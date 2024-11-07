@@ -12,6 +12,7 @@ class SirtetWindow extends JPanel {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
+        changeScene(0);
         frame.setVisible(true);
         return frame;
     }
@@ -22,7 +23,9 @@ class SirtetWindow extends JPanel {
                 frame.add(new MenuScene().getPanel());
                 break;
             case 1:
-                frame.add(new GameplayScene().getPanel());
+                GameplayScene gameplayScene = new GameplayScene();
+                frame.addKeyListener(gameplayScene);
+                frame.add(gameplayScene);
                 break;
             case 2:
                 frame.add(new GameOverScene().getPanel());

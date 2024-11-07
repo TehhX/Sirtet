@@ -30,7 +30,7 @@ class Sonimortet {
             case 'Z':
                 positions[0] = new SonimortetPositions(0, 0);
                 positions[1] = new SonimortetPositions(1, 0);
-                positions[2] = new SonimortetPositions(0, 1);
+                positions[2] = new SonimortetPositions(1, 1);
                 positions[3] = new SonimortetPositions(2, 1);
                 break;
             case 'L':
@@ -52,14 +52,6 @@ class Sonimortet {
                 positions[3] = new SonimortetPositions(2, 0);
                 break;
         }
-    }
-    public void moveDown() {
-        for(int i = 0; i < 4; i++) {
-            positions[i].move(0, -1);
-        }
-    }
-    public void rotateClockwise() {
-
     }
     public SonimortetPositions[] getPositions() {
         return positions;
