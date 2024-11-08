@@ -3,18 +3,16 @@ import java.util.*;
 class SaveData {
     private int currentPoints;
     private String currentName;
-    private HighScores[] highScores = new HighScores[10];
+    private HighScore[] highScores = new HighScore[10];
     private int volume;
-    private int controlScheme;
     public SaveData() {
         currentPoints = 0;
         currentName = null;
         for(int i = 0; i < 10; i++) {
-            highScores[i] = new HighScores();
+            highScores[i] = new HighScore();
         }
-        controlScheme = 0;
         volume = 5;
-        interperetString();
+        inputString();
     }
     public void incrementPoints(int increment) {
         currentPoints += increment;
@@ -22,13 +20,12 @@ class SaveData {
     public void changeName(String nameChange) {
         currentName = nameChange;
     }
-    public void interperetString() {
-        String fileString = fileToString();
-        controlScheme = Integer.parseInt(fileString.substring(0, 1));
-        volume = Integer.parseInt(fileString.substring(1, 2));
-        int previousIndex = 2;
+    public void inputString() {
+        String fileString = readFile();
+        volume = Integer.parseInt(fileString.substring(0, 1));
+        int previousIndex = 1;
         int indexLarge = 0;
-        for(int i = 2; true; i++) {
+        for(int i = 1; true; i++) {
             if(fileString.charAt(i) == ',') {
                 highScores[indexLarge].setScore(Integer.valueOf(fileString.substring(previousIndex, i)));
                 indexLarge++;
@@ -52,7 +49,7 @@ class SaveData {
             }
         }
     }
-    public String fileToString() {
+    public String readFile() {
         String fileContents = "";
         try {
             FileReader saveFile = new FileReader("Sirtet Data.txt");
@@ -67,8 +64,7 @@ class SaveData {
     }
     public void writeFile() {
         try {
-            PrintWriter writer = new PrintWriter("Fella");
-            writer.print(controlScheme);
+            PrintWriter writer = new PrintWriter("Sirtet Data.txt");
             writer.print(volume);
             for(int i = 0; i < 9; i++) {
                 writer.print(highScores[i].getScore() + ",");
@@ -79,7 +75,6 @@ class SaveData {
             }
             writer.print(highScores[9].getName() + ".");
             writer.close();
-            System.out.println("Writing finished");
         } catch(Exception e) {
             e.printStackTrace();
         }

@@ -3,7 +3,6 @@ class SirtetWindow extends JPanel {
     private JFrame frame;
     public SirtetWindow() {
         frame = frameSetup();
-        changeScene(1);
     }
     public JFrame frameSetup() {
         frame = new JFrame("Sirtet");
