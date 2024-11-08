@@ -57,21 +57,25 @@ class Sonimortet {
     }
     public void hardDrop() {
         while(true) {
+            boolean toBreak = false;
             for(int i = 0; i < 4; i++) {
-                if(positions[i].getY() == 15) return;
+                if(positions[i].getY() == 14) toBreak = true;
             }
             for(int i = 0; i < 4; i++) {
-                positions[i].move(0, 1);
+                positions[i].move(0, 1, false);
             }
+            if(toBreak) break;
         }
+        parentGrid.addSonimortet(' ');
     }
     public void softDrop() {
         for(int i = 0; i < 4; i++) {
-            positions[i].move(0, 1);
+            positions[i].move(0, 1, false);
         }
         for(int i = 0; i < 4; i++) {
             if(positions[i].getY() == 15) {
-                parentGrid.addSonimortet();
+                parentGrid.addSonimortet(' ');
+                break;
             }
         }
     }
@@ -80,7 +84,7 @@ class Sonimortet {
             if(positions[i].getX() == 0) return;
         }
         for(int i = 0; i < 4; i++) {
-            positions[i].move(-1, 0);
+            positions[i].move(-1, 0, false);
         }
     }
     public void shiftRight() {
@@ -88,22 +92,22 @@ class Sonimortet {
             if(positions[i].getX() == 9) return;
         }
         for(int i = 0; i < 4; i++) {
-            positions[i].move(1, 0);
+            positions[i].move(1, 0, false);
         }
     }
     public void rotateClockwise() {
         switch(rotation) {
             case 0:
-                rotate0();
+                rotate0(false);
                 break;
             case 1:
-                rotate1();
+                rotate1(false);
                 break;
             case 2:
-                rotate2();
+                rotate2(false);
                 break;
             default:
-                rotate3();
+                rotate3(false);
         }
         if(rotation == 3) {
             rotation = 0;
@@ -111,103 +115,127 @@ class Sonimortet {
         }
         rotation++;
     }
-    public void rotate0() {
+    public void rotateCounterwise() {
+        switch(rotation) {
+            case 0:
+                rotate3(true);
+                break;
+            case 1:
+                rotate0(true);
+                break;
+            case 2:
+                rotate1(true);
+                break;
+            default:
+                rotate2(true);
+        }
+        if(rotation == 0) {
+            rotation = 3;
+            return;
+        }
+        rotation--;
+    }
+    public void rotate0(boolean invert) {
         switch(type) {
             case 'I':
-                positions[1].move(1, -1);
-                positions[2].move(2, -2);
-                positions[3].move(3, -3);
+                positions[1].move(1, -1, invert);
+                positions[2].move(2, -2, invert);
+                positions[3].move(3, -3, invert);
                 break;
             case 'S':
-
+                positions[2].move(-1, 0, invert);
+                positions[3].move(-1, 2, invert);
                 break;
             case 'Z':
-
+                positions[0].move(0, 1, invert);
+                positions[3].move(-2, 1, invert);
                 break;
             case 'L':
-                positions[2].move(1, -2);
-                positions[3].move(1, -2);
+                positions[2].move(1, -2, invert);
+                positions[3].move(1, -2, invert);
                 break;
             case 'J':
-
+                positions[0].move(-1, 0, invert);
+                positions[2].move(1, -1, invert);
+                positions[3].move(0, -1, invert);
                 break;
             case 'T':
-
+                positions[0].move(0, 1, invert);
+                positions[3].move(-1, 2, invert);
         }
     }
-    public void rotate1() {
+    public void rotate1(boolean invert) {
         switch(type) {
             case 'I':
-                positions[1].move(-1, 1);
-                positions[2].move(-2, 2);
-                positions[3].move(-3, 3);
+                positions[1].move(-1, 1, invert);
+                positions[2].move(-2, 2, invert);
+                positions[3].move(-3, 3, invert);
                 break;
             case 'S':
-
+                positions[2].move(1, 0, invert);
+                positions[3].move(1, -2, invert);
                 break;
             case 'Z':
-
+                positions[0].move(0, -1, invert);
+                positions[3].move(2, -1, invert);
                 break;
             case 'L':
-                positions[1].move(1, 1);
-                positions[3].move(-1, 1);
+                positions[1].move(1, 1, invert);
+                positions[3].move(-1, 1, invert);
                 break;
             case 'J':
-
+                positions[1].move(0, -1, invert);
+                positions[2].move(-2, 1, invert);
                 break;
             case 'T':
-
+                positions[3].move(1, -1, invert);
         }
     }
-    public void rotate2() {
+    public void rotate2(boolean invert) {
         switch(type) {
             case 'I':
-                rotate0();
-                break;
             case 'S':
-
-                break;
             case 'Z':
-
+                rotate0(invert);
                 break;
             case 'L':
-                positions[0].move(0, 1);
-                positions[1].move(1, -1);
-                positions[2].move(1, 0);
+                positions[0].move(0, 1, invert);
+                positions[1].move(1, -1, invert);
+                positions[2].move(1, 0, invert);
                 break;
             case 'J':
-
+                positions[2].move(2, -1, invert);
+                positions[3].move(2, -1, invert);
                 break;
             case 'T':
-
+                positions[1].move(-1, 0, invert);
+                positions[3].move(-2, 1, invert);
         }
     }
-    public void rotate3() {
+    public void rotate3(boolean invert) {
         switch(type) {
             case 'I':
-                rotate1();
-                break;
             case 'S':
-
-                break;
             case 'Z':
-
+                rotate1(invert);
                 break;
             case 'L':
-                positions[0].move(0, -1);
-                positions[1].move(-2, 0);
-                positions[2].move(-2, 2);
-                positions[3].move(0, 1);
+                positions[0].move(0, -1, invert);
+                positions[1].move(-2, 0, invert);
+                positions[2].move(-2, 2, invert);
+                positions[3].move(0, 1, invert);
                 break;
             case 'J':
-
+                positions[0].move(1, 0, invert);
+                positions[1].move(0, 1, invert);
+                positions[2].move(-1, 1, invert);
+                positions[3].move(-2, 2, invert);
                 break;
             case 'T':
-
+                positions[0].move(0, -1, invert);
+                positions[1].move(1, 0, invert);
+                positions[3].move(2, -2, invert);
         }
-    }
-    public int getRotation() {
-        return rotation;
     }
     public char getType() {
         return type;

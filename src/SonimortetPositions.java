@@ -5,7 +5,12 @@ class SonimortetPositions {
         this.x = x;
         this.y = y;
     }
-    public void move(int x, int y) {
+    public void move(int x, int y, boolean invert) {
+        if(invert) {
+            this.x -= x;
+            this.y -= y;
+            return;
+        }
         this.x += x;
         this.y += y;
     }

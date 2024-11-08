@@ -6,11 +6,18 @@ class SirtetGrid {
     private ArrayList<Sonimortet> sonimortetList = new ArrayList<>();
     public SirtetGrid() {
         grid = new boolean[10][16];
-        held = ' ';
+        held = 'S';
         last = -1;
     }
-    public void addSonimortet() {
-        last++;
+    public void addSonimortet(char type) {
+        if(type == ' '){
+            sonimortetList.add(new Sonimortet(randomChar(), this));
+            last++;
+            return;
+        }
+        sonimortetList.add(new Sonimortet(type, this));
+    }
+    public char randomChar() {
         char type;
         switch((int)Math.round(Math.random() * 6 + 1)) {
             case 1:
@@ -34,17 +41,17 @@ class SirtetGrid {
             default:
                 type = 'T';
         }
-        sonimortetList.add(new Sonimortet('I', this));
+        return type;
     }
     public Sonimortet getLastSonimortet() {
         return sonimortetList.get(last);
     }
     public void updateGrid() {
         grid = new boolean[10][16];
-        for(int outer = 0; outer < sonimortetList.size(); outer++) {
-            for(int inner = 0; inner < 4; inner++) {
-                int x = sonimortetList.get(outer).getPositions()[inner].getX();
-                int y = sonimortetList.get(outer).getPositions()[inner].getY();
+        for (Sonimortet sonimortet : sonimortetList) {
+            for (int inner = 0; inner < 4; inner++) {
+                int x = sonimortet.getPositions()[inner].getX();
+                int y = sonimortet.getPositions()[inner].getY();
                 grid[x][y] = true;
             }
         }
@@ -59,11 +66,14 @@ class SirtetGrid {
             }
         }
     }
+    public void swapHeld() {
+        char tempType = held;
+        held = getLastSonimortet().getType();
+        sonimortetList.remove(getLastSonimortet());
+        addSonimortet(tempType);
+    }
     public char getHeld() {
         return held;
-    }
-    public void addSonimortet(char type) {
-        sonimortetList.add(new Sonimortet(type, this));
     }
     public boolean getGrid(int outerIndex, int innerIndex) {
         return grid[outerIndex][innerIndex];
