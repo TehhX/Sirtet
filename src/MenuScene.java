@@ -1,5 +1,5 @@
 import javax.swing.*;
-class MenuScene extends JPanel {
+class MenuScene {
     private JPanel panel;
     public MenuScene() {
         panel = new JPanel();

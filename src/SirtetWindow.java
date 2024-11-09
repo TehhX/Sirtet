@@ -1,14 +1,18 @@
 import javax.swing.*;
-class SirtetWindow extends JPanel {
+class SirtetWindow {
     private JFrame frame;
+    private int sizeX;
+    private int sizeY;
     public SirtetWindow() {
+        sizeX = 966;
+        sizeY = 989;
         frame = frameSetup();
         changeScene(0);
     }
     public JFrame frameSetup() {
         frame = new JFrame("Sirtet");
         frame.setLayout(null);
-        frame.setSize(966, 989);
+        frame.setSize(sizeX, sizeY);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
@@ -23,6 +27,7 @@ class SirtetWindow extends JPanel {
                 break;
             case 1:
                 GameplayScene gameplayScene = new GameplayScene();
+                gameplayScene.setSize(sizeX, sizeY);
                 frame.addKeyListener(gameplayScene);
                 frame.add(gameplayScene);
                 break;

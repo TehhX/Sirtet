@@ -9,15 +9,18 @@ class SonimortetPositions {
         if(invert) {
             this.x -= x;
             this.y -= y;
-            return;
+        } else {
+            this.x += x;
+            this.y += y;
         }
-        this.x += x;
-        this.y += y;
     }
     public int getX() {
         return x;
     }
     public int getY() {
         return y;
+    }
+    public String toString() {
+        return "X = " + x + ", Y = " + y;
     }
 }

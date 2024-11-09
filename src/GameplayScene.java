@@ -6,10 +6,9 @@ class GameplayScene extends JPanel implements KeyListener {
     private JPanel panel;
     private SirtetGrid grid;
     public GameplayScene() {
-        grid = new SirtetGrid();
+        grid = new SirtetGrid(this);
         panel = new JPanel();
         panel.setBounds(0, 0, 966, 989);
-        this.setSize(966, 989);
         panel.add(this);
         panel.setLayout(null);
         grid.addSonimortet(' ');
@@ -24,14 +23,14 @@ class GameplayScene extends JPanel implements KeyListener {
                 g.fillRect(200 + 28 * outer, 50 + 28 * inner, 25, 25);
             }
         }
-        // Hold window
         g.setColor(Color.green);
         if(grid.getHeld() == ' ') return;
         boolean[][] heldGrid = getHeldGrid();
         for(int outer = 0; outer < 3; outer++) {
             for(int inner = 0; inner < 4; inner++) {
-                if(heldGrid[outer][inner])
-                g.fillRect(50 + 28 * outer, 50 + 28 * inner, 25, 25);
+                if(heldGrid[outer][inner]) {
+                    g.fillRect(50 + 28 * outer, 50 + 28 * inner, 25, 25);
+                }
             }
         }
     }
@@ -63,13 +62,22 @@ class GameplayScene extends JPanel implements KeyListener {
                 heldGrid[2][1] = true;
                 break;
             case 'L':
-
+                heldGrid[0][0] = true;
+                heldGrid[0][1] = true;
+                heldGrid[0][2] = true;
+                heldGrid[1][2] = true;
                 break;
             case 'J':
-
+                heldGrid[1][0] = true;
+                heldGrid[1][1] = true;
+                heldGrid[1][2] = true;
+                heldGrid[0][2] = true;
                 break;
             case 'T':
-
+                heldGrid[0][0] = true;
+                heldGrid[1][0] = true;
+                heldGrid[1][1] = true;
+                heldGrid[2][0] = true;
                 break;
         }
         return heldGrid;
@@ -78,7 +86,6 @@ class GameplayScene extends JPanel implements KeyListener {
         return panel;
     }
     public void keyPressed(KeyEvent e) {
-        System.out.println("Key Pressed: " + e.getKeyChar());
         switch(e.getKeyChar()) {
             case 'a':
                 grid.getLastSonimortet().shiftLeft();
@@ -96,7 +103,7 @@ class GameplayScene extends JPanel implements KeyListener {
                 grid.getLastSonimortet().rotateClockwise();
                 break;
             case 'q':
-                grid.getLastSonimortet().rotateCounterwise();
+                grid.getLastSonimortet().rotateCounterClockwise();
                 break;
             case 'f':
                 grid.swapHeld();

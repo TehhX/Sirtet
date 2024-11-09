@@ -2,98 +2,113 @@ class Sonimortet {
     private char type;
     private int rotation;
     private SirtetGrid parentGrid;
-    private SonimortetPositions[] positions = new SonimortetPositions[4];
+    private SonimortetPositions[] positions;
     public Sonimortet(char type, SirtetGrid parentGrid) {
         rotation = 0;
         this.type = type;
         this.parentGrid = parentGrid;
+        positions = new SonimortetPositions[4];
         setStartingPositions();
     }
     public void setStartingPositions() {
         switch(type) {
             case 'O':
-                positions[0] = new SonimortetPositions(0, 0);
-                positions[1] = new SonimortetPositions(1, 0);
-                positions[2] = new SonimortetPositions(0, 1);
-                positions[3] = new SonimortetPositions(1, 1);
+                positions[0] = new SonimortetPositions(4, 0);
+                positions[1] = new SonimortetPositions(5, 0);
+                positions[2] = new SonimortetPositions(4, 1);
+                positions[3] = new SonimortetPositions(5, 1);
                 break;
             case 'I':
-                positions[0] = new SonimortetPositions(0, 0);
-                positions[1] = new SonimortetPositions(0, 1);
-                positions[2] = new SonimortetPositions(0, 2);
-                positions[3] = new SonimortetPositions(0, 3);
+                positions[0] = new SonimortetPositions(4, 0);
+                positions[1] = new SonimortetPositions(4, 1);
+                positions[2] = new SonimortetPositions(4, 2);
+                positions[3] = new SonimortetPositions(4, 3);
                 break;
             case 'S':
-                positions[0] = new SonimortetPositions(0, 1);
-                positions[1] = new SonimortetPositions(1, 1);
-                positions[2] = new SonimortetPositions(1, 0);
-                positions[3] = new SonimortetPositions(2, 0);
+                positions[0] = new SonimortetPositions(4, 1);
+                positions[1] = new SonimortetPositions(5, 1);
+                positions[2] = new SonimortetPositions(5, 0);
+                positions[3] = new SonimortetPositions(6, 0);
                 break;
             case 'Z':
-                positions[0] = new SonimortetPositions(0, 0);
-                positions[1] = new SonimortetPositions(1, 0);
-                positions[2] = new SonimortetPositions(1, 1);
-                positions[3] = new SonimortetPositions(2, 1);
+                positions[0] = new SonimortetPositions(4, 0);
+                positions[1] = new SonimortetPositions(5, 0);
+                positions[2] = new SonimortetPositions(5, 1);
+                positions[3] = new SonimortetPositions(6, 1);
                 break;
             case 'L':
-                positions[0] = new SonimortetPositions(0, 0);
-                positions[1] = new SonimortetPositions(0, 1);
-                positions[2] = new SonimortetPositions(0, 2);
-                positions[3] = new SonimortetPositions(1, 2);
+                positions[0] = new SonimortetPositions(4, 0);
+                positions[1] = new SonimortetPositions(4, 1);
+                positions[2] = new SonimortetPositions(4, 2);
+                positions[3] = new SonimortetPositions(5, 2);
                 break;
             case 'J':
-                positions[0] = new SonimortetPositions(1, 0);
-                positions[1] = new SonimortetPositions(1, 1);
-                positions[2] = new SonimortetPositions(1, 2);
-                positions[3] = new SonimortetPositions(0, 2);
+                positions[0] = new SonimortetPositions(5, 0);
+                positions[1] = new SonimortetPositions(5, 1);
+                positions[2] = new SonimortetPositions(5, 2);
+                positions[3] = new SonimortetPositions(4, 2);
                 break;
             case 'T':
-                positions[0] = new SonimortetPositions(0, 0);
-                positions[1] = new SonimortetPositions(1, 0);
-                positions[2] = new SonimortetPositions(1, 1);
-                positions[3] = new SonimortetPositions(2, 0);
+                positions[0] = new SonimortetPositions(4, 0);
+                positions[1] = new SonimortetPositions(5, 0);
+                positions[2] = new SonimortetPositions(5, 1);
+                positions[3] = new SonimortetPositions(6, 0);
                 break;
         }
     }
+    public boolean checkSurrounding(int xOffset, int yOffset) {
+        for(int outer = 0; outer < positions.length; outer++) {
+            int x = positions[outer].getX();
+            int y = positions[outer].getY();
+            if(positions[outer].getY() == 15 && yOffset > 0) return true;
+            if(positions[outer].getX() == 0 && xOffset < 0) return true;
+            if(positions[outer].getX() == 9 && xOffset > 0) return true;
+            if(parentGrid.getGrid(x + xOffset, y + yOffset)) {
+                boolean isOtherSonimortet = true;
+                for(int inner = 0; inner < positions.length; inner++) {
+                    if(positions[inner].getX() == x + xOffset && positions[inner].getY() == y + yOffset) {
+                        isOtherSonimortet = false;
+                        break;
+                    }
+                }
+                if(isOtherSonimortet) return true;
+            }
+        }
+        return false;
+    }
     public void hardDrop() {
-        while(true) {
-            boolean toBreak = false;
-            for(int i = 0; i < 4; i++) {
-                if(positions[i].getY() == 14) toBreak = true;
+        while(!checkSurrounding(0, 1)) {
+            for(SonimortetPositions positions : positions) {
+                positions.move(0, 1, false);
             }
-            for(int i = 0; i < 4; i++) {
-                positions[i].move(0, 1, false);
-            }
-            if(toBreak) break;
         }
         parentGrid.addSonimortet(' ');
     }
     public void softDrop() {
-        for(int i = 0; i < 4; i++) {
-            positions[i].move(0, 1, false);
-        }
-        for(int i = 0; i < 4; i++) {
-            if(positions[i].getY() == 15) {
-                parentGrid.addSonimortet(' ');
-                break;
+        if(checkSurrounding(0, 1)) return;
+        shiftAll(0, 1, false);
+    }
+    public void delete(int index) {
+        SonimortetPositions[] currentPositions = positions;
+        positions = new SonimortetPositions[positions.length - 1];
+        int newIndex = 0;
+        for(int i = 0; i < currentPositions.length; i++) {
+            if(i != index) {
+                positions[newIndex] = currentPositions[i];
+                newIndex++;
             }
         }
     }
     public void shiftLeft() {
-        for(int i = 0; i < 4; i++) {
-            if(positions[i].getX() == 0) return;
-        }
-        for(int i = 0; i < 4; i++) {
-            positions[i].move(-1, 0, false);
-        }
+        if(checkSurrounding(-1, 0)) return;
+        shiftAll(-1, 0, false);
     }
     public void shiftRight() {
-        for(int i = 0; i < 4; i++) {
-            if(positions[i].getX() == 9) return;
-        }
-        for(int i = 0; i < 4; i++) {
-            positions[i].move(1, 0, false);
-        }
+        if(checkSurrounding(1, 0)) return;
+        shiftAll(1, 0, false);
+    }
+    public void shiftAll(int x, int y, boolean invert) {
+        for(SonimortetPositions position : positions) position.move(x, y, invert);
     }
     public void rotateClockwise() {
         switch(rotation) {
@@ -115,7 +130,7 @@ class Sonimortet {
         }
         rotation++;
     }
-    public void rotateCounterwise() {
+    public void rotateCounterClockwise() {
         switch(rotation) {
             case 0:
                 rotate3(true);
