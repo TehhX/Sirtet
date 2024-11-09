@@ -57,36 +57,34 @@ class Sonimortet {
         }
     }
     public boolean checkSurrounding(int xOffset, int yOffset) {
-        for(int outer = 0; outer < positions.length; outer++) {
-            int x = positions[outer].getX();
-            int y = positions[outer].getY();
-            if(positions[outer].getY() == 15 && yOffset > 0) return true;
-            if(positions[outer].getX() == 0 && xOffset < 0) return true;
-            if(positions[outer].getX() == 9 && xOffset > 0) return true;
-            if(parentGrid.getGrid(x + xOffset, y + yOffset)) {
-                boolean isOtherSonimortet = true;
-                for(int inner = 0; inner < positions.length; inner++) {
-                    if(positions[inner].getX() == x + xOffset && positions[inner].getY() == y + yOffset) {
-                        isOtherSonimortet = false;
-                        break;
-                    }
-                }
-                if(isOtherSonimortet) return true;
+        for(int i = 0; i < positions.length; i++) {
+            if(checkSurrounding(i, xOffset, yOffset, false)) {
+                return true;
             }
         }
         return false;
     }
-    public void hardDrop() {
-        while(!checkSurrounding(0, 1)) {
-            for(SonimortetPositions positions : positions) {
-                positions.move(0, 1, false);
-            }
+    public boolean checkSurrounding(int index, int xOffset, int yOffset, boolean invert) {
+        if(invert) {
+            xOffset *= -1;
+            yOffset *= -1;
         }
-        parentGrid.addSonimortet(' ');
-    }
-    public void softDrop() {
-        if(checkSurrounding(0, 1)) return;
-        shiftAll(0, 1, false);
+        int x = positions[index].getX();
+        int y = positions[index].getY();
+        if(y + yOffset > 15 && yOffset > 0) return true;
+        if(x + xOffset < 0 && xOffset < 0) return true;
+        if(x + xOffset > 9 && xOffset > 0) return true;
+        if(parentGrid.getGrid(x + xOffset, y + yOffset)) {
+            boolean isOtherSonimortet = true;
+            for (SonimortetPositions position : positions) {
+                if (position.getX() == x + xOffset && position.getY() == y + yOffset) {
+                    isOtherSonimortet = false;
+                    break;
+                }
+            }
+            return isOtherSonimortet;
+        }
+        return false;
     }
     public void delete(int index) {
         SonimortetPositions[] currentPositions = positions;
@@ -99,6 +97,18 @@ class Sonimortet {
             }
         }
     }
+    public void hardDrop() {
+        while(!checkSurrounding(0, 1)) {
+            for(SonimortetPositions positions : positions) {
+                positions.shiftSingle(0, 1, false);
+            }
+        }
+        parentGrid.addSonimortet(' ');
+    }
+    public void softDrop() {
+        if(checkSurrounding(0, 1)) return;
+        shiftAll(0, 1, false);
+    }
     public void shiftLeft() {
         if(checkSurrounding(-1, 0)) return;
         shiftAll(-1, 0, false);
@@ -108,7 +118,9 @@ class Sonimortet {
         shiftAll(1, 0, false);
     }
     public void shiftAll(int x, int y, boolean invert) {
-        for(SonimortetPositions position : positions) position.move(x, y, invert);
+        for(SonimortetPositions position : positions) {
+            position.shiftSingle(x, y, invert);
+        }
     }
     public void rotateClockwise() {
         switch(rotation) {
@@ -124,11 +136,6 @@ class Sonimortet {
             default:
                 rotate3(false);
         }
-        if(rotation == 3) {
-            rotation = 0;
-            return;
-        }
-        rotation++;
     }
     public void rotateCounterClockwise() {
         switch(rotation) {
@@ -144,113 +151,138 @@ class Sonimortet {
             default:
                 rotate2(true);
         }
-        if(rotation == 0) {
-            rotation = 3;
-            return;
+    }
+    public void updateRotation(boolean counterClockwise) {
+        if(counterClockwise) {
+            if(rotation == 0) {
+                rotation = 3;
+                System.out.println(rotation);
+                return;
+            }
+            rotation--;
+        } else {
+            if(rotation == 3) {
+                rotation = 0;
+                System.out.println(rotation);
+                return;
+            }
+            rotation++;
         }
-        rotation--;
+        System.out.println(rotation);
     }
     public void rotate0(boolean invert) {
+        int[] xOffset = new int[]{};
+        int[] yOffset = new int[]{};
         switch(type) {
             case 'I':
-                positions[1].move(1, -1, invert);
-                positions[2].move(2, -2, invert);
-                positions[3].move(3, -3, invert);
+                xOffset = new int[]{0, 1, 2, 3};;
+                yOffset = new int[]{0, -1, -2, -3};
                 break;
             case 'S':
-                positions[2].move(-1, 0, invert);
-                positions[3].move(-1, 2, invert);
+                xOffset = new int[]{0, 0, -1, -1};
+                yOffset = new int[]{0, 0, 0, 2};
                 break;
             case 'Z':
-                positions[0].move(0, 1, invert);
-                positions[3].move(-2, 1, invert);
+                xOffset = new int[]{0, 0, 0, -2};
+                yOffset = new int[]{1, 0, 0, 1};
                 break;
             case 'L':
-                positions[2].move(1, -2, invert);
-                positions[3].move(1, -2, invert);
+                xOffset = new int[]{0, 0, 1, 1};
+                yOffset = new int[]{0, 0, -2, -2};
                 break;
             case 'J':
-                positions[0].move(-1, 0, invert);
-                positions[2].move(1, -1, invert);
-                positions[3].move(0, -1, invert);
+                xOffset = new int[]{-1, 0, 1, 0};
+                yOffset = new int[]{0, 0, -1, -1};
                 break;
             case 'T':
-                positions[0].move(0, 1, invert);
-                positions[3].move(-1, 2, invert);
+                xOffset = new int[]{0, 0, 0, -1};
+                yOffset = new int[]{1, 0, 0, 2};
         }
+        for(int i = 0; i < 4; i++) if(checkSurrounding(i, xOffset[i], yOffset[i], invert)) return;
+        for(int i = 0; i < 4; i++) positions[i].shiftSingle(xOffset[i], yOffset[i], invert);
+        updateRotation(invert);
     }
     public void rotate1(boolean invert) {
+        int[] xOffset = new int[]{};
+        int[] yOffset = new int[]{};
         switch(type) {
             case 'I':
-                positions[1].move(-1, 1, invert);
-                positions[2].move(-2, 2, invert);
-                positions[3].move(-3, 3, invert);
+                xOffset = new int[]{0, -1, -2, -3};
+                yOffset = new int[]{0, 1, 2, 3};
                 break;
             case 'S':
-                positions[2].move(1, 0, invert);
-                positions[3].move(1, -2, invert);
+                xOffset = new int[]{0, 0, 1, 1};
+                yOffset = new int[]{0, 0, 0, -2};
                 break;
             case 'Z':
-                positions[0].move(0, -1, invert);
-                positions[3].move(2, -1, invert);
+                xOffset = new int[]{0, 0, 0, 2};
+                yOffset = new int[]{-1, 0, 0, -1};
                 break;
             case 'L':
-                positions[1].move(1, 1, invert);
-                positions[3].move(-1, 1, invert);
+                xOffset = new int[]{0, 1, 0, -1};
+                yOffset = new int[]{0, 1, 0, 1};
                 break;
             case 'J':
-                positions[1].move(0, -1, invert);
-                positions[2].move(-2, 1, invert);
+                xOffset = new int[]{0, 0, -2, 0};
+                yOffset = new int[]{0, -1, 1, 0};
                 break;
             case 'T':
-                positions[3].move(1, -1, invert);
+                xOffset = new int[]{0, 0, 0, 1};
+                yOffset = new int[]{0, 0, 0, -1};
         }
+        for(int i = 0; i < 4; i++) if(checkSurrounding(i, xOffset[i], yOffset[i], invert)) return;
+        for(int i = 0; i < 4; i++) positions[i].shiftSingle(xOffset[i], yOffset[i], invert);
+        updateRotation(invert);
     }
     public void rotate2(boolean invert) {
+        int[] xOffset = new int[]{};
+        int[] yOffset = new int[]{};
         switch(type) {
             case 'I':
             case 'S':
             case 'Z':
                 rotate0(invert);
-                break;
+                return;
             case 'L':
-                positions[0].move(0, 1, invert);
-                positions[1].move(1, -1, invert);
-                positions[2].move(1, 0, invert);
+                xOffset = new int[]{0, 1, 1, 0};
+                yOffset = new int[]{1, -1, 0, 0};
                 break;
             case 'J':
-                positions[2].move(2, -1, invert);
-                positions[3].move(2, -1, invert);
+                xOffset = new int[]{0, 0, 2, 2};
+                yOffset = new int[]{0, 0, -1, -1};
                 break;
             case 'T':
-                positions[1].move(-1, 0, invert);
-                positions[3].move(-2, 1, invert);
+                xOffset = new int[]{0, -1, 0, -2};
+                yOffset = new int[]{0, 0, 0, 1};
         }
+        for(int i = 0; i < 4; i++) if(checkSurrounding(i, xOffset[i], yOffset[i], invert)) return;
+        for(int i = 0; i < 4; i++) positions[i].shiftSingle(xOffset[i], yOffset[i], invert);
+        updateRotation(invert);
     }
     public void rotate3(boolean invert) {
+        int[] xOffset = new int[]{};
+        int[] yOffset = new int[]{};
         switch(type) {
             case 'I':
             case 'S':
             case 'Z':
                 rotate1(invert);
-                break;
+                return;
             case 'L':
-                positions[0].move(0, -1, invert);
-                positions[1].move(-2, 0, invert);
-                positions[2].move(-2, 2, invert);
-                positions[3].move(0, 1, invert);
+                xOffset = new int[]{0, -2, -2, 0};
+                yOffset = new int[]{-1, 0, 2, 1};
                 break;
             case 'J':
-                positions[0].move(1, 0, invert);
-                positions[1].move(0, 1, invert);
-                positions[2].move(-1, 1, invert);
-                positions[3].move(-2, 2, invert);
+                xOffset = new int[]{1, 0, -1, -2};
+                yOffset = new int[]{0, 1, 1, 2};
                 break;
             case 'T':
-                positions[0].move(0, -1, invert);
-                positions[1].move(1, 0, invert);
-                positions[3].move(2, -2, invert);
+                xOffset = new int[]{0, 1, 0, 2};
+                yOffset = new int[]{-1, 0, 0, -2};
         }
+        for(int i = 0; i < 4; i++) if(checkSurrounding(i, xOffset[i], yOffset[i], invert)) return;
+        for(int i = 0; i < 4; i++) positions[i].shiftSingle(xOffset[i], yOffset[i], invert);
+        updateRotation(invert);
     }
     public char getType() {
         return type;

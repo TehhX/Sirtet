@@ -7,17 +7,17 @@ class SirtetGrid {
     private ArrayList<Sonimortet> sonimortetList = new ArrayList<>();
     public SirtetGrid(GameplayScene parentScene) {
         grid = new boolean[10][16];
-        held = 'S';
+        held = randomChar();
         last = -1;
         this.parentScene = parentScene;
     }
     public void addSonimortet(char type) {
         if(type == ' '){
-            sonimortetList.add(new Sonimortet(randomChar(), this));
+            sonimortetList.add(new Sonimortet(randomChar(), this)); // EDIT 'I' TO RANDOMCHAR()
             last++;
-            return;
+        } else {
+            sonimortetList.add(new Sonimortet(type, this));
         }
-        sonimortetList.add(new Sonimortet(type, this));
     }
     public char randomChar() {
         char type;
@@ -82,7 +82,7 @@ class SirtetGrid {
         for(int outer = 0; outer < sonimortetList.size() - 1; outer++) {
             for(int inner = 0; inner < sonimortetList.get(outer).getPositions().length; inner++) {
                 if(sonimortetList.get(outer).getPositions()[inner].getY() < y) {
-                    sonimortetList.get(outer).shiftAll(0, 1, false);
+                    sonimortetList.get(outer).getPositions()[inner].shiftSingle(0, 1, false);
                 }
             }
         }

@@ -5,7 +5,7 @@ class SonimortetPositions {
         this.x = x;
         this.y = y;
     }
-    public void move(int x, int y, boolean invert) {
+    public void shiftSingle(int x, int y, boolean invert) {
         if(invert) {
             this.x -= x;
             this.y -= y;
@@ -19,8 +19,5 @@ class SonimortetPositions {
     }
     public int getY() {
         return y;
-    }
-    public String toString() {
-        return "X = " + x + ", Y = " + y;
     }
 }
