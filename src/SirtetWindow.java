@@ -1,8 +1,8 @@
 import javax.swing.*;
 class SirtetWindow {
     private JFrame frame;
-    private int sizeX;
-    private int sizeY;
+    private final int sizeX;
+    private final int sizeY;
     public SirtetWindow() {
         sizeX = 966;
         sizeY = 989;
@@ -16,6 +16,7 @@ class SirtetWindow {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
+        frame.setUndecorated(true);
         frame.setVisible(true);
         return frame;
     }

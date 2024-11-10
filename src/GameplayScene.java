@@ -3,19 +3,43 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 class GameplayScene extends JPanel implements KeyListener {
-    private JPanel panel;
-    private SirtetGrid grid;
+    private int currentPoints;
+    private final SirtetGrid grid;
+    private final JLabel scoreLabel;
     public GameplayScene() {
+        currentPoints = 0;
         grid = new SirtetGrid(this);
-        panel = new JPanel();
-        panel.setBounds(0, 0, 966, 989);
-        panel.add(this);
-        panel.setLayout(null);
+        scoreLabel = labelSetup();
+        this.setLayout(null);
+        this.add(scoreLabel);
         grid.addSonimortet(' ');
     }
+    public JLabel labelSetup() {
+        JLabel label = new JLabel();
+        label.setBounds(500, 100, 500, 200);
+        label.setFont(new Font("Impact", Font.BOLD, 70));
+        label.setForeground(Color.blue);
+        return label;
+    }
+    public void pointIncrease(int rowsCleared) {
+        if(rowsCleared == 0) return;
+        switch (rowsCleared) {
+            case 1:
+                currentPoints += 100;
+                break;
+            case 2:
+                currentPoints += 250;
+                break;
+            case 3:
+                currentPoints += 1000;
+                break;
+            default:
+                currentPoints += 2000;
+        }
+    }
     @Override
-    public void paint(Graphics g) {
-        super.paint(g);
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
         grid.updateGrid();
         for(int outer = 0; outer < 10; outer++) {
             for(int inner = 0; inner < 16; inner++) {
@@ -24,15 +48,17 @@ class GameplayScene extends JPanel implements KeyListener {
             }
         }
         g.setColor(Color.green);
-        if(grid.getHeld() == ' ') return;
-        boolean[][] heldGrid = getHeldGrid();
-        for(int outer = 0; outer < 3; outer++) {
-            for(int inner = 0; inner < 4; inner++) {
-                if(heldGrid[outer][inner]) {
-                    g.fillRect(50 + 28 * outer, 50 + 28 * inner, 25, 25);
+        if(grid.getHeld() != ' ') {
+            boolean[][] heldGrid = getHeldGrid();
+            for(int outer = 0; outer < 3; outer++) {
+                for(int inner = 0; inner < 4; inner++) {
+                    if(heldGrid[outer][inner]) {
+                        g.fillRect(50 + 28 * outer, 50 + 28 * inner, 25, 25);
+                    }
                 }
             }
         }
+        scoreLabel.setText("" + currentPoints);
     }
     public boolean[][] getHeldGrid() {
         boolean[][] heldGrid = new boolean[3][4];
@@ -73,17 +99,13 @@ class GameplayScene extends JPanel implements KeyListener {
                 heldGrid[1][2] = true;
                 heldGrid[0][2] = true;
                 break;
-            case 'T':
+            default:
                 heldGrid[0][0] = true;
                 heldGrid[1][0] = true;
                 heldGrid[1][1] = true;
                 heldGrid[2][0] = true;
-                break;
         }
         return heldGrid;
-    }
-    public JPanel getPanel() {
-        return panel;
     }
     public void keyPressed(KeyEvent e) {
         switch(e.getKeyChar()) {
@@ -100,16 +122,16 @@ class GameplayScene extends JPanel implements KeyListener {
                 grid.getLastSonimortet().hardDrop();
                 break;
             case 'e':
-                grid.getLastSonimortet().rotateClockwise();
+                grid.getLastSonimortet().rotate(false);
                 break;
             case 'q':
-                grid.getLastSonimortet().rotateCounterClockwise();
+                grid.getLastSonimortet().rotate(true);
                 break;
             case 'f':
                 grid.swapHeld();
                 break;
         }
-        this.repaint();
+        repaint();
     }
     public void keyTyped(KeyEvent e) {}
     public void keyReleased(KeyEvent e) {}

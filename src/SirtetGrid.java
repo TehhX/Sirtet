@@ -2,19 +2,18 @@ import java.util.ArrayList;
 class SirtetGrid {
     public boolean[][] grid;
     private char held;
-    private int last;
-    private GameplayScene parentScene;
-    private ArrayList<Sonimortet> sonimortetList = new ArrayList<>();
+    private int rowsCleared;
+    private final GameplayScene parentScene;
+    private final ArrayList<Sonimortet> sonimortetList = new ArrayList<>();
     public SirtetGrid(GameplayScene parentScene) {
+        rowsCleared = 0;
         grid = new boolean[10][16];
-        held = randomChar();
-        last = -1;
+        held = ' ';
         this.parentScene = parentScene;
     }
     public void addSonimortet(char type) {
         if(type == ' '){
-            sonimortetList.add(new Sonimortet(randomChar(), this)); // EDIT 'I' TO RANDOMCHAR()
-            last++;
+            sonimortetList.add(new Sonimortet(randomChar(), this));
         } else {
             sonimortetList.add(new Sonimortet(type, this));
         }
@@ -46,7 +45,7 @@ class SirtetGrid {
         return type;
     }
     public Sonimortet getLastSonimortet() {
-        return sonimortetList.get(last);
+        return sonimortetList.get(sonimortetList.size() - 1);
     }
     public void updateGrid() {
         grid = new boolean[10][16];
@@ -64,9 +63,11 @@ class SirtetGrid {
             }
             if(count == 10) clearRow(outer);
         }
-        parentScene.repaint();
+        parentScene.pointIncrease(rowsCleared);
+        rowsCleared = 0;
     }
     public void clearRow(int y) {
+        rowsCleared++;
         int deleted;
         do {
             deleted = 0;
@@ -86,6 +87,7 @@ class SirtetGrid {
                 }
             }
         }
+        parentScene.repaint();
         updateGrid();
     }
     public void swapHeld() {

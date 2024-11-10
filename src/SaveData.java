@@ -1,21 +1,15 @@
 import java.io.*;
 import java.util.*;
 class SaveData {
-    private int currentPoints;
-    private String currentName;
-    private HighScore[] highScores = new HighScore[10];
-    private int volume;
+    private static String currentName = null;
+    private final static HighScore[] highScores = new HighScore[10];
+    private static int volume;
     public SaveData() {
-        currentPoints = 0;
-        currentName = null;
         for(int i = 0; i < 10; i++) {
             highScores[i] = new HighScore();
         }
         volume = 5;
         inputString();
-    }
-    public void incrementPoints(int increment) {
-        currentPoints += increment;
     }
     public void changeName(String nameChange) {
         currentName = nameChange;
@@ -27,11 +21,11 @@ class SaveData {
         int indexLarge = 0;
         for(int i = 1; true; i++) {
             if(fileString.charAt(i) == ',') {
-                highScores[indexLarge].setScore(Integer.valueOf(fileString.substring(previousIndex, i)));
+                highScores[indexLarge].setScore(Integer.parseInt(fileString.substring(previousIndex, i)));
                 indexLarge++;
                 previousIndex = i + 1;
             } else if(fileString.charAt(i) == '.') {
-                highScores[9].setScore(Integer.valueOf(fileString.substring(previousIndex, i)));
+                highScores[9].setScore(Integer.parseInt(fileString.substring(previousIndex, i)));
                 previousIndex = i + 1;
                 break;
             }
