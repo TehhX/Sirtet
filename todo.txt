@@ -1,3 +1,4 @@
+ClearRow shouldn't be called until piece is placed.
 Change I piece pivot point
 Add timer
 Add BGM & SFX
