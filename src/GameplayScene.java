@@ -4,15 +4,15 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 class GameplayScene extends JPanel implements KeyListener {
     private int currentPoints;
-    private final SirtetGrid grid;
+    private SirtetGrid grid;
     private final JLabel scoreLabel;
     public GameplayScene() {
-        currentPoints = 0;
+        currentPoints = -25;
         grid = new SirtetGrid(this);
         scoreLabel = labelSetup();
         this.setLayout(null);
         this.add(scoreLabel);
-        grid.addSonimortet(' ');
+        grid.addSonimortet();
     }
     public JLabel labelSetup() {
         JLabel label = new JLabel();
@@ -23,23 +23,27 @@ class GameplayScene extends JPanel implements KeyListener {
     }
     public void pointIncrease(int rowsCleared) {
         if(rowsCleared == 0) return;
+        currentPoints -= 25;
         switch (rowsCleared) {
             case 1:
                 currentPoints += 100;
                 break;
             case 2:
-                currentPoints += 250;
+                currentPoints += 800;
                 break;
             case 3:
-                currentPoints += 1000;
+                currentPoints += 1200;
                 break;
             default:
-                currentPoints += 2000;
+                currentPoints += 1600;
         }
     }
+    public void pointIncrease() {
+        currentPoints += 25;
+    }
     @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
+    public void paint(Graphics g) {
+        super.paint(g);
         grid.updateGrid();
         for(int outer = 0; outer < 10; outer++) {
             for(int inner = 0; inner < 16; inner++) {
@@ -62,48 +66,11 @@ class GameplayScene extends JPanel implements KeyListener {
     }
     public boolean[][] getHeldGrid() {
         boolean[][] heldGrid = new boolean[3][4];
-        switch(grid.getHeld()) {
-            case 'O':
-                heldGrid[0][0] = true;
-                heldGrid[1][0] = true;
-                heldGrid[0][1] = true;
-                heldGrid[1][1] = true;
-                break;
-            case 'I':
-                heldGrid[0][0] = true;
-                heldGrid[0][1] = true;
-                heldGrid[0][2] = true;
-                heldGrid[0][3] = true;
-                break;
-            case 'S':
-                heldGrid[0][1] = true;
-                heldGrid[1][1] = true;
-                heldGrid[1][0] = true;
-                heldGrid[2][0] = true;
-                break;
-            case 'Z':
-                heldGrid[0][0] = true;
-                heldGrid[1][0] = true;
-                heldGrid[1][1] = true;
-                heldGrid[2][1] = true;
-                break;
-            case 'L':
-                heldGrid[0][0] = true;
-                heldGrid[0][1] = true;
-                heldGrid[0][2] = true;
-                heldGrid[1][2] = true;
-                break;
-            case 'J':
-                heldGrid[1][0] = true;
-                heldGrid[1][1] = true;
-                heldGrid[1][2] = true;
-                heldGrid[0][2] = true;
-                break;
-            default:
-                heldGrid[0][0] = true;
-                heldGrid[1][0] = true;
-                heldGrid[1][1] = true;
-                heldGrid[2][0] = true;
+        int[][] startPos = Sonimortet.getStartingPositions(grid.getHeld());
+        for(int outer = 0; outer < 4; outer++) {
+            for(int inner = 0; inner < 4; inner++) {
+                heldGrid[startPos[0][inner] - 4][startPos[1][inner]] = true;
+            }
         }
         return heldGrid;
     }
@@ -132,6 +99,9 @@ class GameplayScene extends JPanel implements KeyListener {
                 break;
         }
         repaint();
+    }
+    public SirtetGrid getGrid() {
+        return grid;
     }
     public void keyTyped(KeyEvent e) {}
     public void keyReleased(KeyEvent e) {}

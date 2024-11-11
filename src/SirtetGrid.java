@@ -3,49 +3,45 @@ class SirtetGrid {
     public boolean[][] grid;
     private char held;
     private int rowsCleared;
-    private final GameplayScene parentScene;
+    GameplayScene parentScene;
     private final ArrayList<Sonimortet> sonimortetList = new ArrayList<>();
     public SirtetGrid(GameplayScene parentScene) {
         rowsCleared = 0;
         grid = new boolean[10][16];
-        held = ' ';
+        held = randomChar();
         this.parentScene = parentScene;
     }
     public void addSonimortet(char type) {
-        if(type == ' '){
-            sonimortetList.add(new Sonimortet(randomChar(), this));
-        } else {
-            sonimortetList.add(new Sonimortet(type, this));
-        }
+        sonimortetList.add(new Sonimortet(type, this));
+    }
+    public void addSonimortet() {
+        sonimortetList.add(new Sonimortet(randomChar(), this));
+        parentScene.pointIncrease();
+        getLastSonimortet().restartTimer();
     }
     public char randomChar() {
-        char type;
-        switch((int)Math.round(Math.random() * 6 + 1)) {
+        switch((int) (Math.random() * 7)) {
+            case 0:
+                return  'O';
             case 1:
-                type = 'O';
-                break;
+                return  'I';
             case 2:
-                type = 'I';
-                break;
+                return  'S';
             case 3:
-                type = 'S';
-                break;
+                return  'Z';
             case 4:
-                type = 'Z';
-                break;
+                return  'L';
             case 5:
-                type = 'L';
-                break;
-            case 6:
-                type = 'J';
-                break;
+                return  'J';
             default:
-                type = 'T';
+                return 'T';
         }
-        return type;
     }
     public Sonimortet getLastSonimortet() {
         return sonimortetList.get(sonimortetList.size() - 1);
+    }
+    public SonimortetPositions[] getLastPositions() {
+        return getLastSonimortet().getPositions();
     }
     public void updateGrid() {
         grid = new boolean[10][16];
@@ -56,6 +52,16 @@ class SirtetGrid {
                 grid[x][y] = true;
             }
         }
+        if(!sonimortetList.isEmpty()) {
+            for(SonimortetPositions sonimortet : getLastPositions()) {
+                if(sonimortet.getY() == 0) {
+                    checkRows();
+                    return;
+                }
+            }
+        }
+    }
+    public void checkRows() {
         for(int outer = 15; outer >= 0; outer--) {
             int count = 0;
             for(int inner = 0; inner < 10; inner++) {
@@ -92,7 +98,7 @@ class SirtetGrid {
     }
     public void swapHeld() {
         int currentHigh = 15;
-        for(SonimortetPositions position : getLastSonimortet().getPositions()) {
+        for(SonimortetPositions position : getLastPositions()) {
             if(position.getY() < currentHigh) currentHigh = position.getY();
         }
         if(currentHigh >= 2) return;

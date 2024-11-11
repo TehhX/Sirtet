@@ -3,6 +3,7 @@ class Sonimortet {
     private int rotation;
     private final SirtetGrid parentGrid;
     private SonimortetPositions[] positions;
+    private GameplayTimers timer;
     public Sonimortet(char type, SirtetGrid parentGrid) {
         rotation = 0;
         this.type = type;
@@ -11,38 +12,33 @@ class Sonimortet {
         setStartingPositions();
     }
     public void setStartingPositions() {
-        int[] x;
-        int[] y;
+        int[][] startingPositions = getStartingPositions(type);
+        parentGrid.updateGrid();
+        for(int i = 0; i < 4; i++) {
+            if(parentGrid.getGrid(startingPositions[0][i], startingPositions[1][i])) {
+                System.exit(0); // Replace with gameOver() method to be made later.
+            }
+        }
+        for(int i = 0; i < 4; i++) {
+            positions[i] = new SonimortetPositions(startingPositions[0][i], startingPositions[1][i]);
+        }
+    }
+    public static int[][] getStartingPositions(char type) {
         switch(type) {
             case 'O':
-                x = new int[]{4, 5, 4, 5};
-                y = new int[]{0, 0, 1, 1};
-                break;
+                return new int[][]{{4, 5, 4, 5}, {0, 0, 1, 1}};
             case 'I':
-                x = new int[]{4, 4, 4, 4};
-                y = new int[]{0, 1, 2, 3};
-                break;
+                return new int[][]{{4, 4, 4, 4}, {0, 1, 2, 3}};
             case 'S':
-                x = new int[]{4, 5, 5, 6};
-                y = new int[]{1, 1, 0, 0};
-                break;
+                return new int[][]{{4, 5, 5, 6}, {1, 1, 0, 0}};
             case 'Z':
-                x = new int[]{4, 5, 5, 6};
-                y = new int[]{0, 0, 1, 1};
-                break;
+                return new int[][]{{4, 5, 5, 6}, {0, 0, 1, 1}};
             case 'L':
-                x = new int[]{4, 4, 4, 5};
-                y = new int[]{0, 1, 2, 2};
-                break;
+                return new int[][]{{4, 4, 4, 5}, {0, 1, 2, 2}};
             case 'J':
-                x = new int[]{5, 5, 5, 4};
-                y = new int[]{0, 1, 2, 2};
-                break;
-            default:
-                x = new int[]{4, 5, 5, 6};
-                y = new int[]{0, 0, 1, 0};
+                return new int[][]{{5, 5, 5, 4}, {0, 1, 2, 2}};
         }
-        for(int i = 0; i < 4; i++) positions[i] = new SonimortetPositions(x[i], y[i]);
+        return new int[][]{{4, 5, 5, 6}, {0, 0, 1, 0}};
     }
     public boolean checkSurrounding(int xOffset, int yOffset) {
         for(int i = 0; i < positions.length; i++) {
@@ -57,7 +53,7 @@ class Sonimortet {
         }
         int x = positions[index].getX();
         int y = positions[index].getY();
-        if(y + yOffset > 15 && yOffset > 0) return true;
+        if(y + yOffset > 15) return true;
         if(x + xOffset < 0 && xOffset < 0) return true;
         if(x + xOffset > 9 && xOffset > 0) return true;
         if(parentGrid.getGrid(x + xOffset, y + yOffset)) {
@@ -90,11 +86,13 @@ class Sonimortet {
                 positions.shiftSingle(0, 1, false);
             }
         }
-        parentGrid.addSonimortet(' ');
+        parentGrid.addSonimortet();
+        new GameplayTimers().decrementTimer();
     }
     public void softDrop() {
         if(checkSurrounding(0, 1)) return;
         shiftAll(0, 1, false);
+        restartTimer();
     }
     public void shiftLeft() {
         if(checkSurrounding(-1, 0)) return;
@@ -108,6 +106,10 @@ class Sonimortet {
         for(SonimortetPositions position : positions) {
             position.shiftSingle(x, y, invert);
         }
+    }
+    public void restartTimer() {
+        if(timer != null) timer.stopTimer();
+        timer = new GameplayTimers(parentGrid.parentScene);
     }
     public void rotate(boolean counterClockwise) {
         if(type == 'O') return;
