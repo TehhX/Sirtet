@@ -1,1 +1,1 @@
-A java application version of Tetris, made for my own personal use.
+Sirtet is a tetris clone in java.
