@@ -1,12 +1,17 @@
 import javax.swing.*;
-class MenuScene {
-    private JPanel panel;
-    public MenuScene() {
-        panel = new JPanel();
-        panel.setLayout(null);
-        panel.setSize(950, 950);
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+class MenuScene extends JPanel implements KeyListener {
+    private SirtetWindow frame;
+    public MenuScene(SirtetWindow frame) {
+        this.setLayout(null);
+        this.frame = frame;
+        this.setBackground(Color.blue);
     }
-    public JPanel getPanel() {
-        return panel;
+    public void keyPressed(KeyEvent e) {
+        frame.changeScene(1);
     }
+    public void keyTyped(KeyEvent e) {}
+    public void keyReleased(KeyEvent e) {}
 }

@@ -1,10 +1,11 @@
 import java.util.ArrayList;
 class SirtetGrid {
-    public boolean[][] grid;
+    private boolean[][] grid;
     private char held;
     private int rowsCleared;
-    GameplayScene parentScene;
-    private final ArrayList<Sonimortet> sonimortetList = new ArrayList<>();
+    private GameplayTimers timer;
+    private GameplayScene parentScene;
+    private ArrayList<Sonimortet> sonimortetList = new ArrayList<>();
     public SirtetGrid(GameplayScene parentScene) {
         rowsCleared = 0;
         grid = new boolean[10][16];
@@ -15,9 +16,10 @@ class SirtetGrid {
         sonimortetList.add(new Sonimortet(type, this));
     }
     public void addSonimortet() {
-        sonimortetList.add(new Sonimortet(randomChar(), this));
+        sonimortetList.add(new Sonimortet('I', this));
         parentScene.pointIncrease();
-        getLastSonimortet().restartTimer();
+        restartTimer();
+        updateGrid();
     }
     public char randomChar() {
         switch((int) (Math.random() * 7)) {
@@ -43,6 +45,10 @@ class SirtetGrid {
     public SonimortetPositions[] getLastPositions() {
         return getLastSonimortet().getPositions();
     }
+    public void restartTimer() {
+        if(timer != null) timer.stopTimer();
+        timer = new GameplayTimers(this);
+    }
     public void updateGrid() {
         grid = new boolean[10][16];
         for (Sonimortet sonimortet : sonimortetList) {
@@ -56,10 +62,11 @@ class SirtetGrid {
             for(SonimortetPositions sonimortet : getLastPositions()) {
                 if(sonimortet.getY() == 0) {
                     checkRows();
-                    return;
+                    break;
                 }
             }
         }
+        parentScene.repaint();
     }
     public void checkRows() {
         for(int outer = 15; outer >= 0; outer--) {
@@ -93,8 +100,9 @@ class SirtetGrid {
                 }
             }
         }
-        parentScene.repaint();
         updateGrid();
+        // Reaches this point every time an individual row is clear
+        // i.e. for a tetris, any code here will execute 4 times.
     }
     public void swapHeld() {
         int currentHigh = 15;
@@ -106,6 +114,9 @@ class SirtetGrid {
         held = getLastSonimortet().getType();
         sonimortetList.remove(getLastSonimortet());
         addSonimortet(tempType);
+    }
+    public GameplayScene getParentScene() {
+        return parentScene;
     }
     public char getHeld() {
         return held;

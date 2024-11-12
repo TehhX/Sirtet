@@ -3,6 +3,10 @@ class SirtetWindow {
     private JFrame frame;
     private final int sizeX;
     private final int sizeY;
+    private GameplayScene gameplayScene;
+    private MenuScene menuScene;
+    private HighScoreScene highScoreScene;
+    private GameOverScene gameOverScene;
     public SirtetWindow() {
         sizeX = 966;
         sizeY = 989;
@@ -20,23 +24,51 @@ class SirtetWindow {
         frame.setVisible(true);
         return frame;
     }
+    public void removeAll() {
+        if(menuScene != null) {
+            frame.remove(menuScene);
+            frame.removeKeyListener(menuScene);
+            menuScene = null;
+        } else if(gameplayScene != null) {
+            frame.remove(gameplayScene);
+            frame.removeKeyListener(gameplayScene);
+            gameplayScene = null;
+        } else if(gameOverScene != null) {
+            frame.remove(gameOverScene);
+            frame.removeKeyListener(gameOverScene);
+            gameOverScene = null;
+        } else if (highScoreScene != null){
+            frame.remove(highScoreScene);
+            frame.removeKeyListener(highScoreScene);
+            highScoreScene = null;
+        }
+    }
     public void changeScene(int sceneNum) {
-        frame.getContentPane().removeAll();
+        removeAll();
         switch(sceneNum) {
             case 0:
-                frame.add(new MenuScene().getPanel());
+                menuScene = new MenuScene(this);
+                menuScene.setSize(sizeX, sizeY);
+                frame.addKeyListener(menuScene);
+                frame.add(menuScene);
                 break;
             case 1:
-                GameplayScene gameplayScene = new GameplayScene();
+                gameplayScene = new GameplayScene(this);
                 gameplayScene.setSize(sizeX, sizeY);
                 frame.addKeyListener(gameplayScene);
                 frame.add(gameplayScene);
                 break;
             case 2:
-                frame.add(new GameOverScene().getPanel());
+                gameOverScene = new GameOverScene(this);
+                gameOverScene.setSize(sizeX, sizeY);
+                frame.addKeyListener(gameOverScene);
+                frame.add(gameOverScene);
                 break;
             case 3:
-                frame.add(new HighScoreScene().getPanel());
+                highScoreScene = new HighScoreScene(this);
+                highScoreScene.setSize(sizeX, sizeY);
+                frame.addKeyListener(highScoreScene);
+                frame.add(highScoreScene);
                 break;
             default:
         }

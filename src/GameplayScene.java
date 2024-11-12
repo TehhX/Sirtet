@@ -4,9 +4,11 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 class GameplayScene extends JPanel implements KeyListener {
     private int currentPoints;
+    private SirtetWindow frame;
     private SirtetGrid grid;
     private final JLabel scoreLabel;
-    public GameplayScene() {
+    public GameplayScene(SirtetWindow frame) {
+        this.frame = frame;
         currentPoints = -25;
         grid = new SirtetGrid(this);
         scoreLabel = labelSetup();
@@ -23,19 +25,18 @@ class GameplayScene extends JPanel implements KeyListener {
     }
     public void pointIncrease(int rowsCleared) {
         if(rowsCleared == 0) return;
-        currentPoints -= 25;
         switch (rowsCleared) {
             case 1:
-                currentPoints += 100;
+                currentPoints += 75;
                 break;
             case 2:
-                currentPoints += 800;
+                currentPoints += 775;
                 break;
             case 3:
-                currentPoints += 1200;
+                currentPoints += 1175;
                 break;
             default:
-                currentPoints += 1600;
+                currentPoints += 1575;
         }
     }
     public void pointIncrease() {
@@ -44,7 +45,6 @@ class GameplayScene extends JPanel implements KeyListener {
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        grid.updateGrid();
         for(int outer = 0; outer < 10; outer++) {
             for(int inner = 0; inner < 16; inner++) {
                 g.setColor(grid.getGrid(outer, inner) ? Color.green : Color.red);
@@ -89,19 +89,24 @@ class GameplayScene extends JPanel implements KeyListener {
                 grid.getLastSonimortet().hardDrop();
                 break;
             case 'e':
-                grid.getLastSonimortet().rotate(false);
+                grid.getLastSonimortet().rotateClock();
                 break;
             case 'q':
-                grid.getLastSonimortet().rotate(true);
+                grid.getLastSonimortet().rotateCounter();
                 break;
             case 'f':
                 grid.swapHeld();
                 break;
+            case 'o':
+                frame.changeScene(0);
+                break;
         }
-        repaint();
     }
     public SirtetGrid getGrid() {
         return grid;
+    }
+    public SirtetWindow getFrame() {
+        return frame;
     }
     public void keyTyped(KeyEvent e) {}
     public void keyReleased(KeyEvent e) {}

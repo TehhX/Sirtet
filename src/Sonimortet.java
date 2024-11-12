@@ -3,7 +3,6 @@ class Sonimortet {
     private int rotation;
     private final SirtetGrid parentGrid;
     private SonimortetPositions[] positions;
-    private GameplayTimers timer;
     public Sonimortet(char type, SirtetGrid parentGrid) {
         rotation = 0;
         this.type = type;
@@ -16,7 +15,7 @@ class Sonimortet {
         parentGrid.updateGrid();
         for(int i = 0; i < 4; i++) {
             if(parentGrid.getGrid(startingPositions[0][i], startingPositions[1][i])) {
-                System.exit(0); // Replace with gameOver() method to be made later.
+                parentGrid.getParentScene().getFrame().changeScene(2);
             }
         }
         for(int i = 0; i < 4; i++) {
@@ -92,7 +91,7 @@ class Sonimortet {
     public void softDrop() {
         if(checkSurrounding(0, 1)) return;
         shiftAll(0, 1, false);
-        restartTimer();
+        parentGrid.restartTimer();
     }
     public void shiftLeft() {
         if(checkSurrounding(-1, 0)) return;
@@ -106,57 +105,41 @@ class Sonimortet {
         for(SonimortetPositions position : positions) {
             position.shiftSingle(x, y, invert);
         }
+        parentGrid.updateGrid();
     }
-    public void restartTimer() {
-        if(timer != null) timer.stopTimer();
-        timer = new GameplayTimers(parentGrid.parentScene);
-    }
-    public void rotate(boolean counterClockwise) {
+    public void rotateClock() {
         if(type == 'O') return;
-        if(counterClockwise) {
-            switch(rotation) {
-                case 0:
-                    rotate3(true);
-                    break;
-                case 1:
-                    rotate0(true);
-                    break;
-                case 2:
-                    rotate1(true);
-                    break;
-                default:
-                    rotate2(true);
-            }
-        } else {
-            switch(rotation) {
-                case 0:
-                    rotate0(false);
-                    break;
-                case 1:
-                    rotate1(false);
-                    break;
-                case 2:
-                    rotate2(false);
-                    break;
-                default:
-                    rotate3(false);
-            }
+        switch(rotation) {
+            case 0:
+                rotate0(false);
+                break;
+            case 1:
+                rotate1(false);
+                break;
+            case 2:
+                rotate2(false);
+                break;
+            default:
+                rotate3(false);
         }
+        parentGrid.updateGrid();
     }
-    public void updateRotation(boolean counterClockwise) {
-        if(counterClockwise) {
-            if(rotation == 0) {
-                rotation = 3;
-                return;
-            }
-            rotation--;
-        } else {
-            if(rotation == 3) {
-                rotation = 0;
-                return;
-            }
-            rotation++;
+    public void rotateCounter() {
+        if(type == 'O') return;
+        switch(rotation) {
+            case 0:
+                rotate3(true);
+                break;
+            case 1:
+                rotate0(true);
+                break;
+            case 2:
+                rotate1(true);
+                break;
+            default:
+                rotate2(true);
         }
+        parentGrid.updateGrid();
     }
     public void rotate0(boolean invert) {
         int[] x;
@@ -186,9 +169,7 @@ class Sonimortet {
                 x = new int[]{0, 0, 0, -1};
                 y = new int[]{1, 0, 0, 2};
         }
-        for(int i = 0; i < 4; i++) if(checkSurrounding(i, x[i], y[i], invert)) return;
-        for(int i = 0; i < 4; i++) positions[i].shiftSingle(x[i], y[i], invert);
-        updateRotation(invert);
+        executeRotate(x, y, invert);
     }
     public void rotate1(boolean invert) {
         int[] x;
@@ -218,9 +199,7 @@ class Sonimortet {
                 x = new int[]{0, 0, 0, 1};
                 y = new int[]{0, 0, 0, -1};
         }
-        for(int i = 0; i < 4; i++) if(checkSurrounding(i, x[i], y[i], invert)) return;
-        for(int i = 0; i < 4; i++) positions[i].shiftSingle(x[i], y[i], invert);
-        updateRotation(invert);
+        executeRotate(x, y, invert);
     }
     public void rotate2(boolean invert) {
         int[] x;
@@ -243,9 +222,7 @@ class Sonimortet {
                 x = new int[]{0, -1, 0, -2};
                 y = new int[]{0, 0, 0, 1};
         }
-        for(int i = 0; i < 4; i++) if(checkSurrounding(i, x[i], y[i], invert)) return;
-        for(int i = 0; i < 4; i++) positions[i].shiftSingle(x[i], y[i], invert);
-        updateRotation(invert);
+        executeRotate(x, y, invert);
     }
     public void rotate3(boolean invert) {
         int[] x;
@@ -268,9 +245,13 @@ class Sonimortet {
                 x = new int[]{0, 1, 0, 2};
                 y = new int[]{-1, 0, 0, -2};
         }
+        executeRotate(x, y, invert);
+    }
+    public void executeRotate(int[] x, int[] y, boolean invert) {
         for(int i = 0; i < 4; i++) if(checkSurrounding(i, x[i], y[i], invert)) return;
         for(int i = 0; i < 4; i++) positions[i].shiftSingle(x[i], y[i], invert);
-        updateRotation(invert);
+        if(rotation == (invert ? 0 : 3)) rotation = (invert ? 3 : 0);
+        else rotation += (invert ? -1 : 1);
     }
     public char getType() {
         return type;

@@ -1,12 +1,14 @@
 import javax.swing.*;
-class HighScoreScene {
-    private JPanel panel;
-    public HighScoreScene() {
-        panel = new JPanel();
-        panel.setLayout(null);
-        panel.setSize(950, 950);
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+class HighScoreScene extends JPanel implements KeyListener {
+    private SirtetWindow frame;
+    public HighScoreScene(SirtetWindow frame) {
     }
-    public JPanel getPanel() {
-        return panel;
+    public void keyPressed(KeyEvent e) {
+
     }
+    public void keyTyped(KeyEvent e) {}
+    public void keyReleased(KeyEvent e) {}
 }
