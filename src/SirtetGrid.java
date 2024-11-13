@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 class SirtetGrid {
     private boolean[][] grid;
-    private char held;
+    private int held;
     private int rowsCleared;
     private GameplayTimers timer;
     private GameplayScene parentScene;
@@ -9,35 +9,18 @@ class SirtetGrid {
     public SirtetGrid(GameplayScene parentScene) {
         rowsCleared = 0;
         grid = new boolean[10][16];
-        held = randomChar();
+        held = (int) (Math.random() * 7);
         this.parentScene = parentScene;
+        new GameplayTimers().resetTimer();
+        addSonimortet();
     }
-    public void addSonimortet(char type) {
+    public void addSonimortet(int type) {
         sonimortetList.add(new Sonimortet(type, this));
     }
     public void addSonimortet() {
-        sonimortetList.add(new Sonimortet('I', this));
+        sonimortetList.add(new Sonimortet((int) (Math.random() * 7), this));
         parentScene.pointIncrease();
-        restartTimer();
-        updateGrid();
-    }
-    public char randomChar() {
-        switch((int) (Math.random() * 7)) {
-            case 0:
-                return  'O';
-            case 1:
-                return  'I';
-            case 2:
-                return  'S';
-            case 3:
-                return  'Z';
-            case 4:
-                return  'L';
-            case 5:
-                return  'J';
-            default:
-                return 'T';
-        }
+        updateGrid(true);
     }
     public Sonimortet getLastSonimortet() {
         return sonimortetList.get(sonimortetList.size() - 1);
@@ -49,7 +32,12 @@ class SirtetGrid {
         if(timer != null) timer.stopTimer();
         timer = new GameplayTimers(this);
     }
-    public void updateGrid() {
+    public void stopTimer() {
+        if(timer == null) return;
+        timer.stopTimer();
+        timer = null;
+    }
+    public void updateGrid(boolean repaint) {
         grid = new boolean[10][16];
         for (Sonimortet sonimortet : sonimortetList) {
             for (int inner = 0; inner < sonimortet.getPositions().length; inner++) {
@@ -58,15 +46,13 @@ class SirtetGrid {
                 grid[x][y] = true;
             }
         }
-        if(!sonimortetList.isEmpty()) {
-            for(SonimortetPositions sonimortet : getLastPositions()) {
-                if(sonimortet.getY() == 0) {
-                    checkRows();
-                    break;
-                }
+        for (SonimortetPositions sonimortet : getLastPositions()) {
+            if (sonimortet.getY() == 0) {
+                checkRows();
+                break;
             }
         }
-        parentScene.repaint();
+        if(repaint) parentScene.repaint();
     }
     public void checkRows() {
         for(int outer = 15; outer >= 0; outer--) {
@@ -100,7 +86,7 @@ class SirtetGrid {
                 }
             }
         }
-        updateGrid();
+        updateGrid(false);
         // Reaches this point every time an individual row is clear
         // i.e. for a tetris, any code here will execute 4 times.
     }
@@ -110,18 +96,32 @@ class SirtetGrid {
             if(position.getY() < currentHigh) currentHigh = position.getY();
         }
         if(currentHigh >= 2) return;
-        char tempType = held;
+        int tempType = held;
         held = getLastSonimortet().getType();
         sonimortetList.remove(getLastSonimortet());
+        updateGrid(false);
         addSonimortet(tempType);
+        updateGrid(true);
     }
     public GameplayScene getParentScene() {
         return parentScene;
     }
-    public char getHeld() {
+    public void printGrid() {
+        for(int outer = 0; outer < 10; outer++) {
+            for(int inner = 0; inner < 16; inner++) {
+               if(grid[outer][inner]) System.out.println(outer + ", " + inner);
+            }
+            System.out.println();
+        }
+    }
+    public int getHeldType() {
         return held;
     }
     public boolean getGrid(int outerIndex, int innerIndex) {
         return grid[outerIndex][innerIndex];
+    }
+
+    public ArrayList<Sonimortet> getSonimortetList() {
+        return sonimortetList;
     }
 }

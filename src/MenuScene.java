@@ -1,5 +1,4 @@
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 class MenuScene extends JPanel implements KeyListener {
@@ -7,7 +6,9 @@ class MenuScene extends JPanel implements KeyListener {
     public MenuScene(SirtetWindow frame) {
         this.setLayout(null);
         this.frame = frame;
-        this.setBackground(Color.blue);
+        JLabel label  = new JLabel("MenuScene (Press Any)");
+        label.setBounds(0, 0, 1000, 100);
+        this.add(label);
     }
     public void keyPressed(KeyEvent e) {
         frame.changeScene(1);

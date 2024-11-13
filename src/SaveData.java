@@ -1,8 +1,9 @@
-import java.io.*;
-import java.util.*;
+import java.io.FileReader;
+import java.io.PrintWriter;
+import java.util.Scanner;
 class SaveData {
     private static String currentName = null;
-    private final static HighScore[] highScores = new HighScore[10];
+    private static HighScore[] highScores = new HighScore[10];
     private static int volume;
     public SaveData() {
         for(int i = 0; i < 10; i++) {

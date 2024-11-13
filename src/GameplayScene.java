@@ -2,25 +2,32 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
 class GameplayScene extends JPanel implements KeyListener {
     private int currentPoints;
     private SirtetWindow frame;
     private SirtetGrid grid;
-    private final JLabel scoreLabel;
-    public GameplayScene(SirtetWindow frame) {
+    private JLabel scoreLabel;
+    private BufferedImage[] images;
+    private ImageObserver observer;
+    public GameplayScene(SirtetWindow frame, BufferedImage[] images) {
         this.frame = frame;
+        this.images = images;
         currentPoints = -25;
         grid = new SirtetGrid(this);
         scoreLabel = labelSetup();
         this.setLayout(null);
         this.add(scoreLabel);
-        grid.addSonimortet();
+        observer = new ImageObserver() {
+            public boolean imageUpdate(Image img, int infoFlags, int x, int y, int width, int height) {
+                return false;
+            }
+        };
     }
     public JLabel labelSetup() {
         JLabel label = new JLabel();
         label.setBounds(500, 100, 500, 200);
-        label.setFont(new Font("Impact", Font.BOLD, 70));
-        label.setForeground(Color.blue);
         return label;
     }
     public void pointIncrease(int rowsCleared) {
@@ -45,20 +52,19 @@ class GameplayScene extends JPanel implements KeyListener {
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        for(int outer = 0; outer < 10; outer++) {
-            for(int inner = 0; inner < 16; inner++) {
-                g.setColor(grid.getGrid(outer, inner) ? Color.green : Color.red);
-                g.fillRect(200 + 28 * outer, 50 + 28 * inner, 25, 25);
+        for (Sonimortet sonimortet : grid.getSonimortetList()) {
+            Image currentImage = images[sonimortet.getType()];
+            for(SonimortetPositions pos : sonimortet.getPositions()) {
+                g.drawImage(currentImage, 200 + 28 * pos.getX(), 50 + 28 * pos.getY(), 25, 25, observer);
             }
         }
         g.setColor(Color.green);
-        if(grid.getHeld() != ' ') {
-            boolean[][] heldGrid = getHeldGrid();
-            for(int outer = 0; outer < 3; outer++) {
-                for(int inner = 0; inner < 4; inner++) {
-                    if(heldGrid[outer][inner]) {
-                        g.fillRect(50 + 28 * outer, 50 + 28 * inner, 25, 25);
-                    }
+        boolean[][] heldGrid = getHeldGrid();
+        Image currentImage = images[grid.getHeldType()];
+        for(int outer = 0; outer < 3; outer++) {
+            for(int inner = 0; inner < 4; inner++) {
+                if(heldGrid[outer][inner]) {
+                    g.drawImage(currentImage, 50 + 28 * outer, 50 + 28 * inner, 25, 25, observer);
                 }
             }
         }
@@ -66,7 +72,7 @@ class GameplayScene extends JPanel implements KeyListener {
     }
     public boolean[][] getHeldGrid() {
         boolean[][] heldGrid = new boolean[3][4];
-        int[][] startPos = Sonimortet.getStartingPositions(grid.getHeld());
+        int[][] startPos = Sonimortet.getStartingPositions(grid.getHeldType());
         for(int outer = 0; outer < 4; outer++) {
             for(int inner = 0; inner < 4; inner++) {
                 heldGrid[startPos[0][inner] - 4][startPos[1][inner]] = true;
@@ -75,30 +81,33 @@ class GameplayScene extends JPanel implements KeyListener {
         return heldGrid;
     }
     public void keyPressed(KeyEvent e) {
-        switch(e.getKeyChar()) {
-            case 'a':
+        switch(e.getKeyCode()) {
+            case 65:
                 grid.getLastSonimortet().shiftLeft();
                 break;
-            case 's':
+            case 83:
                 grid.getLastSonimortet().softDrop();
                 break;
-            case 'd':
+            case 68:
                 grid.getLastSonimortet().shiftRight();
                 break;
-            case ' ':
+            case 32:
                 grid.getLastSonimortet().hardDrop();
                 break;
-            case 'e':
+            case 69:
                 grid.getLastSonimortet().rotateClock();
                 break;
-            case 'q':
+            case 81:
                 grid.getLastSonimortet().rotateCounter();
                 break;
-            case 'f':
+            case 70:
                 grid.swapHeld();
                 break;
-            case 'o':
+            case 79:
                 frame.changeScene(0);
+                break;
+            case 27:
+                System.exit(0);
                 break;
         }
     }

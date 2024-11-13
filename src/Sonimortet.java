@@ -1,9 +1,9 @@
 class Sonimortet {
-    private final char type;
+    private int type;
     private int rotation;
-    private final SirtetGrid parentGrid;
+    private SirtetGrid parentGrid;
     private SonimortetPositions[] positions;
-    public Sonimortet(char type, SirtetGrid parentGrid) {
+    public Sonimortet(int type, SirtetGrid parentGrid) {
         rotation = 0;
         this.type = type;
         this.parentGrid = parentGrid;
@@ -11,30 +11,33 @@ class Sonimortet {
         setStartingPositions();
     }
     public void setStartingPositions() {
+        boolean startTimer = true;
         int[][] startingPositions = getStartingPositions(type);
-        parentGrid.updateGrid();
         for(int i = 0; i < 4; i++) {
             if(parentGrid.getGrid(startingPositions[0][i], startingPositions[1][i])) {
+                parentGrid.stopTimer();
                 parentGrid.getParentScene().getFrame().changeScene(2);
+                startTimer = false;
             }
         }
         for(int i = 0; i < 4; i++) {
             positions[i] = new SonimortetPositions(startingPositions[0][i], startingPositions[1][i]);
         }
+        if(startTimer) parentGrid.restartTimer();
     }
-    public static int[][] getStartingPositions(char type) {
+    public static int[][] getStartingPositions(int type) {
         switch(type) {
-            case 'O':
+            case 0:
                 return new int[][]{{4, 5, 4, 5}, {0, 0, 1, 1}};
-            case 'I':
+            case 1:
                 return new int[][]{{4, 4, 4, 4}, {0, 1, 2, 3}};
-            case 'S':
+            case 2:
                 return new int[][]{{4, 5, 5, 6}, {1, 1, 0, 0}};
-            case 'Z':
+            case 3:
                 return new int[][]{{4, 5, 5, 6}, {0, 0, 1, 1}};
-            case 'L':
+            case 4:
                 return new int[][]{{4, 4, 4, 5}, {0, 1, 2, 2}};
-            case 'J':
+            case 5:
                 return new int[][]{{5, 5, 5, 4}, {0, 1, 2, 2}};
         }
         return new int[][]{{4, 5, 5, 6}, {0, 0, 1, 0}};
@@ -46,6 +49,7 @@ class Sonimortet {
         return false;
     }
     public boolean checkSurrounding(int index, int xOffset, int yOffset, boolean invert) {
+        parentGrid.updateGrid(false);
         if(invert) {
             xOffset *= -1;
             yOffset *= -1;
@@ -105,10 +109,10 @@ class Sonimortet {
         for(SonimortetPositions position : positions) {
             position.shiftSingle(x, y, invert);
         }
-        parentGrid.updateGrid();
+        parentGrid.updateGrid(true);
     }
     public void rotateClock() {
-        if(type == 'O') return;
+        if(type == 0) return;
         switch(rotation) {
             case 0:
                 rotate0(false);
@@ -122,10 +126,10 @@ class Sonimortet {
             default:
                 rotate3(false);
         }
-        parentGrid.updateGrid();
+        parentGrid.updateGrid(true);
     }
     public void rotateCounter() {
-        if(type == 'O') return;
+        if(type == 0) return;
         switch(rotation) {
             case 0:
                 rotate3(true);
@@ -139,29 +143,29 @@ class Sonimortet {
             default:
                 rotate2(true);
         }
-        parentGrid.updateGrid();
+        parentGrid.updateGrid(true);
     }
     public void rotate0(boolean invert) {
         int[] x;
         int[] y;
         switch(type) {
-            case 'I':
+            case 1:
                 x = new int[]{0, 1, 2, 3};
                 y = new int[]{0, -1, -2, -3};
                 break;
-            case 'S':
+            case 2:
                 x = new int[]{0, 0, -1, -1};
                 y = new int[]{0, 0, 0, 2};
                 break;
-            case 'Z':
+            case 3:
                 x = new int[]{0, 0, 0, -2};
                 y = new int[]{1, 0, 0, 1};
                 break;
-            case 'L':
+            case 4:
                 x = new int[]{0, 0, 1, 1};
                 y = new int[]{0, 0, -2, -2};
                 break;
-            case 'J':
+            case 5:
                 x = new int[]{-1, 0, 1, 0};
                 y = new int[]{0, 0, -1, -1};
                 break;
@@ -175,23 +179,23 @@ class Sonimortet {
         int[] x;
         int[] y;
         switch(type) {
-            case 'I':
+            case 1:
                 x = new int[]{0, -1, -2, -3};
                 y = new int[]{0, 1, 2, 3};
                 break;
-            case 'S':
+            case 2:
                 x = new int[]{0, 0, 1, 1};
                 y = new int[]{0, 0, 0, -2};
                 break;
-            case 'Z':
+            case 3:
                 x = new int[]{0, 0, 0, 2};
                 y = new int[]{-1, 0, 0, -1};
                 break;
-            case 'L':
+            case 4:
                 x = new int[]{0, 1, 0, -1};
                 y = new int[]{0, 1, 0, 1};
                 break;
-            case 'J':
+            case 5:
                 x = new int[]{0, 0, -2, 0};
                 y = new int[]{0, -1, 1, 0};
                 break;
@@ -205,16 +209,16 @@ class Sonimortet {
         int[] x;
         int[] y;
         switch(type) {
-            case 'I':
-            case 'S':
-            case 'Z':
+            case 1:
+            case 2:
+            case 3:
                 rotate0(invert);
                 return;
-            case 'L':
+            case 4:
                 x = new int[]{0, 1, 1, 0};
                 y = new int[]{1, -1, 0, 0};
                 break;
-            case 'J':
+            case 5:
                 x = new int[]{0, 0, 2, 2};
                 y = new int[]{0, 0, -1, -1};
                 break;
@@ -228,16 +232,16 @@ class Sonimortet {
         int[] x;
         int[] y;
         switch(type) {
-            case 'I':
-            case 'S':
-            case 'Z':
+            case 1:
+            case 2:
+            case 3:
                 rotate1(invert);
                 return;
-            case 'L':
+            case 4:
                 x = new int[]{0, -2, -2, 0};
                 y = new int[]{-1, 0, 2, 1};
                 break;
-            case 'J':
+            case 5:
                 x = new int[]{1, 0, -1, -2};
                 y = new int[]{0, 1, 1, 2};
                 break;
@@ -253,7 +257,7 @@ class Sonimortet {
         if(rotation == (invert ? 0 : 3)) rotation = (invert ? 3 : 0);
         else rotation += (invert ? -1 : 1);
     }
-    public char getType() {
+    public int getType() {
         return type;
     }
     public SonimortetPositions[] getPositions() {

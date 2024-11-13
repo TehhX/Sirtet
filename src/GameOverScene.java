@@ -1,5 +1,4 @@
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 class GameOverScene extends JPanel implements KeyListener {
@@ -7,10 +6,11 @@ class GameOverScene extends JPanel implements KeyListener {
     public GameOverScene(SirtetWindow frame) {
         this.setLayout(null);
         this.frame = frame;
-        this.setBackground(Color.blue);
+        JLabel label  = new JLabel("GameOverScene (Press Any)");
+        label.setBounds(0, 0, 1000, 100);
+        this.add(label);
     }
     public void keyPressed(KeyEvent e) {
-        System.out.println("New GameplayScene");
         frame.changeScene(1);
     }
     public void keyTyped(KeyEvent e) {}
