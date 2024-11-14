@@ -81,14 +81,17 @@ class Sonimortet {
                 newIndex++;
             }
         }
-        // if(positions.length == 0) If the whole sonimortet is deleted.
+        // if(positions.length == 0) parentGrid.getSonimortetList().remove(this);
+    }
+    public int getDropCount() {
+        int i = 1;
+        while(!checkSurrounding(0, i)) {
+            i++;
+        }
+        return i - 1;
     }
     public void hardDrop() {
-        while(!checkSurrounding(0, 1)) {
-            for(SonimortetPositions positions : positions) {
-                positions.shiftSingle(0, 1, false);
-            }
-        }
+        shiftAll(0, getDropCount(), false);
         parentGrid.addSonimortet();
         new GameplayTimers().decrementTimer();
     }
@@ -252,7 +255,20 @@ class Sonimortet {
         executeRotate(x, y, invert);
     }
     public void executeRotate(int[] x, int[] y, boolean invert) {
-        for(int i = 0; i < 4; i++) if(checkSurrounding(i, x[i], y[i], invert)) return;
+        for(int outer = 0; outer < 4; outer++) if(checkSurrounding(outer, x[outer], y[outer], invert)) {
+            boolean canMove = true;
+            for(int inner = 0; inner < 4; inner++) {
+                if(checkSurrounding(inner, x[inner] - 1, y[inner], invert)) {
+                    canMove = false;
+                    break;
+                }
+            }
+            if(canMove) {
+                shiftAll(-1, 0, invert);
+                executeRotate(x, y, invert);
+            }
+            return;
+        }
         for(int i = 0; i < 4; i++) positions[i].shiftSingle(x[i], y[i], invert);
         if(rotation == (invert ? 0 : 3)) rotation = (invert ? 3 : 0);
         else rotation += (invert ? -1 : 1);
