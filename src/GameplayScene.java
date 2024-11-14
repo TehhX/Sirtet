@@ -47,6 +47,11 @@ class GameplayScene extends JPanel implements KeyListener {
         super.paint(g);
         Image currentImage = images[7];
         g.drawImage(currentImage, 0, 0, observer);
+        int yOffset = grid.getLastSonimortet().getDropCount();
+        for (SonimortetPositions pos : grid.getLastPositions()) {
+            g.setColor(new Color(184, 255, 230));
+            g.fillRect(173 + 38 * pos.getX(), 132 + 38 * (pos.getY() + yOffset), 36, 36);
+        }
         for (Sonimortet sonimortet : grid.getSonimortetList()) {
             currentImage = images[sonimortet.getType()];
             for(SonimortetPositions pos : sonimortet.getPositions()) {
