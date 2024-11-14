@@ -11,7 +11,7 @@ class GameOverScene extends JPanel implements KeyListener {
         this.add(label);
     }
     public void keyPressed(KeyEvent e) {
-        frame.changeScene(0);
+        frame.changeScene(1);
     }
     public void keyTyped(KeyEvent e) {}
     public void keyReleased(KeyEvent e) {}
