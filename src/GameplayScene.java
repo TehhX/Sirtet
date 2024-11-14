@@ -5,6 +5,7 @@ import java.awt.event.KeyListener;
 import java.awt.font.FontRenderContext;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
+import java.util.ConcurrentModificationException;
 class GameplayScene extends JPanel implements KeyListener {
     private int currentPoints;
     private SirtetWindow frame;
@@ -43,7 +44,7 @@ class GameplayScene extends JPanel implements KeyListener {
     public void pointIncrease() {
         currentPoints += 25;
     }
-    public void paint(Graphics g) {
+    public void paint(Graphics g) throws ConcurrentModificationException {
         super.paint(g);
         Image currentImage = images[7];
         g.drawImage(currentImage, 0, 0, observer);
