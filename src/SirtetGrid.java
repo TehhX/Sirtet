@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.util.ArrayList;
 class SirtetGrid {
     private boolean[][] grid;
@@ -91,11 +92,12 @@ class SirtetGrid {
         // i.e. for a tetris, any code here will execute 4 times.
     }
     public void swapHeld() {
+        if(sonimortetList.size() == 1) return;
         int currentHigh = 15;
         for(SonimortetPositions position : getLastPositions()) {
             if(position.getY() < currentHigh) currentHigh = position.getY();
         }
-        if(currentHigh >= 2) return;
+        if(currentHigh >= 4) return;
         int tempType = held;
         held = getLastSonimortet().getType();
         sonimortetList.remove(getLastSonimortet());
