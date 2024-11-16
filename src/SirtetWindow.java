@@ -1,8 +1,5 @@
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-class SirtetWindow {
+class SirtetWindow extends JFrame {
     private JFrame frame;
     final int FRAME_SIZE_X = 600;
     final int FRAME_SIZE_Y = 800;
@@ -10,23 +7,9 @@ class SirtetWindow {
     private MenuScene menuScene;
     private HighScoreScene highScoreScene;
     private GameOverScene gameOverScene;
-    private BufferedImage[] gameplaySceneImages = new BufferedImage[8];
     public SirtetWindow() {
-        loadImages();
         frame = frameSetup();
         changeScene(0);
-    }
-    public void loadImages() {
-        try {
-            for(int i = 0; i < 7; i++) {
-                gameplaySceneImages[i] = ImageIO.read(new File("Assets/piece" + i + ".png"));
-            }
-            gameplaySceneImages[7] = ImageIO.read(new File("Assets/gameplayScene.png"));
-        } catch(Exception e) {
-            System.out.println("Failed to load gameplaySceneImages.");
-            e.printStackTrace();
-            System.exit(1);
-        }
     }
     public JFrame frameSetup() {
         frame = new JFrame("Sirtet");
@@ -41,8 +24,7 @@ class SirtetWindow {
     }
     public void removeAll() {
         if(menuScene != null) {
-            frame.remove(menuScene);
-            frame.removeKeyListener(menuScene);
+            frame.getContentPane().remove(menuScene.getPanel());
             menuScene = null;
         } else if(gameplayScene != null) {
             frame.remove(gameplayScene);
@@ -55,7 +37,6 @@ class SirtetWindow {
             gameOverScene = null;
         } else if (highScoreScene != null){
             frame.remove(highScoreScene);
-            frame.removeKeyListener(highScoreScene);
             highScoreScene = null;
         }
     }
@@ -65,11 +46,10 @@ class SirtetWindow {
             case 0:
                 menuScene = new MenuScene(this);
                 menuScene.setSize(FRAME_SIZE_X, FRAME_SIZE_Y);
-                frame.addKeyListener(menuScene);
-                frame.add(menuScene);
+                frame.getContentPane().add(menuScene.getPanel());
                 break;
             case 1:
-                gameplayScene = new GameplayScene(this, gameplaySceneImages);
+                gameplayScene = new GameplayScene(this);
                 gameplayScene.setSize(FRAME_SIZE_X, FRAME_SIZE_Y);
                 frame.addKeyListener(gameplayScene);
                 frame.add(gameplayScene);
@@ -83,7 +63,6 @@ class SirtetWindow {
             case 3:
                 highScoreScene = new HighScoreScene(this);
                 highScoreScene.setSize(FRAME_SIZE_X, FRAME_SIZE_Y);
-                frame.addKeyListener(highScoreScene);
                 frame.add(highScoreScene);
                 break;
             default:

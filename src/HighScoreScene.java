@@ -1,13 +1,9 @@
 import javax.swing.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-class HighScoreScene extends JPanel implements KeyListener {
+class HighScoreScene extends JPanel {
     private SirtetWindow frame;
     public HighScoreScene(SirtetWindow frame) {
+        JLabel label = new JLabel("nothing in HighScoreScene yet, check back later :)");
+        label.setBounds(180, 0, 1000, 100);
+        this.add(label);
     }
-    public void keyPressed(KeyEvent e) {
-
-    }
-    public void keyTyped(KeyEvent e) {}
-    public void keyReleased(KeyEvent e) {}
 }

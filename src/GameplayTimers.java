@@ -4,9 +4,7 @@ class GameplayTimers {
     private Timer bigTimer;
     private static int tMinus = 1300;
     private static int timesDecremented = 0;
-    public GameplayTimers() {
-
-    }
+    public GameplayTimers() {}
     public GameplayTimers(SirtetGrid grid) {
         bigTimer = new Timer();
         TimerTask smallTimer = new TimerTask() {

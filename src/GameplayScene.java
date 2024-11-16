@@ -3,27 +3,17 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.font.FontRenderContext;
-import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
 import java.util.ConcurrentModificationException;
 class GameplayScene extends JPanel implements KeyListener {
     private int currentPoints;
     private SirtetWindow frame;
     private SirtetGrid grid;
-    private BufferedImage[] images;
-    private ImageObserver observer;
-    private final Font font = new Font("Bahnschrift", Font.PLAIN, 87);
-    public GameplayScene(SirtetWindow frame, BufferedImage[] images) {
+    private final Font font = new Font("Silkscreen", Font.PLAIN, 60);
+    public GameplayScene(SirtetWindow frame) {
         this.frame = frame;
-        this.images = images;
         currentPoints = -25;
         grid = new SirtetGrid(this);
         this.setLayout(null);
-        observer = new ImageObserver() {
-            public boolean imageUpdate(Image img, int infoFlags, int x, int y, int width, int height) {
-                return false;
-            }
-        };
     }
     public void pointIncrease(int rowsCleared) {
         if(rowsCleared == 0) return;
@@ -44,27 +34,33 @@ class GameplayScene extends JPanel implements KeyListener {
     public void pointIncrease() {
         currentPoints += 25;
     }
-    public void paint(Graphics g) throws ConcurrentModificationException {
+    public void paint(Graphics g) {
         super.paint(g);
-        Image currentImage = images[7];
-        g.drawImage(currentImage, 0, 0, observer);
+        g.setColor(new Color(135, 232, 155));
+        g.fillRect(0, 0, 600, 800);
+        Image currentImage;
         int yOffset = grid.getLastSonimortet().getDropCount();
         for (SonimortetPositions pos : grid.getLastPositions()) {
-            g.setColor(new Color(184, 255, 230));
+            g.setColor(new Color(103, 215, 237));
             g.fillRect(173 + 38 * pos.getX(), 132 + 38 * (pos.getY() + yOffset), 36, 36);
         }
-        for (Sonimortet sonimortet : grid.getSonimortetList()) {
-            currentImage = images[sonimortet.getType()];
-            for(SonimortetPositions pos : sonimortet.getPositions()) {
-                g.drawImage(currentImage, 173 + 38 * pos.getX(), 132 + 38 * pos.getY(), 36, 36, observer);
+        try {
+            for (Sonimortet sonimortet : grid.getSonimortetList()) {
+                currentImage = Sirtet.gameplaySceneImages[sonimortet.getType()];
+                for(SonimortetPositions pos : sonimortet.getPositions()) {
+                    g.drawImage(currentImage, 173 + 38 * pos.getX(), 132 + 38 * pos.getY(), 36, 36, Sirtet.observer);
+                }
             }
+        } catch (ConcurrentModificationException e) {
+            repaint();
+            return;
         }
         boolean[][] heldGrid = getHeldGrid();
-        currentImage = images[grid.getHeldType()];
+        currentImage = Sirtet.gameplaySceneImages[grid.getHeldType()];
         for(int outer = 0; outer < 3; outer++) {
             for(int inner = 0; inner < 4; inner++) {
                 if(heldGrid[outer][inner]) {
-                    g.drawImage(currentImage, 30 + 38 * outer, 132 + 38 * inner, 37, 38, observer);
+                    g.drawImage(currentImage, 30 + 38 * outer, 170 + 38 * inner, 37, 38, Sirtet.observer);
                 }
             }
         }
@@ -73,7 +69,9 @@ class GameplayScene extends JPanel implements KeyListener {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setFont(font);
         g2d.setColor(Color.black);
-        g2d.drawString(currentPoints + "", 550 - stringWidth, 100);
+        g2d.drawString(currentPoints + "", 550 - stringWidth, 90);
+        currentImage = Sirtet.gameplaySceneImages[7];
+        g.drawImage(currentImage, 0, 0, Sirtet.observer);
     }
     public boolean[][] getHeldGrid() {
         boolean[][] heldGrid = new boolean[3][4];
@@ -108,11 +106,8 @@ class GameplayScene extends JPanel implements KeyListener {
             case 70:
                 grid.swapHeld();
                 break;
-            case 79:
-                frame.changeScene(0);
-                break;
             case 27:
-                System.exit(0);
+                frame.changeScene(0);
                 break;
         }
     }

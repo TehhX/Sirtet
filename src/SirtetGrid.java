@@ -1,4 +1,3 @@
-import javax.swing.*;
 import java.util.ArrayList;
 class SirtetGrid {
     private boolean[][] grid;
@@ -97,13 +96,8 @@ class SirtetGrid {
         // i.e. for a tetris, any code here will execute 4 times.
     }
     public void swapHeld() {
-        if(swapsTurn == 2) return;
+        if(swapsTurn == 3) return;
         swapsTurn++;
-        int currentHigh = 15;
-        for(SonimortetPositions position : getLastPositions()) {
-            if(position.getY() < currentHigh) currentHigh = position.getY();
-        }
-        if(currentHigh >= 4) return;
         int tempType = held;
         held = getLastSonimortet().getType();
         sonimortetList.remove(getLastSonimortet());
@@ -113,14 +107,6 @@ class SirtetGrid {
     }
     public GameplayScene getParentScene() {
         return parentScene;
-    }
-    public void printGrid() {
-        for(int outer = 0; outer < 10; outer++) {
-            for(int inner = 0; inner < 16; inner++) {
-               if(grid[outer][inner]) System.out.println(outer + ", " + inner);
-            }
-            System.out.println();
-        }
     }
     public int getHeldType() {
         return held;
