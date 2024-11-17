@@ -4,17 +4,25 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.File;
 public class Sirtet {
-    public static BufferedImage[] gameplaySceneImages = new BufferedImage[8];
-    public static BufferedImage[] menuImages = new BufferedImage[7];
-    public static ImageObserver observer;
+    static BufferedImage[] gameplaySceneImages = new BufferedImage[8];
+    static BufferedImage[] menuImages = new BufferedImage[7];
+    static BufferedImage icon;
+    static ImageObserver observer;
+    static final int FRAME_SIZE_X = 600;
+    static final int FRAME_SIZE_Y = 800;
+    static final Font SILKSCREEN_60 = new Font("Silkscreen", Font.PLAIN, 60);
+    static final Font SILKSCREEN_40 = new Font("Silkscreen", Font.PLAIN, 40);
+    static final Font SILKSCREEN_30 = new Font("Silkscreen", Font.PLAIN, 30);
     public static void main(String[]args) {
         loadFonts();
         loadImages();
+        new SaveData();
         new SirtetWindow();
     }
     public static void loadImages() {
         observer = (img, infoflags, x, y, width, height) -> false;
         try {
+            icon = ImageIO.read(new File("Assets/Icon.png"));
             for(int i = 0; i < 7; i++) gameplaySceneImages[i] = ImageIO.read(new File("Assets/piece" + i + ".png"));
             gameplaySceneImages[7] = ImageIO.read(new File("Assets/gameplayScene.png"));
             menuImages[0] = ImageIO.read(new File("Assets/logo.png"));

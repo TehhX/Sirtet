@@ -16,6 +16,7 @@ class Sonimortet {
         for(int i = 0; i < 4; i++) {
             if(parentGrid.getGrid(startingPositions[0][i], startingPositions[1][i])) {
                 parentGrid.stopTimer();
+                SaveData.currentScore = parentGrid.getParentScene().getCurrentPoints();
                 parentGrid.getParentScene().getFrame().changeScene(2);
                 startTimer = false;
             }

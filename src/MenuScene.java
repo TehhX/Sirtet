@@ -14,10 +14,11 @@ class MenuScene extends JPanel implements ActionListener, MouseListener {
     public MenuScene(SirtetWindow frame) {
         this.frame = frame;
         this.setOpaque(false);
+        this.setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
         panel = new JPanel();
         panel.setBackground(new Color(135, 232, 155));
         panel.setLayout(null);
-        panel.setSize(600, 800);
+        panel.setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
         play = buttonSetup(Sirtet.menuImages[1]);
         highScores = buttonSetup(Sirtet.menuImages[2]);
         quit = buttonSetup(Sirtet.menuImages[3]);

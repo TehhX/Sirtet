@@ -8,12 +8,17 @@ class GameplayScene extends JPanel implements KeyListener {
     private int currentPoints;
     private SirtetWindow frame;
     private SirtetGrid grid;
-    private final Font font = new Font("Silkscreen", Font.PLAIN, 60);
+    private JPanel panel;
     public GameplayScene(SirtetWindow frame) {
         this.frame = frame;
         currentPoints = -25;
         grid = new SirtetGrid(this);
-        this.setLayout(null);
+        this.setOpaque(false);
+        this.setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
+        panel = new JPanel();
+        panel.setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
+        panel.add(this);
+        panel.setLayout(null);
     }
     public void pointIncrease(int rowsCleared) {
         if(rowsCleared == 0) return;
@@ -37,7 +42,7 @@ class GameplayScene extends JPanel implements KeyListener {
     public void paint(Graphics g) {
         super.paint(g);
         g.setColor(new Color(135, 232, 155));
-        g.fillRect(0, 0, 600, 800);
+        g.fillRect(0, 0, Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
         Image currentImage;
         int yOffset = grid.getLastSonimortet().getDropCount();
         for (SonimortetPositions pos : grid.getLastPositions()) {
@@ -64,10 +69,10 @@ class GameplayScene extends JPanel implements KeyListener {
                 }
             }
         }
-        int stringWidth = (int) font.getStringBounds(currentPoints + "", new FontRenderContext(null, true, true)).getWidth();
+        int stringWidth = (int) Sirtet.SILKSCREEN_60.getStringBounds(currentPoints + "", new FontRenderContext(null, true, true)).getWidth();
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setFont(font);
+        g2d.setFont(Sirtet.SILKSCREEN_60);
         g2d.setColor(Color.black);
         g2d.drawString(currentPoints + "", 550 - stringWidth, 90);
         currentImage = Sirtet.gameplaySceneImages[7];
@@ -116,6 +121,12 @@ class GameplayScene extends JPanel implements KeyListener {
     }
     public SirtetWindow getFrame() {
         return frame;
+    }
+    public JPanel getPanel() {
+        return panel;
+    }
+    public int getCurrentPoints() {
+        return currentPoints;
     }
     public void keyTyped(KeyEvent e) {}
     public void keyReleased(KeyEvent e) {}

@@ -20,10 +20,8 @@ class GameplayTimers {
         bigTimer.schedule(smallTimer, tMinus);
     }
     public void decrementTimer() {
-        if(tMinus >= 140) {
-            tMinus = (int) (1300.0 * Math.pow(0.5, (timesDecremented / 21.0)) + 130.8);
-            timesDecremented++;
-        }
+        tMinus = (int) (Math.round(Math.pow(0.9822, timesDecremented - 392) + 200));
+        timesDecremented++;
     }
     public void resetTimer() {
         timesDecremented = 0;
