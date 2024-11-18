@@ -62,6 +62,7 @@ class SirtetWindow extends JFrame {
                 frame.getContentPane().add(highScoreScene.getPanel());
                 break;
             default:
+                System.out.println("Incorrect Scene Number Identified");
         }
         frame.repaint();
     }

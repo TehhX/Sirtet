@@ -74,7 +74,7 @@ class GameplayScene extends JPanel implements KeyListener {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setFont(Sirtet.SILKSCREEN_60);
         g2d.setColor(Color.black);
-        g2d.drawString(currentPoints + "", 550 - stringWidth, 90);
+        g2d.drawString(currentPoints + "", 550 - stringWidth, 85);
         currentImage = Sirtet.gameplaySceneImages[7];
         g.drawImage(currentImage, 0, 0, Sirtet.observer);
     }

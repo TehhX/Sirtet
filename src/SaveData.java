@@ -100,6 +100,5 @@ class SaveData {
         }
         highScores[index].setScore(currentScore);
         highScores[index].setName(currentName);
-        writeFile();
     }
 }

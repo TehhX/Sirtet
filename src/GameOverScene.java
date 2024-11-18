@@ -35,7 +35,10 @@ class GameOverScene extends JPanel implements ActionListener {
         return panel;
     }
     public void actionPerformed(ActionEvent e) {
-        if(nameField.getText().length() > 10) return;
+        if(nameField.getText().length() > 7) {
+            JOptionPane.showMessageDialog(frame, "7 Character Max!");
+            return;
+        }
         SaveData.insertScore(nameField.getText());
         frame.changeScene(3);
     }

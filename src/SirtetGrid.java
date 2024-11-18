@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 class SirtetGrid {
     private boolean[][] grid;
     private int held;
@@ -18,11 +19,12 @@ class SirtetGrid {
     }
     public void addSonimortet(int type) {
         sonimortetList.add(new Sonimortet(type, this));
+        SirtetAudio.playAudio("blockPlace.wav");
+        updateGrid(true);
     }
     public void addSonimortet() {
-        sonimortetList.add(new Sonimortet((int) (Math.random() * 7), this));
+        addSonimortet((int) (Math.random() * 7));
         parentScene.pointIncrease();
-        updateGrid(true);
         swapsTurn = 0;
     }
     public Sonimortet getLastSonimortet() {
@@ -41,23 +43,27 @@ class SirtetGrid {
         timer = null;
     }
     public void updateGrid(boolean repaint) {
-        grid = new boolean[10][16];
-        for (Sonimortet sonimortet : sonimortetList) {
-            for (int inner = 0; inner < sonimortet.getPositions().length; inner++) {
-                int x = sonimortet.getPositions()[inner].getX();
-                int y = sonimortet.getPositions()[inner].getY();
-                grid[x][y] = true;
-            }
-        }
-        if(!sonimortetList.isEmpty()) {
-            for (SonimortetPositions sonimortet : getLastPositions()) {
-                if (sonimortet.getY() == 0) {
-                    checkRows();
-                    break;
+        try {
+            grid = new boolean[10][16];
+            for (Sonimortet sonimortet : sonimortetList) {
+                for (int inner = 0; inner < sonimortet.getPositions().length; inner++) {
+                    int x = sonimortet.getPositions()[inner].getX();
+                    int y = sonimortet.getPositions()[inner].getY();
+                    grid[x][y] = true;
                 }
             }
+            if (!sonimortetList.isEmpty()) {
+                for (SonimortetPositions sonimortet : getLastPositions()) {
+                    if (sonimortet.getY() == 0) {
+                        checkRows();
+                        break;
+                    }
+                }
+            }
+            if (repaint) parentScene.repaint();
+        } catch (ConcurrentModificationException e) {
+            updateGrid(repaint);
         }
-        if(repaint) parentScene.repaint();
     }
     public void checkRows() {
         for(int outer = 15; outer >= 0; outer--) {
