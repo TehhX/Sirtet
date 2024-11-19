@@ -3,19 +3,32 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 class HighScoreScene extends JPanel implements KeyListener {
+    /**
+     * This class holds the JPanel and everything within needed for the high score menu to be made visible and
+     * populated with the necessary data. It uses 3 JLabel arrays, each with a part of the data gathered by
+     * SaveData.java. A given name label will have the same index as the score and placement as those associated
+     * with it.
+     */
     private SirtetWindow frame;
     private JPanel panel;
+    private JLabel title;
     private JLabel[] indexLabels = new JLabel[10];
     private JLabel[] nameLabels = new JLabel[10];
     private JLabel[] scoreLabels = new JLabel[10];
     public HighScoreScene(SirtetWindow frame) {
         this.frame = frame;
         loadLabels();
+        title = new JLabel("Highscores");
+        title.setBounds(0, 0, 0, 0);
+        title.setFont(Sirtet.SILKSCREEN_60);
+        title.setForeground(Color.black);
+        title.setBounds(90, 50, 421, 77);
         this.setOpaque(false);
         this.setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
         panel = new JPanel();
         panel.setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
         panel.setLayout(null);
+        panel.add(title);
         for(int i = 0; i < 10; i++) {
             panel.add(nameLabels[i]);
             panel.add(scoreLabels[i]);
@@ -25,23 +38,23 @@ class HighScoreScene extends JPanel implements KeyListener {
     }
     public void loadLabels() {
         for(int i = 0; i < 10; i++) {
-            indexLabels[i] = new JLabel(i + 1 + ": ", SwingConstants.RIGHT);
-            nameLabels[i] = new JLabel(SaveData.highScores[i].getName(), SwingConstants.RIGHT);
-            scoreLabels[i] = new JLabel("" + SaveData.highScores[i].getScore(), SwingConstants.RIGHT);
-            indexLabels[i].setFont(Sirtet.SILKSCREEN_40);
-            nameLabels[i].setFont(Sirtet.SILKSCREEN_40);
-            scoreLabels[i].setFont(Sirtet.SILKSCREEN_40);
-            indexLabels[i].setForeground(Color.black);
-            nameLabels[i].setForeground(Color.black);
-            scoreLabels[i].setForeground(Color.black);
-            indexLabels[i].setBounds(30, 120 + i * 50, 100, 50);
-            nameLabels[i].setBounds(140, 120 + i * 50, 200, 50);
-            scoreLabels[i].setBounds(230, 120 + i * 50, 300, 50);
+            indexLabels[i] = labelSetup(i + 1 + ": ");
+            nameLabels[i] = labelSetup(SaveData.highScores[i].getName());
+            scoreLabels[i] = labelSetup("" + SaveData.highScores[i].getScore());
+            indexLabels[i].setBounds(20, 160 + i * 50, 100, 50);
+            nameLabels[i].setBounds(80, 160 + i * 50, 300, 50);
+            scoreLabels[i].setBounds(230, 160 + i * 50, 300, 50);
         }
+    }
+    public JLabel labelSetup(String text) {
+        JLabel label = new JLabel(text, SwingConstants.RIGHT);
+        label.setFont(Sirtet.SILKSCREEN_30);
+        label.setForeground(Color.black);
+        return label;
     }
     public void paint(Graphics g) {
         super.paint(g);
-        g.setColor(new Color(135, 232, 155));
+        g.setColor(Sirtet.SIRTET_GREEN);
         g.fillRect(0, 0, Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
     }
     public JPanel getPanel() {

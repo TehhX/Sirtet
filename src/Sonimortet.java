@@ -18,6 +18,7 @@ class Sonimortet {
                 parentGrid.stopTimer();
                 SaveData.currentScore = parentGrid.getParentScene().getCurrentPoints();
                 parentGrid.getParentScene().getFrame().changeScene(2);
+                SirtetAudio.playAudio("gameOver.wav");
                 startTimer = false;
             }
         }
@@ -82,7 +83,6 @@ class Sonimortet {
                 newIndex++;
             }
         }
-        // if(positions.length == 0) parentGrid.getSonimortetList().remove(this);
     }
     public int getDropCount() {
         int i = 1;

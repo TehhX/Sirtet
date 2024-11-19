@@ -1,6 +1,12 @@
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 class SirtetGrid {
+    /**
+     * This class handles the grid logic, and has the master list of all sonimortets within. Also contains the timer
+     * object that moves sonimortets downwards at a set speed over time. Lets GameplayScene add and manipulate
+     * sonimortets with key inputs, checks rows, gets last sonimortet or positions in the master list, contains the
+     * held sonimortet  etc.
+     */
     private boolean[][] grid;
     private int held;
     private int rowsCleared;
@@ -24,7 +30,7 @@ class SirtetGrid {
     }
     public void addSonimortet() {
         addSonimortet((int) (Math.random() * 7));
-        parentScene.pointIncrease();
+        parentScene.pointIncrease(-1);
         swapsTurn = 0;
     }
     public Sonimortet getLastSonimortet() {
@@ -98,8 +104,6 @@ class SirtetGrid {
             }
         }
         updateGrid(false);
-        // Reaches this point every time an individual row is clear
-        // i.e. for a tetris, any code here will execute 4 times.
     }
     public void swapHeld() {
         if(swapsTurn == 3) return;

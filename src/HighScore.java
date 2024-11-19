@@ -1,4 +1,5 @@
 class HighScore {
+    // Contains individual high scores and their associated names, along with getter/setter methods.
     private int score;
     private String name;
     public HighScore() {
@@ -16,8 +17,5 @@ class HighScore {
     }
     public void setName(String name) {
         this.name = name;
-    }
-    public String toString() {
-        return "Score: " + score + ", Name: " + name + "\n";
     }
 }

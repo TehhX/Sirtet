@@ -2,46 +2,72 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.font.FontRenderContext;
 import java.util.ConcurrentModificationException;
 class GameplayScene extends JPanel implements KeyListener {
+    /**
+     * This class handles the main gameplay scene, and all within. It also needs a SirtetGrid object to pass user
+     * input to.
+     */
     private int currentPoints;
+    private JLabel score;
     private SirtetWindow frame;
     private SirtetGrid grid;
     private JPanel panel;
     public GameplayScene(SirtetWindow frame) {
         this.frame = frame;
         currentPoints = -25;
+        score = new JLabel();
         grid = new SirtetGrid(this);
         this.setOpaque(false);
         this.setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
         panel = new JPanel();
         panel.setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
+        score.setFont(Sirtet.SILKSCREEN_60);
+        score.setForeground(Color.black);
+        updateScoreLabel();
+        panel.add(score);
         panel.add(this);
         panel.setLayout(null);
     }
     public void pointIncrease(int rowsCleared) {
-        if(rowsCleared == 0) return;
         switch (rowsCleared) {
+            case -1:
+                currentPoints += 50;
+                break;
+            case 0:
+                return;
             case 1:
-                currentPoints += 75;
+                currentPoints += 100;
+                SirtetAudio.playAudio("oneRow.wav");
                 break;
             case 2:
-                currentPoints += 775;
+                currentPoints += 800;
+                SirtetAudio.playAudio("twoRow.wav");
                 break;
             case 3:
-                currentPoints += 1175;
+                currentPoints += 1200;
+                SirtetAudio.playAudio("threeRow.wav");
                 break;
             default:
-                currentPoints += 1575;
+                currentPoints += 1600;
+                SirtetAudio.playAudio("fourRow.wav");
         }
+        currentPoints -= 25;
+        updateScoreLabel();
     }
-    public void pointIncrease() {
-        currentPoints += 25;
+    public void updateScoreLabel() {
+        score.setText(currentPoints + "");
+        int width = (int) score.getPreferredSize().getWidth();
+        score.setBounds(550 - width, 35, width, 50);
     }
+    /**
+     * The paint method will first paint the panel with a green rectangle as the background. After this, it paints
+     * the grid of blocks, the image being painted depending on which type of block is in each grid slot. It will
+     * then paint the held grid on the side.
+     */
     public void paint(Graphics g) {
         super.paint(g);
-        g.setColor(new Color(135, 232, 155));
+        g.setColor(Sirtet.SIRTET_GREEN);
         g.fillRect(0, 0, Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
         Image currentImage;
         int yOffset = grid.getLastSonimortet().getDropCount();
@@ -56,7 +82,7 @@ class GameplayScene extends JPanel implements KeyListener {
                     g.drawImage(currentImage, 173 + 38 * pos.getX(), 132 + 38 * pos.getY(), 36, 36, Sirtet.observer);
                 }
             }
-        } catch (ConcurrentModificationException e) {
+        } catch(ConcurrentModificationException e) {
             repaint();
             return;
         }
@@ -69,12 +95,6 @@ class GameplayScene extends JPanel implements KeyListener {
                 }
             }
         }
-        int stringWidth = (int) Sirtet.SILKSCREEN_60.getStringBounds(currentPoints + "", new FontRenderContext(null, true, true)).getWidth();
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setFont(Sirtet.SILKSCREEN_60);
-        g2d.setColor(Color.black);
-        g2d.drawString(currentPoints + "", 550 - stringWidth, 85);
         currentImage = Sirtet.gameplaySceneImages[7];
         g.drawImage(currentImage, 0, 0, Sirtet.observer);
     }
@@ -88,6 +108,7 @@ class GameplayScene extends JPanel implements KeyListener {
         }
         return heldGrid;
     }
+    // keyPressed handles user input for this scene, and calls the appropriate methods depending on the key pressed.
     public void keyPressed(KeyEvent e) {
         switch(e.getKeyCode()) {
             case 65:
