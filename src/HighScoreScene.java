@@ -9,14 +9,12 @@ class HighScoreScene extends JPanel implements KeyListener {
      * SaveData.java. A given name label will have the same index as the score and placement as those associated
      * with it.
      */
-    private SirtetWindow frame;
     private JPanel panel;
     private JLabel title;
     private JLabel[] indexLabels = new JLabel[10];
     private JLabel[] nameLabels = new JLabel[10];
     private JLabel[] scoreLabels = new JLabel[10];
-    public HighScoreScene(SirtetWindow frame) {
-        this.frame = frame;
+    public HighScoreScene() {
         loadLabels();
         title = new JLabel("Highscores");
         title.setBounds(0, 0, 0, 0);
@@ -61,7 +59,7 @@ class HighScoreScene extends JPanel implements KeyListener {
         return panel;
     }
     public void keyPressed(KeyEvent e) {
-        if(e.getKeyCode() == 27) frame.changeScene(0);
+        if(e.getKeyCode() == 27) SirtetWindow.changeScene(0);
     }
     public void keyTyped(KeyEvent e) {}
     public void keyReleased(KeyEvent e) {}

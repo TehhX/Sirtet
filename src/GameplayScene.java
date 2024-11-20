@@ -10,11 +10,14 @@ class GameplayScene extends JPanel implements KeyListener {
      */
     private int currentPoints;
     private JLabel score;
-    private SirtetWindow frame;
     private SirtetGrid grid;
     private JPanel panel;
-    public GameplayScene(SirtetWindow frame) {
-        this.frame = frame;
+    private JLabel paused;
+    private boolean isPaused;
+    private VolumeSlidersPanel volumeSlidersPanel;
+    public GameplayScene() {
+        volumeSlidersPanel = new VolumeSlidersPanel(VolumeSlidersPanel.VOLUME_CENTER_X, 350);
+        isPaused = false;
         currentPoints = -25;
         score = new JLabel();
         grid = new SirtetGrid(this);
@@ -24,10 +27,33 @@ class GameplayScene extends JPanel implements KeyListener {
         panel.setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
         score.setFont(Sirtet.SILKSCREEN_60);
         score.setForeground(Color.black);
+        paused = new JLabel("game paused", SwingConstants.CENTER);
+        paused.setFont(Sirtet.SILKSCREEN_60);
+        paused.setBounds(63, 250, 474, 77);
+        paused.setForeground(Color.black);
         updateScoreLabel();
         panel.add(score);
         panel.add(this);
         panel.setLayout(null);
+    }
+    public void pauseGame() {
+        grid.stopTimer();
+        isPaused = true;
+        panel.add(paused);
+        panel.add(volumeSlidersPanel.getPanel());
+        panel.remove(score);
+        panel.remove(this);
+        panel.add(this);
+        repaint();
+    }
+    public void resumeGame() {
+        grid.restartTimer();
+        isPaused = false;
+        panel.remove(volumeSlidersPanel.getPanel());
+        panel.remove(paused);
+        panel.add(score);
+        panel.add(this);
+        repaint();
     }
     public void pointIncrease(int rowsCleared) {
         switch (rowsCleared) {
@@ -69,8 +95,9 @@ class GameplayScene extends JPanel implements KeyListener {
         super.paint(g);
         g.setColor(Sirtet.SIRTET_GREEN);
         g.fillRect(0, 0, Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
+        if(isPaused) return;
         Image currentImage;
-        int yOffset = grid.getLastSonimortet().getDropCount();
+        int yOffset = grid.getLastSonimortet().getHeight();
         for (SonimortetPositions pos : grid.getLastPositions()) {
             g.setColor(new Color(103, 215, 237));
             g.fillRect(173 + 38 * pos.getX(), 132 + 38 * (pos.getY() + yOffset), 36, 36);
@@ -97,6 +124,7 @@ class GameplayScene extends JPanel implements KeyListener {
         }
         currentImage = Sirtet.gameplaySceneImages[7];
         g.drawImage(currentImage, 0, 0, Sirtet.observer);
+
     }
     public boolean[][] getHeldGrid() {
         boolean[][] heldGrid = new boolean[3][4];
@@ -110,6 +138,10 @@ class GameplayScene extends JPanel implements KeyListener {
     }
     // keyPressed handles user input for this scene, and calls the appropriate methods depending on the key pressed.
     public void keyPressed(KeyEvent e) {
+        if(isPaused && e.getKeyCode() == 27) {
+            resumeGame();
+            return;
+        } else if(isPaused) return;
         switch(e.getKeyCode()) {
             case 65:
                 grid.getLastSonimortet().shiftLeft();
@@ -133,15 +165,11 @@ class GameplayScene extends JPanel implements KeyListener {
                 grid.swapHeld();
                 break;
             case 27:
-                frame.changeScene(0);
-                break;
+                pauseGame();
         }
     }
     public SirtetGrid getGrid() {
         return grid;
-    }
-    public SirtetWindow getFrame() {
-        return frame;
     }
     public JPanel getPanel() {
         return panel;

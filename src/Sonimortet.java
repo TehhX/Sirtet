@@ -11,21 +11,24 @@ class Sonimortet {
         setStartingPositions();
     }
     public void setStartingPositions() {
-        boolean startTimer = true;
         int[][] startingPositions = getStartingPositions(type);
-        for(int i = 0; i < 4; i++) {
-            if(parentGrid.getGrid(startingPositions[0][i], startingPositions[1][i])) {
-                parentGrid.stopTimer();
-                SaveData.currentScore = parentGrid.getParentScene().getCurrentPoints();
-                parentGrid.getParentScene().getFrame().changeScene(2);
-                SirtetAudio.playAudio("gameOver.wav");
-                startTimer = false;
-            }
-        }
+        if(!canPlace(startingPositions)) {
+            parentGrid.stopTimer();
+            SaveData.currentScore = parentGrid.getParentScene().getCurrentPoints();
+            SirtetAudio.playAudio("gameOver.wav");
+            if(parentGrid.getParentScene().getCurrentPoints() > SaveData.highScores[9].getScore()) {
+                SirtetWindow.changeScene(2);
+            } else SirtetWindow.changeScene(3);
+        } else parentGrid.restartTimer();
         for(int i = 0; i < 4; i++) {
             positions[i] = new SonimortetPositions(startingPositions[0][i], startingPositions[1][i]);
         }
-        if(startTimer) parentGrid.restartTimer();
+    }
+    public boolean canPlace(int[][] positions) {
+        for(int i = 0; i < 4; i++) {
+            if(parentGrid.getGrid(positions[0][i], positions[1][i])) return false;
+        }
+        return true;
     }
     public static int[][] getStartingPositions(int type) {
         switch(type) {
@@ -41,16 +44,20 @@ class Sonimortet {
                 return new int[][]{{4, 4, 4, 5}, {0, 1, 2, 2}};
             case 5:
                 return new int[][]{{5, 5, 5, 4}, {0, 1, 2, 2}};
+            case 6:
+                return new int[][]{{4, 5, 5, 6}, {0, 0, 1, 0}};
+            default:
+                System.out.println("getStartingPositions incorrect input");
+                return new int[][]{};
         }
-        return new int[][]{{4, 5, 5, 6}, {0, 0, 1, 0}};
     }
-    public boolean checkSurrounding(int xOffset, int yOffset) {
+    public boolean allCanMove(int xOffset, int yOffset) {
         for(int i = 0; i < positions.length; i++) {
-            if(checkSurrounding(i, xOffset, yOffset, false)) return true;
+            if(!singleCanMove(i, xOffset, yOffset, false)) return false;
         }
-        return false;
+        return true;
     }
-    public boolean checkSurrounding(int index, int xOffset, int yOffset, boolean invert) {
+    public boolean singleCanMove(int index, int xOffset, int yOffset, boolean invert) {
         parentGrid.updateGrid(false);
         if(invert) {
             xOffset *= -1;
@@ -58,18 +65,21 @@ class Sonimortet {
         }
         int x = positions[index].getX();
         int y = positions[index].getY();
+        if(isEdge(x, xOffset, y, yOffset)) return false;
+        if(parentGrid.getGrid(x + xOffset, y + yOffset)) {
+            return isSameSoni(x, xOffset, y, yOffset);
+        }
+        return true;
+    }
+    public boolean isEdge(int x, int xOffset, int y, int yOffset) {
         if(y + yOffset > 15) return true;
         if(x + xOffset < 0 && xOffset < 0) return true;
         if(x + xOffset > 9 && xOffset > 0) return true;
-        if(parentGrid.getGrid(x + xOffset, y + yOffset)) {
-            boolean isOtherSonimortet = true;
-            for(SonimortetPositions position : positions) {
-                if(position.getX() == x + xOffset && position.getY() == y + yOffset) {
-                    isOtherSonimortet = false;
-                    break;
-                }
-            }
-            return isOtherSonimortet;
+        return false;
+    }
+    public boolean isSameSoni(int thisX, int xOffset, int thisY, int yOffset) {
+        for(SonimortetPositions position : positions) {
+            if(position.getX() == thisX + xOffset && position.getY() == thisY + yOffset) return true;
         }
         return false;
     }
@@ -84,34 +94,34 @@ class Sonimortet {
             }
         }
     }
-    public int getDropCount() {
-        int i = 1;
-        while(!checkSurrounding(0, i)) {
-            i++;
+    public int getHeight() {
+        int height = 0;
+        while(allCanMove(0, height)) {
+            height++;
         }
-        return i - 1;
+        return height - 1;
     }
     public void hardDrop() {
-        shiftAll(0, getDropCount(), false);
+        shiftAll(0, getHeight(), false);
         parentGrid.addSonimortet();
         new GameplayTimers().decrementTimer();
     }
     public void softDrop() {
-        if(checkSurrounding(0, 1)) return;
+        if(!allCanMove(0, 1)) return;
         shiftAll(0, 1, false);
         parentGrid.restartTimer();
     }
     public void shiftLeft() {
-        if(checkSurrounding(-1, 0)) return;
+        if(!allCanMove(-1, 0)) return;
         shiftAll(-1, 0, false);
     }
     public void shiftRight() {
-        if(checkSurrounding(1, 0)) return;
+        if(!allCanMove(1, 0)) return;
         shiftAll(1, 0, false);
     }
-    public void shiftAll(int x, int y, boolean invert) {
+    public void shiftAll(int shiftX, int shiftY, boolean invert) {
         for(SonimortetPositions position : positions) {
-            position.shiftSingle(x, y, invert);
+            position.shiftSingle(shiftX, shiftY, invert);
         }
         parentGrid.updateGrid(true);
     }
@@ -150,68 +160,68 @@ class Sonimortet {
         parentGrid.updateGrid(true);
     }
     public void rotate0(boolean invert) {
-        int[] x;
-        int[] y;
+        int[] shiftX;
+        int[] shiftY;
         switch(type) {
             case 1:
-                x = new int[]{0, 1, 2, 3};
-                y = new int[]{0, -1, -2, -3};
+                shiftX = new int[]{0, 1, 2, 3};
+                shiftY = new int[]{0, -1, -2, -3};
                 break;
             case 2:
-                x = new int[]{0, 0, -1, -1};
-                y = new int[]{0, 0, 0, 2};
+                shiftX = new int[]{0, 0, -1, -1};
+                shiftY = new int[]{0, 0, 0, 2};
                 break;
             case 3:
-                x = new int[]{0, 0, 0, -2};
-                y = new int[]{1, 0, 0, 1};
+                shiftX = new int[]{0, 0, 0, -2};
+                shiftY = new int[]{1, 0, 0, 1};
                 break;
             case 4:
-                x = new int[]{0, 0, 1, 1};
-                y = new int[]{0, 0, -2, -2};
+                shiftX = new int[]{0, 0, 1, 1};
+                shiftY = new int[]{0, 0, -2, -2};
                 break;
             case 5:
-                x = new int[]{-1, 0, 1, 0};
-                y = new int[]{0, 0, -1, -1};
+                shiftX = new int[]{-1, 0, 1, 0};
+                shiftY = new int[]{0, 0, -1, -1};
                 break;
             default:
-                x = new int[]{0, 0, 0, -1};
-                y = new int[]{1, 0, 0, 2};
+                shiftX = new int[]{0, 0, 0, -1};
+                shiftY = new int[]{1, 0, 0, 2};
         }
-        executeRotate(x, y, invert);
+        executeRotate(shiftX, shiftY, invert);
     }
     public void rotate1(boolean invert) {
-        int[] x;
-        int[] y;
+        int[] shiftX;
+        int[] shiftY;
         switch(type) {
             case 1:
-                x = new int[]{0, -1, -2, -3};
-                y = new int[]{0, 1, 2, 3};
+                shiftX = new int[]{0, -1, -2, -3};
+                shiftY = new int[]{0, 1, 2, 3};
                 break;
             case 2:
-                x = new int[]{0, 0, 1, 1};
-                y = new int[]{0, 0, 0, -2};
+                shiftX = new int[]{0, 0, 1, 1};
+                shiftY = new int[]{0, 0, 0, -2};
                 break;
             case 3:
-                x = new int[]{0, 0, 0, 2};
-                y = new int[]{-1, 0, 0, -1};
+                shiftX = new int[]{0, 0, 0, 2};
+                shiftY = new int[]{-1, 0, 0, -1};
                 break;
             case 4:
-                x = new int[]{0, 1, 0, -1};
-                y = new int[]{0, 1, 0, 1};
+                shiftX = new int[]{0, 1, 0, -1};
+                shiftY = new int[]{0, 1, 0, 1};
                 break;
             case 5:
-                x = new int[]{0, 0, -2, 0};
-                y = new int[]{0, -1, 1, 0};
+                shiftX = new int[]{0, 0, -2, 0};
+                shiftY = new int[]{0, -1, 1, 0};
                 break;
             default:
-                x = new int[]{0, 0, 0, 1};
-                y = new int[]{0, 0, 0, -1};
+                shiftX = new int[]{0, 0, 0, 1};
+                shiftY = new int[]{0, 0, 0, -1};
         }
-        executeRotate(x, y, invert);
+        executeRotate(shiftX, shiftY, invert);
     }
     public void rotate2(boolean invert) {
-        int[] x;
-        int[] y;
+        int[] shiftX;
+        int[] shiftY;
         switch(type) {
             case 1:
             case 2:
@@ -219,22 +229,22 @@ class Sonimortet {
                 rotate0(invert);
                 return;
             case 4:
-                x = new int[]{0, 1, 1, 0};
-                y = new int[]{1, -1, 0, 0};
+                shiftX = new int[]{0, 1, 1, 0};
+                shiftY = new int[]{1, -1, 0, 0};
                 break;
             case 5:
-                x = new int[]{0, 0, 2, 2};
-                y = new int[]{0, 0, -1, -1};
+                shiftX = new int[]{0, 0, 2, 2};
+                shiftY = new int[]{0, 0, -1, -1};
                 break;
             default:
-                x = new int[]{0, -1, 0, -2};
-                y = new int[]{0, 0, 0, 1};
+                shiftX = new int[]{0, -1, 0, -2};
+                shiftY = new int[]{0, 0, 0, 1};
         }
-        executeRotate(x, y, invert);
+        executeRotate(shiftX, shiftY, invert);
     }
     public void rotate3(boolean invert) {
-        int[] x;
-        int[] y;
+        int[] shiftX;
+        int[] shiftY;
         switch(type) {
             case 1:
             case 2:
@@ -242,37 +252,35 @@ class Sonimortet {
                 rotate1(invert);
                 return;
             case 4:
-                x = new int[]{0, -2, -2, 0};
-                y = new int[]{-1, 0, 2, 1};
+                shiftX = new int[]{0, -2, -2, 0};
+                shiftY = new int[]{-1, 0, 2, 1};
                 break;
             case 5:
-                x = new int[]{1, 0, -1, -2};
-                y = new int[]{0, 1, 1, 2};
+                shiftX = new int[]{1, 0, -1, -2};
+                shiftY = new int[]{0, 1, 1, 2};
                 break;
             default:
-                x = new int[]{0, 1, 0, 2};
-                y = new int[]{-1, 0, 0, -2};
+                shiftX = new int[]{0, 1, 0, 2};
+                shiftY = new int[]{-1, 0, 0, -2};
         }
-        executeRotate(x, y, invert);
+        executeRotate(shiftX, shiftY, invert);
     }
-    public void executeRotate(int[] x, int[] y, boolean invert) {
-        for(int outer = 0; outer < 4; outer++) if(checkSurrounding(outer, x[outer], y[outer], invert)) {
-            boolean canMove = true;
-            for(int inner = 0; inner < 4; inner++) {
-                if(checkSurrounding(inner, x[inner] - 1, y[inner], invert)) {
-                    canMove = false;
-                    break;
-                }
-            }
-            if(canMove) {
-                shiftAll(-1, 0, invert);
-                executeRotate(x, y, invert);
-            }
-            return;
-        }
-        for(int i = 0; i < 4; i++) positions[i].shiftSingle(x[i], y[i], invert);
+    public void executeRotate(int[] shiftX, int[] shiftY, boolean invert) {
+        if(!canRotate(shiftX, shiftY, invert)) return;
+        for(int i = 0; i < 4; i++) positions[i].shiftSingle(shiftX[i], shiftY[i], invert);
         if(rotation == (invert ? 0 : 3)) rotation = (invert ? 3 : 0);
         else rotation += (invert ? -1 : 1);
+    }
+    public boolean canRotate(int[] shiftX, int[] shiftY, boolean invert) {
+        for(int posIndex = 0; posIndex < 4; posIndex++) {
+            if(!singleCanMove(posIndex, shiftX[posIndex], shiftY[posIndex], invert)) {
+                if(allCanMove(-1, 0)) {
+                    shiftAll(-1, 0, false);
+                    executeRotate(shiftX, shiftY, invert);
+                } return false;
+            }
+        }
+        return true;
     }
     public int getType() {
         return type;

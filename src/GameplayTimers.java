@@ -9,7 +9,7 @@ class GameplayTimers {
         bigTimer = new Timer();
         TimerTask smallTimer = new TimerTask() {
             public void run() {
-                if(grid.getLastSonimortet().checkSurrounding(0, 1)) {
+                if(!grid.getLastSonimortet().allCanMove(0, 1)) {
                     grid.getLastSonimortet().hardDrop();
                     decrementTimer();
                 } else {

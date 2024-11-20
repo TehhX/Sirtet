@@ -1,10 +1,10 @@
 import javax.swing.*;
 class SirtetWindow extends JFrame {
-    private JFrame frame;
-    private GameplayScene gameplayScene;
-    private MenuScene menuScene;
-    private HighScoreScene highScoreScene;
-    private GameOverScene gameOverScene;
+    public static JFrame frame;
+    public static GameplayScene gameplayScene;
+    public static MenuScene menuScene;
+    public static HighScoreScene highScoreScene;
+    public static GameOverScene gameOverScene;
     public SirtetWindow() {
         frame = frameSetup();
         changeScene(0);
@@ -21,7 +21,7 @@ class SirtetWindow extends JFrame {
         frame.setVisible(true);
         return frame;
     }
-    public void removeAll() {
+    public static void removePreviousScene() {
         frame.requestFocus();
         if(menuScene != null) {
             frame.getContentPane().remove(menuScene.getPanel());
@@ -40,24 +40,24 @@ class SirtetWindow extends JFrame {
             highScoreScene = null;
         }
     }
-    public void changeScene(int sceneNum) {
-        removeAll();
+    public static void changeScene(int sceneNum) {
+        removePreviousScene();
         switch(sceneNum) {
             case 0:
-                menuScene = new MenuScene(this);
+                menuScene = new MenuScene();
                 frame.getContentPane().add(menuScene.getPanel());
                 break;
             case 1:
-                gameplayScene = new GameplayScene(this);
+                gameplayScene = new GameplayScene();
                 frame.addKeyListener(gameplayScene);
                 frame.getContentPane().add(gameplayScene.getPanel());
                 break;
             case 2:
-                gameOverScene = new GameOverScene(this);
+                gameOverScene = new GameOverScene();
                 frame.getContentPane().add(gameOverScene.getPanel());
                 break;
             case 3:
-                highScoreScene = new HighScoreScene(this);
+                highScoreScene = new HighScoreScene();
                 frame.addKeyListener(highScoreScene);
                 frame.getContentPane().add(highScoreScene.getPanel());
                 break;

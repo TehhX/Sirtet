@@ -10,12 +10,10 @@ class GameOverScene extends JPanel implements ActionListener {
      * if it is, as the high score scene can only display names up to a certain size. After receiving a name, it
      * switches to the high score scene.
      */
-    private SirtetWindow frame;
     private JPanel panel;
     private JTextField nameField;
     private JLabel label;
-    public GameOverScene(SirtetWindow frame) {
-        this.frame = frame;
+    public GameOverScene() {
         this.setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
         // Uses HTML to change the paragraph style to justify center, adds a line break between lines.
         label = new JLabel("<html><p style=\"text-align:center;\">Game Over!<br>Enter Your Name</html></p>", SwingConstants.CENTER);
@@ -31,7 +29,7 @@ class GameOverScene extends JPanel implements ActionListener {
         nameField.setFont(Sirtet.SILKSCREEN_30);
         nameField.addActionListener(this);
         nameField.setHorizontalAlignment(JTextField.CENTER);
-        nameField.setBackground(Sirtet.SIRTET_GREEN);
+        nameField.setBackground(new Color(37, 218, 192));
         nameField.setBorder(null);
         panel.add(label);
         panel.add(nameField);
@@ -42,16 +40,16 @@ class GameOverScene extends JPanel implements ActionListener {
         return panel;
     }
     public void actionPerformed(ActionEvent e) {
-        if(nameField.getText().length() > 10) {
-            JOptionPane.showMessageDialog(frame, "10 Character Max!");
+        if(nameField.getText().length() > 10 || nameField.getText().length() < 3) {
+            JOptionPane.showMessageDialog(SirtetWindow.frame, "Name Must be 3-10 Characters");
             return;
         }
         SaveData.insertScore(nameField.getText());
-        frame.changeScene(3);
+        SirtetWindow.changeScene(3);
     }
     public void paint(Graphics g) {
         super.paint(g);
-        g.setColor(new Color(172, 241, 116));
+        g.setColor(Sirtet.SIRTET_GREEN);
         g.fillRect(0, 0, Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
     }
 }
