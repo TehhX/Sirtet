@@ -115,10 +115,10 @@ class GameplayScene extends JPanel implements KeyListener {
         }
         boolean[][] heldGrid = getHeldGrid();
         currentImage = Sirtet.gameplaySceneImages[grid.getHeldType()];
-        for(int outer = 0; outer < 3; outer++) {
-            for(int inner = 0; inner < 4; inner++) {
-                if(heldGrid[outer][inner]) {
-                    g.drawImage(currentImage, 30 + 38 * outer, 170 + 38 * inner, 37, 38, Sirtet.observer);
+        for(int xPos = 0; xPos < 3; xPos++) {
+            for(int yPos = 0; yPos < 4; yPos++) {
+                if(heldGrid[xPos][yPos]) {
+                    g.drawImage(currentImage, 30 + 38 * xPos, 170 + 38 * yPos, 37, 38, Sirtet.observer);
                 }
             }
         }
@@ -144,13 +144,13 @@ class GameplayScene extends JPanel implements KeyListener {
         } else if(isPaused) return;
         switch(e.getKeyCode()) {
             case 65:
-                grid.getLastSonimortet().shiftLeft();
+                grid.getLastSonimortet().shiftAll(-1, 0);
                 break;
             case 83:
                 grid.getLastSonimortet().softDrop();
                 break;
             case 68:
-                grid.getLastSonimortet().shiftRight();
+                grid.getLastSonimortet().shiftAll(1, 0);
                 break;
             case 32:
                 grid.getLastSonimortet().hardDrop();

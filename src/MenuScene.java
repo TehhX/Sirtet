@@ -6,6 +6,10 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 class MenuScene extends JPanel implements ActionListener, MouseListener {
+    /**
+     * This class handles the menu scene and panel. It can launch a new GameplayScene instance, HighScoreScene instance,
+     * quit to desktop, or change the bgm/sfx volumes. The JSliders communicate to SirtetAudio to change volume.
+     */
     private JButton play;
     private JButton highScores;
     private JButton quit;

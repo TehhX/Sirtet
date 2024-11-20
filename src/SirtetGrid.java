@@ -88,9 +88,9 @@ class SirtetGrid {
         do {
             deleted = 0;
             for (Sonimortet sonimortet : sonimortetList) {
-                for (int i = 0; i < sonimortet.getPositions().length; i++) {
-                    if (sonimortet.getPositions()[i].getY() == y) {
-                        sonimortet.delete(i);
+                for (int posIndex = 0; posIndex < sonimortet.getPositions().length; posIndex++) {
+                    if (sonimortet.getPositions()[posIndex].getY() == y) {
+                        sonimortet.delete(posIndex);
                         deleted++;
                     }
                 }

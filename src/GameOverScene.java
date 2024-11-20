@@ -12,14 +12,13 @@ class GameOverScene extends JPanel implements ActionListener {
      */
     private JPanel panel;
     private JTextField nameField;
-    private JLabel label;
     public GameOverScene() {
         this.setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
         // Uses HTML to change the paragraph style to justify center, adds a line break between lines.
-        label = new JLabel("<html><p style=\"text-align:center;\">Game Over!<br>Enter Your Name</html></p>", SwingConstants.CENTER);
-        label.setForeground(Color.black);
-        label.setBounds(0, 275, 600, 100);
-        label.setFont(Sirtet.SILKSCREEN_40);
+        JLabel gameOverLabel = new JLabel("<html><p style=\"text-align:center;\">Game Over!<br>Enter Your Name</html></p>", SwingConstants.CENTER);
+        gameOverLabel.setForeground(Color.black);
+        gameOverLabel.setBounds(0, 275, 600, 100);
+        gameOverLabel.setFont(Sirtet.SILKSCREEN_40);
         panel = new JPanel();
         panel.setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
         panel.setLayout(null);
@@ -31,7 +30,7 @@ class GameOverScene extends JPanel implements ActionListener {
         nameField.setHorizontalAlignment(JTextField.CENTER);
         nameField.setBackground(new Color(37, 218, 192));
         nameField.setBorder(null);
-        panel.add(label);
+        panel.add(gameOverLabel);
         panel.add(nameField);
         panel.add(this);
         SwingUtilities.invokeLater(() -> nameField.requestFocusInWindow());

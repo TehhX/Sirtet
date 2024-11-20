@@ -2,6 +2,11 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 public class VolumeSlidersPanel extends JPanel implements ChangeListener {
+    /**
+     * This class holds a JPanel with JSliders within. Because these same JSliders and their functionality
+     * are used by multiple other classes, it made sense to make them their own class to have
+     * it editable all in the same place.
+     */
     private JPanel panel;
     private JSlider bgmSlider;
     private JSlider sfxSlider;

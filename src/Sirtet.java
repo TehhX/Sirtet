@@ -18,7 +18,7 @@ public class Sirtet {
     static final Font SILKSCREEN_40 = new Font("Silkscreen", Font.PLAIN, 40);
     static final Font SILKSCREEN_30 = new Font("Silkscreen", Font.PLAIN, 30);
     static BufferedImage[] gameplaySceneImages = new BufferedImage[8];
-    static BufferedImage[] menuImages = new BufferedImage[9];
+    static BufferedImage[] menuImages = new BufferedImage[7];
     static BufferedImage icon;
     static ImageObserver observer;
     public static void main(String[]args) {
@@ -32,7 +32,9 @@ public class Sirtet {
         observer = (img, infoflags, x, y, width, height) -> false;
         try {
             icon = ImageIO.read(new File("Assets/Icon.png"));
-            for(int i = 0; i < 7; i++) gameplaySceneImages[i] = ImageIO.read(new File("Assets/piece" + i + ".png"));
+            for(int pieceIndex = 0; pieceIndex < 7; pieceIndex++) {
+                gameplaySceneImages[pieceIndex] = ImageIO.read(new File("Assets/piece" + pieceIndex + ".png"));
+            }
             gameplaySceneImages[7] = ImageIO.read(new File("Assets/gameplayScene.png"));
             menuImages[0] = ImageIO.read(new File("Assets/playButton.png"));
             menuImages[1] = ImageIO.read(new File("Assets/highscoreButton.png"));
@@ -41,8 +43,6 @@ public class Sirtet {
             menuImages[4] = ImageIO.read(new File("Assets/highscoreButtonActive.png"));
             menuImages[5] = ImageIO.read(new File("Assets/quitButtonActive.png"));
             menuImages[6] = ImageIO.read(new File("Assets/menuScene.png"));
-            menuImages[7] = ImageIO.read(new File("Assets/bgmSlider.png"));
-            menuImages[8] = ImageIO.read(new File("Assets/sfxSlider.png"));
         } catch(Exception e) {
             e.printStackTrace();
             System.exit(1);

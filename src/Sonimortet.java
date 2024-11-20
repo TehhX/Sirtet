@@ -1,4 +1,12 @@
 class Sonimortet {
+    /**
+     * This class handles the positions, rotation, and type of given sonimortet of the parent ArrayList in
+     * SirtetGrid. It also accepts movement and rotation requests from GameplayScene's input method.
+     * Any changes made to a sonimortet or its individual blocks go through this class. When a new sonimortet
+     * is called for placement, but its starting positions are blocked by a preexisting sonimortet, it will
+     * call the GameOver() method, which handles removing the GameplayScene, SirtetGrid, and all object
+     * instances within from memory, and their panels/frames.
+     */
     private int type;
     private int rotation;
     private SirtetGrid parentGrid;
@@ -12,21 +20,22 @@ class Sonimortet {
     }
     public void setStartingPositions() {
         int[][] startingPositions = getStartingPositions(type);
-        if(!canPlace(startingPositions)) {
-            parentGrid.stopTimer();
-            SaveData.currentScore = parentGrid.getParentScene().getCurrentPoints();
-            SirtetAudio.playAudio("gameOver.wav");
-            if(parentGrid.getParentScene().getCurrentPoints() > SaveData.highScores[9].getScore()) {
-                SirtetWindow.changeScene(2);
-            } else SirtetWindow.changeScene(3);
-        } else parentGrid.restartTimer();
-        for(int i = 0; i < 4; i++) {
-            positions[i] = new SonimortetPositions(startingPositions[0][i], startingPositions[1][i]);
+        if(!canPlace(startingPositions)) gameOver();
+        else parentGrid.restartTimer();
+        for(int posIndex = 0; posIndex < 4; posIndex++) {
+            positions[posIndex] = new SonimortetPositions(startingPositions[0][posIndex], startingPositions[1][posIndex]);
         }
     }
+    public void gameOver() {
+        parentGrid.stopTimer();
+        SaveData.currentScore = parentGrid.getParentScene().getCurrentPoints();
+        SirtetAudio.playAudio("gameOver.wav");
+        if(SaveData.currentScore > SaveData.highScores[9].getScore()) SirtetWindow.changeScene(2);
+        else SirtetWindow.changeScene(3);
+    }
     public boolean canPlace(int[][] positions) {
-        for(int i = 0; i < 4; i++) {
-            if(parentGrid.getGrid(positions[0][i], positions[1][i])) return false;
+        for(int positionIndex = 0; positionIndex < 4; positionIndex++) {
+            if(parentGrid.getGrid(positions[0][positionIndex], positions[1][positionIndex])) return false;
         }
         return true;
     }
@@ -52,8 +61,8 @@ class Sonimortet {
         }
     }
     public boolean allCanMove(int xOffset, int yOffset) {
-        for(int i = 0; i < positions.length; i++) {
-            if(!singleCanMove(i, xOffset, yOffset, false)) return false;
+        for(int posIndex = 0; posIndex < positions.length; posIndex++) {
+            if(!singleCanMove(posIndex, xOffset, yOffset, false)) return false;
         }
         return true;
     }
@@ -67,7 +76,7 @@ class Sonimortet {
         int y = positions[index].getY();
         if(isEdge(x, xOffset, y, yOffset)) return false;
         if(parentGrid.getGrid(x + xOffset, y + yOffset)) {
-            return isSameSoni(x, xOffset, y, yOffset);
+            return singleIsSameSonimortet(x, xOffset, y, yOffset);
         }
         return true;
     }
@@ -77,7 +86,7 @@ class Sonimortet {
         if(x + xOffset > 9 && xOffset > 0) return true;
         return false;
     }
-    public boolean isSameSoni(int thisX, int xOffset, int thisY, int yOffset) {
+    public boolean singleIsSameSonimortet(int thisX, int xOffset, int thisY, int yOffset) {
         for(SonimortetPositions position : positions) {
             if(position.getX() == thisX + xOffset && position.getY() == thisY + yOffset) return true;
         }
@@ -87,9 +96,9 @@ class Sonimortet {
         SonimortetPositions[] currentPositions = positions;
         positions = new SonimortetPositions[positions.length - 1];
         int newIndex = 0;
-        for(int i = 0; i < currentPositions.length; i++) {
-            if(i != index) {
-                positions[newIndex] = currentPositions[i];
+        for(int posIndex = 0; posIndex < currentPositions.length; posIndex++) {
+            if(posIndex != index) {
+                positions[newIndex] = currentPositions[posIndex];
                 newIndex++;
             }
         }
@@ -102,26 +111,18 @@ class Sonimortet {
         return height - 1;
     }
     public void hardDrop() {
-        shiftAll(0, getHeight(), false);
+        shiftAll(0, getHeight());
         parentGrid.addSonimortet();
         new GameplayTimers().decrementTimer();
     }
     public void softDrop() {
-        if(!allCanMove(0, 1)) return;
-        shiftAll(0, 1, false);
+        shiftAll(0, 1);
         parentGrid.restartTimer();
     }
-    public void shiftLeft() {
-        if(!allCanMove(-1, 0)) return;
-        shiftAll(-1, 0, false);
-    }
-    public void shiftRight() {
-        if(!allCanMove(1, 0)) return;
-        shiftAll(1, 0, false);
-    }
-    public void shiftAll(int shiftX, int shiftY, boolean invert) {
+    public void shiftAll(int shiftX, int shiftY) {
+        if(!allCanMove(shiftX, shiftY)) return;
         for(SonimortetPositions position : positions) {
-            position.shiftSingle(shiftX, shiftY, invert);
+            position.shiftSingle(shiftX, shiftY, false);
         }
         parentGrid.updateGrid(true);
     }
@@ -267,7 +268,9 @@ class Sonimortet {
     }
     public void executeRotate(int[] shiftX, int[] shiftY, boolean invert) {
         if(!canRotate(shiftX, shiftY, invert)) return;
-        for(int i = 0; i < 4; i++) positions[i].shiftSingle(shiftX[i], shiftY[i], invert);
+        for(int posIndex = 0; posIndex < 4; posIndex++) {
+            positions[posIndex].shiftSingle(shiftX[posIndex], shiftY[posIndex], invert);
+        }
         if(rotation == (invert ? 0 : 3)) rotation = (invert ? 3 : 0);
         else rotation += (invert ? -1 : 1);
     }
@@ -275,7 +278,7 @@ class Sonimortet {
         for(int posIndex = 0; posIndex < 4; posIndex++) {
             if(!singleCanMove(posIndex, shiftX[posIndex], shiftY[posIndex], invert)) {
                 if(allCanMove(-1, 0)) {
-                    shiftAll(-1, 0, false);
+                    shiftAll(-1, 0);
                     executeRotate(shiftX, shiftY, invert);
                 } return false;
             }

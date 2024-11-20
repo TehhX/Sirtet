@@ -4,6 +4,10 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 import java.io.File;
 public class SirtetAudio {
+    /**
+     * This class loads and plays audio clips when required, such as the background track on launch, and individual
+     * sfx when a block is placed, for example.
+     */
     static Clip bgmClip;
     public SirtetAudio() {
         try {

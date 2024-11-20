@@ -1,4 +1,8 @@
 class SonimortetPositions {
+    /**
+     * This class handles the individual positions of blocks within a Sonimortet. It can move them, and get/set
+     * the x and y variables of a block as well.
+     */
     private int x;
     private int y;
     public SonimortetPositions(int x, int y) {

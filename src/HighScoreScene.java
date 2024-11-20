@@ -10,13 +10,12 @@ class HighScoreScene extends JPanel implements KeyListener {
      * with it.
      */
     private JPanel panel;
-    private JLabel title;
     private JLabel[] indexLabels = new JLabel[10];
     private JLabel[] nameLabels = new JLabel[10];
     private JLabel[] scoreLabels = new JLabel[10];
     public HighScoreScene() {
         loadLabels();
-        title = new JLabel("Highscores");
+        JLabel title = new JLabel("Highscores");
         title.setBounds(0, 0, 0, 0);
         title.setFont(Sirtet.SILKSCREEN_60);
         title.setForeground(Color.black);
@@ -27,21 +26,21 @@ class HighScoreScene extends JPanel implements KeyListener {
         panel.setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
         panel.setLayout(null);
         panel.add(title);
-        for(int i = 0; i < 10; i++) {
-            panel.add(nameLabels[i]);
-            panel.add(scoreLabels[i]);
-            panel.add(indexLabels[i]);
+        for(int labelIndex = 0; labelIndex < 10; labelIndex++) {
+            panel.add(nameLabels[labelIndex]);
+            panel.add(scoreLabels[labelIndex]);
+            panel.add(indexLabels[labelIndex]);
         }
         panel.add(this);
     }
     public void loadLabels() {
-        for(int i = 0; i < 10; i++) {
-            indexLabels[i] = labelSetup(i + 1 + ": ");
-            nameLabels[i] = labelSetup(SaveData.highScores[i].getName());
-            scoreLabels[i] = labelSetup("" + SaveData.highScores[i].getScore());
-            indexLabels[i].setBounds(20, 160 + i * 50, 100, 50);
-            nameLabels[i].setBounds(80, 160 + i * 50, 300, 50);
-            scoreLabels[i].setBounds(230, 160 + i * 50, 300, 50);
+        for(int labelIndex = 0; labelIndex < 10; labelIndex++) {
+            indexLabels[labelIndex] = labelSetup(labelIndex + 1 + ": ");
+            nameLabels[labelIndex] = labelSetup(SaveData.highScores[labelIndex].getName());
+            scoreLabels[labelIndex] = labelSetup("" + SaveData.highScores[labelIndex].getScore());
+            indexLabels[labelIndex].setBounds(20, 160 + labelIndex * 50, 100, 50);
+            nameLabels[labelIndex].setBounds(80, 160 + labelIndex * 50, 300, 50);
+            scoreLabels[labelIndex].setBounds(230, 160 + labelIndex * 50, 300, 50);
         }
     }
     public JLabel labelSetup(String text) {

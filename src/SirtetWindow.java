@@ -1,5 +1,10 @@
 import javax.swing.*;
 class SirtetWindow extends JFrame {
+    /**
+     * This class handles the main JFrame and all of its children. It can change the scene by an integer argument,
+     * removing the old scene before adding the new one. The frame will only be made visible once all checks
+     * done by the Sirtet class, such as loading media, are finished to prevent wasted resources.
+     */
     public static JFrame frame;
     public static GameplayScene gameplayScene;
     public static MenuScene menuScene;
