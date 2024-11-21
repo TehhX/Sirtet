@@ -23,9 +23,9 @@ class MenuScene extends JPanel implements ActionListener, MouseListener {
         play = buttonSetup(Sirtet.menuImages[0]);
         highScores = buttonSetup(Sirtet.menuImages[1]);
         quit = buttonSetup(Sirtet.menuImages[2]);
-        play.setBounds(225, 300, 151, 39);
-        highScores.setBounds(125, 360, 350, 42);
-        quit.setBounds(247, 425, 107, 39);
+        play.setBounds(225, 280, 151, 39);
+        highScores.setBounds(125, 340, 350, 42);
+        quit.setBounds(247, 405, 107, 39);
         panel.add(play);
         panel.add(highScores);
         panel.add(quit);
@@ -47,6 +47,8 @@ class MenuScene extends JPanel implements ActionListener, MouseListener {
         super.paint(g);
         Image image = Sirtet.menuImages[6];
         g.drawImage(image, 0, 0, Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y, Sirtet.observer);
+        image = Sirtet.menuImages[7];
+        g.drawImage(image, 600/2-388/2, 475, 388, 193, Sirtet.observer);
     }
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == play) {
