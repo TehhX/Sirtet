@@ -11,7 +11,6 @@ class GameplayTimers {
     private Timer bigTimer;
     private static int tMinus = 1300;
     private static int timesDecremented = 0;
-    public GameplayTimers() {}
     public GameplayTimers(SirtetGrid grid) {
         bigTimer = new Timer();
         TimerTask smallTimer = new TimerTask() {
@@ -26,11 +25,11 @@ class GameplayTimers {
         };
         bigTimer.schedule(smallTimer, tMinus);
     }
-    public void decrementTimer() {
+    public static void decrementTimer() {
         tMinus = (int) (Math.round(Math.pow(0.9822, timesDecremented - 392) + 200));
         timesDecremented++;
     }
-    public void resetTimer() {
+    public static void resetTimer() {
         timesDecremented = 0;
         tMinus = 1300;
     }

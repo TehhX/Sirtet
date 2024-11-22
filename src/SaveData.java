@@ -6,7 +6,7 @@ class SaveData {
     /**
      * This class handles all high scores, and their associated names, along with volume settings. It reads and
      * writes to and from the text file named Sirtet Data.txt. If Sirtet Data.txt does not exist on read,
-     * a copy will be made with premade data. However, if Sirtet Data.txt does exist and is corrupted,
+     * a copy will be made with pre-made data. However, if Sirtet Data.txt does exist and is corrupted,
      * it will fail to load, and close the program until the user fixes or deletes the file.
      */
     static HighScore[] highScores = new HighScore[10];
@@ -18,15 +18,16 @@ class SaveData {
         bgmVolume = 5;
         sfxVolume = 5;
         currentScore = 0;
-        try {
-            inputString();
-        } catch(NumberFormatException e) {
-            System.out.println("Save file corrupted, inspect or delete it. (Sirtet Data.txt)");
-            System.exit(1);
-        }
+        readFile();
     }
-    public static void inputString() {
-        String fileString = readFile();
+    public static void readFile() {
+        String fileString;
+        try {
+            FileReader saveFile = new FileReader("Sirtet Data.txt");
+            fileString = new Scanner(saveFile).nextLine();
+        } catch(FileNotFoundException e) {
+            fileString = "551000,900,800,700,600,500,400,300,200,100.a,b,c,d,e,f,g,h,i,j.";
+        }
         bgmVolume = Integer.parseInt(fileString.substring(0, 1));
         sfxVolume = Integer.parseInt(fileString.substring(1, 2));
         int previousIndex = 2;
@@ -59,19 +60,6 @@ class SaveData {
             stringIndex++;
         }
         highScores[9].setName(fileString.substring(previousIndex, stringIndex));
-    }
-    public static String readFile() {
-        String fileContents = "";
-        try {
-            FileReader saveFile = new FileReader("Sirtet Data.txt");
-            Scanner sc = new Scanner(saveFile);
-            while(sc.hasNext()) {
-                fileContents += sc.nextLine();
-            }
-            return fileContents;
-        } catch(FileNotFoundException e) {
-            return "551000,900,800,700,600,500,400,300,200,100.a,b,c,d,e,f,g,h,i,j.";
-        }
     }
     public static void writeFile() {
         try {

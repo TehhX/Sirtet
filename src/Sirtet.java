@@ -29,7 +29,12 @@ public class Sirtet {
         new SirtetWindow();
     }
     public static void loadImages() {
-        observer = (img, infoflags, x, y, width, height) -> false;
+        observer = new ImageObserver() {
+            @Override
+            public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
+                return false;
+            }
+        };
         try {
             icon = ImageIO.read(new File("Assets/Icon.png"));
             for(int pieceIndex = 0; pieceIndex < 7; pieceIndex++) {

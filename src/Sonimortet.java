@@ -113,7 +113,7 @@ class Sonimortet {
     public void hardDrop() {
         shiftAll(0, getHeight());
         parentGrid.addSonimortet();
-        new GameplayTimers().decrementTimer();
+        GameplayTimers.decrementTimer();
     }
     public void softDrop() {
         shiftAll(0, 1);

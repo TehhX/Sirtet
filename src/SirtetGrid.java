@@ -20,7 +20,7 @@ class SirtetGrid {
         swapsTurn = 0;
         held = (int) (Math.random() * 7);
         this.parentScene = parentScene;
-        new GameplayTimers().resetTimer();
+        GameplayTimers.resetTimer();
         addSonimortet();
     }
     public void addSonimortet(int type) {
