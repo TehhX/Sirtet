@@ -1,7 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import static java.awt.event.KeyEvent.*;
 import java.awt.event.KeyListener;
 import java.util.ConcurrentModificationException;
 class GameplayScene extends JPanel implements KeyListener {
@@ -14,11 +13,10 @@ class GameplayScene extends JPanel implements KeyListener {
     private SirtetGrid grid;
     private JPanel panel;
     private JLabel paused;
-    private boolean isPaused;
+    private boolean isPaused = false;
     private VolumeSlidersPanel volumeSlidersPanel;
     public GameplayScene() {
         volumeSlidersPanel = new VolumeSlidersPanel(VolumeSlidersPanel.VOLUME_CENTER_X, 350);
-        isPaused = false;
         currentPoints = -25;
         score = new JLabel();
         grid = new SirtetGrid(this);
@@ -93,9 +91,9 @@ class GameplayScene extends JPanel implements KeyListener {
      * then paint the held grid on the side.
      */
     public void paint(Graphics g) {
+        super.paint(g);
         g.setColor(Sirtet.SIRTET_GREEN);
         g.fillRect(0, 0, Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
-        super.paint(g);
         if(isPaused) return;
         Image currentImage;
         int yOffset = grid.getLastSonimortet().getHeight();
@@ -125,7 +123,6 @@ class GameplayScene extends JPanel implements KeyListener {
         }
         currentImage = Sirtet.gameplaySceneImages[7];
         g.drawImage(currentImage, 0, 0, Sirtet.observer);
-
     }
     public boolean[][] getHeldGrid() {
         boolean[][] heldGrid = new boolean[3][4];
@@ -141,28 +138,28 @@ class GameplayScene extends JPanel implements KeyListener {
             return;
         } else if(isPaused) return;
         switch(e.getKeyCode()) {
-            case VK_A:
+            case KeyEvent.VK_A:
                 grid.getLastSonimortet().shiftAll(-1, 0);
                 break;
-            case VK_S:
+            case KeyEvent.VK_S:
                 grid.getLastSonimortet().softDrop();
                 break;
-            case VK_D:
+            case KeyEvent.VK_D:
                 grid.getLastSonimortet().shiftAll(1, 0);
                 break;
-            case VK_SPACE:
+            case KeyEvent.VK_SPACE:
                 grid.getLastSonimortet().hardDrop();
                 break;
-            case VK_E:
+            case KeyEvent.VK_E:
                 grid.getLastSonimortet().rotateClock();
                 break;
-            case VK_Q:
+            case KeyEvent.VK_Q:
                 grid.getLastSonimortet().rotateCounter();
                 break;
-            case VK_F:
+            case KeyEvent.VK_F:
                 grid.swapHeld();
                 break;
-            case VK_ESCAPE:
+            case KeyEvent.VK_ESCAPE:
                 pauseGame();
         }
     }

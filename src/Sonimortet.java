@@ -56,8 +56,7 @@ class Sonimortet {
             case 6:
                 return new int[][]{{4, 5, 5, 6}, {0, 0, 1, 0}};
             default:
-                System.out.println("getStartingPositions incorrect input");
-                return new int[][]{};
+                throw new IllegalStateException("Unexpected value: " + type);
         }
     }
     public boolean allCanMove(int xOffset, int yOffset) {
