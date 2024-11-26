@@ -8,14 +8,13 @@ class GameOverScene extends JPanel implements ActionListener {
      * and then sends it off to SaveData.java to be inserted or thrown away, depending on whether it makes it
      * into the top 10 scores list. The user will be told if their name is over 7 characters, and asked to re-enter
      * if it is, as the high score scene can only display names up to a certain size. After receiving a name, it
-     * switches to the high score scene.
+     * switches to the high score scene. The gameOverLabel is written with HTML syntax so it can be center aligned.
      */
     private JPanel panel;
     private JTextField nameField;
     public GameOverScene() {
         this.setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
-        // Uses HTML to change the paragraph style to justify center, adds a line break between lines.
-        JLabel gameOverLabel = new JLabel("<html><p style=\"text-align:center;\">Game Over!<br>Enter Your Name</html></p>", SwingConstants.CENTER);
+        JLabel gameOverLabel = new JLabel("<html><p style=\"text-align:center;\">Game Over!<br>Enter Your Name</p>", SwingConstants.CENTER);
         gameOverLabel.setForeground(Color.black);
         gameOverLabel.setBounds(0, 275, 600, 100);
         gameOverLabel.setFont(Sirtet.SILKSCREEN_40);
@@ -39,11 +38,16 @@ class GameOverScene extends JPanel implements ActionListener {
         return panel;
     }
     public void actionPerformed(ActionEvent e) {
-        if(nameField.getText().length() > 10 || nameField.getText().length() < 3) {
-            JOptionPane.showMessageDialog(SirtetWindow.frame, "Name Must be 3-10 Characters");
+        String name = nameField.getText();
+        if(name.length() > 10 || name.length() < 3) {
+            JOptionPane.showMessageDialog(SirtetWindow.frame, "Name Must be 3-10 Characters.");
             return;
         }
-        SaveData.insertScore(nameField.getText());
+        if(name.contains(",") || name.contains(".")) {
+            JOptionPane.showMessageDialog(SirtetWindow.frame, "No commas or periods allowed.");
+            return;
+        }
+        SaveData.insertScore(name);
         SirtetWindow.changeScene(3);
     }
     public void paint(Graphics g) {

@@ -32,22 +32,28 @@ public class Sirtet {
         observer = (img, infoflags, x, y, width, height) -> false;
         try {
             icon = ImageIO.read(new File("Assets/Icon.png"));
-            for(int pieceIndex = 0; pieceIndex < 7; pieceIndex++) {
-                gameplaySceneImages[pieceIndex] = ImageIO.read(new File("Assets/piece" + pieceIndex + ".png"));
-            }
-            gameplaySceneImages[7] = ImageIO.read(new File("Assets/gameplayScene.png"));
-            menuImages[0] = ImageIO.read(new File("Assets/playButton.png"));
-            menuImages[1] = ImageIO.read(new File("Assets/highscoreButton.png"));
-            menuImages[2] = ImageIO.read(new File("Assets/quitButton.png"));
-            menuImages[3] = ImageIO.read(new File("Assets/playButtonActive.png"));
-            menuImages[4] = ImageIO.read(new File("Assets/highscoreButtonActive.png"));
-            menuImages[5] = ImageIO.read(new File("Assets/quitButtonActive.png"));
-            menuImages[6] = ImageIO.read(new File("Assets/menuScene.png"));
-            menuImages[7] = ImageIO.read(new File("Assets/controlsImage.png"));
+            loadGameplayImages();
+            loadMenuImages();
         } catch(Exception e) {
             e.printStackTrace();
             System.exit(1);
         }
+    }
+    public static void loadGameplayImages() throws Exception {
+        for(int i = 0; i < 7; i++) {
+            gameplaySceneImages[i] = ImageIO.read(new File("Assets/piece" + i + ".png"));
+        }
+        gameplaySceneImages[7] = ImageIO.read(new File("Assets/gameplayScene.png"));
+    }
+    public static void loadMenuImages() throws Exception {
+        menuImages[0] = ImageIO.read(new File("Assets/playButton.png"));
+        menuImages[1] = ImageIO.read(new File("Assets/highscoreButton.png"));
+        menuImages[2] = ImageIO.read(new File("Assets/quitButton.png"));
+        menuImages[3] = ImageIO.read(new File("Assets/playButtonActive.png"));
+        menuImages[4] = ImageIO.read(new File("Assets/highscoreButtonActive.png"));
+        menuImages[5] = ImageIO.read(new File("Assets/quitButtonActive.png"));
+        menuImages[6] = ImageIO.read(new File("Assets/menuScene.png"));
+        menuImages[7] = ImageIO.read(new File("Assets/controlsImage.png"));
     }
     public static void loadFonts() {
         try {

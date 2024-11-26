@@ -7,7 +7,7 @@ class SirtetGrid {
      * held sonimortet  etc.
      */
     private boolean[][] grid;
-    private int held;
+    private BlockType held;
     private int rowsCleared = 0;
     private GameplayTimers timer;
     private GameplayScene parentScene;
@@ -16,20 +16,24 @@ class SirtetGrid {
     public SirtetGrid(GameplayScene parentScene) {
         grid = new boolean[10][16];
         swapsTurn = 0;
-        held = (int) (Math.random() * 7);
+        held = randomBlock();
         this.parentScene = parentScene;
         GameplayTimers.resetTimer();
         addSonimortet();
     }
-    public void addSonimortet(int type) {
+    public void addSonimortet(BlockType type) {
         sonimortetList.add(new Sonimortet(type, this));
         SirtetAudio.playAudio("blockPlace.wav");
         updateGrid(true);
     }
     public void addSonimortet() {
-        addSonimortet((int) (Math.random() * 7));
+        addSonimortet(randomBlock());
         parentScene.pointIncrease(-1);
         swapsTurn = 0;
+    }
+    public BlockType randomBlock() {
+        BlockType[] blockTypes = BlockType.values();
+        return blockTypes[(int) (Math.random() * blockTypes.length)];
     }
     public Sonimortet getLastSonimortet() {
         return sonimortetList.get(sonimortetList.size() - 1);
@@ -71,53 +75,56 @@ class SirtetGrid {
         }
     }
     public void checkRow() {
-        for(int outer = 15; outer >= 0; outer--) {
-            int count = 0;
-            for(int inner = 0; inner < 10; inner++) {
-                if(grid[inner][outer]) count++;
+        for(int yPos = 15; yPos >= 0; yPos--) {
+            int rowFilledCount = 0;
+            for(int xPos = 0; xPos < 10; xPos++) {
+                if(grid[xPos][yPos]) rowFilledCount++;
             }
-            if(count == 10) clearRowAndShift(outer);
+            if(rowFilledCount == 10) {
+                clearRow(yPos);
+                shiftAbove(yPos);
+                updateGrid(false);
+            }
         }
         parentScene.pointIncrease(rowsCleared);
         rowsCleared = 0;
     }
-    public void clearRowAndShift(int y) {
+    public void clearRow(int yPos) {
         rowsCleared++;
-        int deleted;
+        boolean deleted;
         do {
-            deleted = 0;
+            deleted = false;
             for (Sonimortet sonimortet : sonimortetList) {
                 for (int posIndex = 0; posIndex < sonimortet.getPositions().length; posIndex++) {
-                    if (sonimortet.getPositions()[posIndex].getY() == y) {
+                    if (sonimortet.getPositions()[posIndex].getY() == yPos) {
                         sonimortet.delete(posIndex);
-                        deleted++;
+                        deleted = true;
                     }
                 }
             }
-        } while(deleted != 0);
+        } while(deleted);
+    }
+    public void shiftAbove(int yPos) {
         for(int soniIndex = 0; soniIndex < sonimortetList.size() - 1; soniIndex++) {
             for(int xPos = 0; xPos < sonimortetList.get(soniIndex).getPositions().length; xPos++) {
-                if(sonimortetList.get(soniIndex).getPositions()[xPos].getY() < y) {
+                if(sonimortetList.get(soniIndex).getPositions()[xPos].getY() < yPos) {
                     sonimortetList.get(soniIndex).getPositions()[xPos].shiftSingle(0, 1, false);
                 }
             }
         }
-        updateGrid(false);
     }
+
     public void swapHeld() {
         if(swapsTurn == 3) return;
         swapsTurn++;
-        int tempType = held;
+        BlockType tempType = held;
         held = getLastSonimortet().getType();
         sonimortetList.remove(getLastSonimortet());
         updateGrid(false);
         addSonimortet(tempType);
         updateGrid(true);
     }
-    public GameplayScene getParentScene() {
-        return parentScene;
-    }
-    public int getHeldType() {
+    public BlockType getHeldType() {
         return held;
     }
     public boolean getGrid(int outerIndex, int innerIndex) {

@@ -8,7 +8,6 @@ class GameplayScene extends JPanel implements KeyListener {
      * This class handles the main gameplay scene, and all within. It also needs a SirtetGrid object to pass user
      * input to.
      */
-    private int currentPoints;
     private JLabel score;
     private SirtetGrid grid;
     private JPanel panel;
@@ -17,7 +16,7 @@ class GameplayScene extends JPanel implements KeyListener {
     private VolumeSlidersPanel volumeSlidersPanel;
     public GameplayScene() {
         volumeSlidersPanel = new VolumeSlidersPanel(VolumeSlidersPanel.VOLUME_CENTER_X, 350);
-        currentPoints = -25;
+        SaveData.currentScore = -25;
         score = new JLabel();
         grid = new SirtetGrid(this);
         this.setOpaque(false);
@@ -57,31 +56,31 @@ class GameplayScene extends JPanel implements KeyListener {
     public void pointIncrease(int rowsCleared) {
         switch (rowsCleared) {
             case -1:
-                currentPoints += 50;
+                SaveData.currentScore += 50;
                 break;
             case 0:
                 return;
             case 1:
-                currentPoints += 100;
+                SaveData.currentScore += 100;
                 SirtetAudio.playAudio("oneRow.wav");
                 break;
             case 2:
-                currentPoints += 800;
+                SaveData.currentScore += 800;
                 SirtetAudio.playAudio("twoRow.wav");
                 break;
             case 3:
-                currentPoints += 1200;
+                SaveData.currentScore += 1200;
                 SirtetAudio.playAudio("threeRow.wav");
                 break;
             default:
-                currentPoints += 1600;
+                SaveData.currentScore += 1600;
                 SirtetAudio.playAudio("fourRow.wav");
         }
-        currentPoints -= 25;
+        SaveData.currentScore -= 25;
         updateScoreLabel();
     }
     public void updateScoreLabel() {
-        score.setText(currentPoints + "");
+        score.setText(SaveData.currentScore + "");
         int width = (int) score.getPreferredSize().getWidth();
         score.setBounds(550 - width, 35, width, 50);
     }
@@ -95,15 +94,15 @@ class GameplayScene extends JPanel implements KeyListener {
         g.setColor(Sirtet.SIRTET_GREEN);
         g.fillRect(0, 0, Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
         if(isPaused) return;
-        Image currentImage;
+        g.setColor(new Color(103, 215, 237));
         int yOffset = grid.getLastSonimortet().getHeight();
         for (SonimortetPositions pos : grid.getLastPositions()) {
-            g.setColor(new Color(103, 215, 237));
             g.fillRect(173 + 38 * pos.getX(), 132 + 38 * (pos.getY() + yOffset), 36, 36);
         }
+        Image currentImage;
         try {
             for (Sonimortet sonimortet : grid.getSonimortetList()) {
-                currentImage = Sirtet.gameplaySceneImages[sonimortet.getType()];
+                currentImage = Sirtet.gameplaySceneImages[sonimortet.getType().ordinal()];
                 for(SonimortetPositions pos : sonimortet.getPositions()) {
                     g.drawImage(currentImage, 173 + 38 * pos.getX(), 132 + 38 * pos.getY(), 36, 36, Sirtet.observer);
                 }
@@ -113,11 +112,11 @@ class GameplayScene extends JPanel implements KeyListener {
             return;
         }
         boolean[][] heldGrid = getHeldGrid();
-        currentImage = Sirtet.gameplaySceneImages[grid.getHeldType()];
+        currentImage = Sirtet.gameplaySceneImages[grid.getHeldType().ordinal()];
         for(int xPos = 0; xPos < 3; xPos++) {
             for(int yPos = 0; yPos < 4; yPos++) {
                 if(heldGrid[xPos][yPos]) {
-                    g.drawImage(currentImage, 30 + 38 * xPos, 170 + 38 * yPos, 37, 38, Sirtet.observer);
+                    g.drawImage(currentImage, 30 + 38 * xPos, 170 + 38 * yPos, 37, 37, Sirtet.observer);
                 }
             }
         }
@@ -168,9 +167,6 @@ class GameplayScene extends JPanel implements KeyListener {
     }
     public JPanel getPanel() {
         return panel;
-    }
-    public int getCurrentPoints() {
-        return currentPoints;
     }
     public void keyTyped(KeyEvent e) {}
     public void keyReleased(KeyEvent e) {}

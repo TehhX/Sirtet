@@ -14,7 +14,9 @@ class SaveData {
     static int sfxVolume;
     static int currentScore;
     public SaveData() {
-        for(int hsIndex = 0; hsIndex < 10; hsIndex++) highScores[hsIndex] = new HighScore();
+        for(int highScoreIndex = 0; highScoreIndex < 10; highScoreIndex++) {
+            highScores[highScoreIndex] = new HighScore();
+        }
         bgmVolume = 5;
         sfxVolume = 5;
         currentScore = 0;
@@ -28,11 +30,15 @@ class SaveData {
         } catch(FileNotFoundException e) {
             fileString = "551000,900,800,700,600,500,400,300,200,100.a,b,c,d,e,f,g,h,i,j.";
         }
-        bgmVolume = Integer.parseInt(fileString.substring(0, 1));
-        sfxVolume = Integer.parseInt(fileString.substring(1, 2));
-        int previousIndex = 2;
-        previousIndex = setScores(fileString, previousIndex);
-        setNames(fileString, previousIndex);
+        try {
+            bgmVolume = Integer.parseInt(fileString.substring(0, 1));
+            sfxVolume = Integer.parseInt(fileString.substring(1, 2));
+            int previousIndex = setScores(fileString, 2);
+            setNames(fileString, previousIndex);
+        } catch(NumberFormatException nfe) {
+            System.out.println("Inspect or Delete Sirtet Data.txt, file is corrupted.");
+            System.exit(1);
+        }
     }
     public static int setScores(String fileString, int previousIndex) {
         int scoresIndex = 0;

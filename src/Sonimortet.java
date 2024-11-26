@@ -7,11 +7,11 @@ class Sonimortet {
      * call the GameOver() method, which handles removing the GameplayScene, SirtetGrid, and all object
      * instances within from memory, and their panels/frames.
      */
-    private int type;
+    private BlockType type;
     private int rotation;
     private SirtetGrid parentGrid;
     private SonimortetPositions[] positions;
-    public Sonimortet(int type, SirtetGrid parentGrid) {
+    public Sonimortet(BlockType type, SirtetGrid parentGrid) {
         rotation = 0;
         this.type = type;
         this.parentGrid = parentGrid;
@@ -28,7 +28,6 @@ class Sonimortet {
     }
     public void gameOver() {
         parentGrid.stopTimer();
-        SaveData.currentScore = parentGrid.getParentScene().getCurrentPoints();
         SirtetAudio.playAudio("gameOver.wav");
         if(SaveData.currentScore > SaveData.highScores[9].getScore()) SirtetWindow.changeScene(2);
         else SirtetWindow.changeScene(3);
@@ -39,21 +38,21 @@ class Sonimortet {
         }
         return true;
     }
-    public static int[][] getStartingPositions(int type) {
+    public static int[][] getStartingPositions(BlockType type) {
         switch(type) {
-            case 0:
+            case O:
                 return new int[][]{{4, 5, 4, 5}, {0, 0, 1, 1}};
-            case 1:
+            case I:
                 return new int[][]{{4, 4, 4, 4}, {0, 1, 2, 3}};
-            case 2:
+            case S:
                 return new int[][]{{4, 5, 5, 6}, {1, 1, 0, 0}};
-            case 3:
+            case Z:
                 return new int[][]{{4, 5, 5, 6}, {0, 0, 1, 1}};
-            case 4:
+            case L:
                 return new int[][]{{4, 4, 4, 5}, {0, 1, 2, 2}};
-            case 5:
+            case J:
                 return new int[][]{{5, 5, 5, 4}, {0, 1, 2, 2}};
-            case 6:
+            case T:
                 return new int[][]{{4, 5, 5, 6}, {0, 0, 1, 0}};
             default:
                 throw new IllegalStateException("Unexpected value: " + type);
@@ -104,9 +103,7 @@ class Sonimortet {
     }
     public int getHeight() {
         int height = 0;
-        while(allCanMove(0, height)) {
-            height++;
-        }
+        while(allCanMove(0, height)) height++;
         return height - 1;
     }
     public void hardDrop() {
@@ -126,7 +123,7 @@ class Sonimortet {
         parentGrid.updateGrid(true);
     }
     public void rotateClock() {
-        if(type == 0) return;
+        if(type == BlockType.O) return;
         switch(rotation) {
             case 0:
                 rotate0(false);
@@ -143,7 +140,7 @@ class Sonimortet {
         parentGrid.updateGrid(true);
     }
     public void rotateCounter() {
-        if(type == 0) return;
+        if(type == BlockType.O) return;
         switch(rotation) {
             case 0:
                 rotate3(true);
@@ -163,29 +160,32 @@ class Sonimortet {
         int[] shiftX;
         int[] shiftY;
         switch(type) {
-            case 1:
+            case I:
                 shiftX = new int[]{0, 1, 2, 3};
                 shiftY = new int[]{0, -1, -2, -3};
                 break;
-            case 2:
+            case S:
                 shiftX = new int[]{0, 0, -1, -1};
                 shiftY = new int[]{0, 0, 0, 2};
                 break;
-            case 3:
+            case Z:
                 shiftX = new int[]{0, 0, 0, -2};
                 shiftY = new int[]{1, 0, 0, 1};
                 break;
-            case 4:
+            case L:
                 shiftX = new int[]{0, 0, 1, 1};
                 shiftY = new int[]{0, 0, -2, -2};
                 break;
-            case 5:
+            case J:
                 shiftX = new int[]{-1, 0, 1, 0};
                 shiftY = new int[]{0, 0, -1, -1};
                 break;
-            default:
+            case T:
                 shiftX = new int[]{0, 0, 0, -1};
                 shiftY = new int[]{1, 0, 0, 2};
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + type);
         }
         executeRotate(shiftX, shiftY, invert);
     }
@@ -193,29 +193,32 @@ class Sonimortet {
         int[] shiftX;
         int[] shiftY;
         switch(type) {
-            case 1:
+            case I:
                 shiftX = new int[]{0, -1, -2, -3};
                 shiftY = new int[]{0, 1, 2, 3};
                 break;
-            case 2:
+            case S:
                 shiftX = new int[]{0, 0, 1, 1};
                 shiftY = new int[]{0, 0, 0, -2};
                 break;
-            case 3:
+            case Z:
                 shiftX = new int[]{0, 0, 0, 2};
                 shiftY = new int[]{-1, 0, 0, -1};
                 break;
-            case 4:
+            case L:
                 shiftX = new int[]{0, 1, 0, -1};
                 shiftY = new int[]{0, 1, 0, 1};
                 break;
-            case 5:
+            case J:
                 shiftX = new int[]{0, 0, -2, 0};
                 shiftY = new int[]{0, -1, 1, 0};
                 break;
-            default:
+            case T:
                 shiftX = new int[]{0, 0, 0, 1};
                 shiftY = new int[]{0, 0, 0, -1};
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + type);
         }
         executeRotate(shiftX, shiftY, invert);
     }
@@ -223,22 +226,23 @@ class Sonimortet {
         int[] shiftX;
         int[] shiftY;
         switch(type) {
-            case 1:
-            case 2:
-            case 3:
+            case I: case S: case Z:
                 rotate0(invert);
                 return;
-            case 4:
+            case L:
                 shiftX = new int[]{0, 1, 1, 0};
                 shiftY = new int[]{1, -1, 0, 0};
                 break;
-            case 5:
+            case J:
                 shiftX = new int[]{0, 0, 2, 2};
                 shiftY = new int[]{0, 0, -1, -1};
                 break;
-            default:
+            case T:
                 shiftX = new int[]{0, -1, 0, -2};
                 shiftY = new int[]{0, 0, 0, 1};
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + type);
         }
         executeRotate(shiftX, shiftY, invert);
     }
@@ -246,22 +250,23 @@ class Sonimortet {
         int[] shiftX;
         int[] shiftY;
         switch(type) {
-            case 1:
-            case 2:
-            case 3:
+            case I: case S: case Z:
                 rotate1(invert);
                 return;
-            case 4:
+            case L:
                 shiftX = new int[]{0, -2, -2, 0};
                 shiftY = new int[]{-1, 0, 2, 1};
                 break;
-            case 5:
+            case J:
                 shiftX = new int[]{1, 0, -1, -2};
                 shiftY = new int[]{0, 1, 1, 2};
                 break;
-            default:
+            case T:
                 shiftX = new int[]{0, 1, 0, 2};
                 shiftY = new int[]{-1, 0, 0, -2};
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + type);
         }
         executeRotate(shiftX, shiftY, invert);
     }
@@ -284,7 +289,7 @@ class Sonimortet {
         }
         return true;
     }
-    public int getType() {
+    public BlockType getType() {
         return type;
     }
     public SonimortetPositions[] getPositions() {
