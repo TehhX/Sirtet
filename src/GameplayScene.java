@@ -101,10 +101,10 @@ class GameplayScene extends JPanel implements KeyListener {
         }
         Image currentImage;
         try {
-            for (Sonimortet sonimortet : grid.getSonimortetList()) {
-                currentImage = Sirtet.gameplaySceneImages[sonimortet.getType().ordinal()];
-                for(SonimortetPositions pos : sonimortet.getPositions()) {
-                    g.drawImage(currentImage, 173 + 38 * pos.getX(), 132 + 38 * pos.getY(), 36, 36, Sirtet.observer);
+            for (Sonimortet currentSonimortet : grid.getSonimortetList()) {
+                currentImage = Sirtet.gameplaySceneImages[currentSonimortet.getType().ordinal()];
+                for(SonimortetPositions currentPosition : currentSonimortet.getPositions()) {
+                    g.drawImage(currentImage, 173 + 38 * currentPosition.getX(), 132 + 38 * currentPosition.getY(), 36, 36, Sirtet.observer);
                 }
             }
         } catch(ConcurrentModificationException e) {

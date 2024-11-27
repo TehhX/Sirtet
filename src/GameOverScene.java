@@ -43,8 +43,8 @@ class GameOverScene extends JPanel implements ActionListener {
             JOptionPane.showMessageDialog(SirtetWindow.frame, "Name Must be 3-10 Characters.");
             return;
         }
-        if(name.contains(",") || name.contains(".")) {
-            JOptionPane.showMessageDialog(SirtetWindow.frame, "No commas or periods allowed.");
+        if(name.contains(",") || name.contains(".") || name.contains(" ")) {
+            JOptionPane.showMessageDialog(SirtetWindow.frame, "No commas, periods, or spaces allowed.");
             return;
         }
         SaveData.insertScore(name);

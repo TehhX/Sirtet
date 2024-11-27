@@ -74,7 +74,7 @@ class Sonimortet {
         int y = positions[index].getY();
         if(isEdge(x, xOffset, y, yOffset)) return false;
         if(parentGrid.getGrid(x + xOffset, y + yOffset)) {
-            return singleIsSameSonimortet(x, xOffset, y, yOffset);
+            return isSameSonimortet(x, xOffset, y, yOffset);
         }
         return true;
     }
@@ -84,7 +84,7 @@ class Sonimortet {
         if(x + xOffset > 9 && xOffset > 0) return true;
         return false;
     }
-    public boolean singleIsSameSonimortet(int thisX, int xOffset, int thisY, int yOffset) {
+    public boolean isSameSonimortet(int thisX, int xOffset, int thisY, int yOffset) {
         for(SonimortetPositions position : positions) {
             if(position.getX() == thisX + xOffset && position.getY() == thisY + yOffset) return true;
         }
@@ -134,8 +134,11 @@ class Sonimortet {
             case 2:
                 rotate2(false);
                 break;
-            default:
+            case 3:
                 rotate3(false);
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + rotation);
         }
         parentGrid.updateGrid(true);
     }
@@ -151,8 +154,11 @@ class Sonimortet {
             case 2:
                 rotate1(true);
                 break;
-            default:
+            case 3:
                 rotate2(true);
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + rotation);
         }
         parentGrid.updateGrid(true);
     }
@@ -275,8 +281,13 @@ class Sonimortet {
         for(int posIndex = 0; posIndex < 4; posIndex++) {
             positions[posIndex].shiftSingle(shiftX[posIndex], shiftY[posIndex], invert);
         }
-        if(rotation == (invert ? 0 : 3)) rotation = (invert ? 3 : 0);
-        else rotation += (invert ? -1 : 1);
+        if(invert) {
+            if(rotation == 0) rotation = 3;
+            else rotation -= 1;
+        } else {
+            if(rotation == 3) rotation = 0;
+            else rotation +=1;
+        }
     }
     public boolean canRotate(int[] shiftX, int[] shiftY, boolean invert) {
         for(int posIndex = 0; posIndex < 4; posIndex++) {
