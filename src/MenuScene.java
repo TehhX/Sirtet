@@ -56,7 +56,6 @@ class MenuScene extends JPanel implements ActionListener, MouseListener {
         } else if(e.getSource() == highScores) {
             SirtetWindow.changeScene(3);
         } else if (e.getSource() == quit){
-            SaveData.writeFile();
             System.exit(0);
         }
     }

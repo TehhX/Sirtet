@@ -41,6 +41,7 @@ public class VolumeSlidersPanel extends JPanel implements ChangeListener {
             SaveData.sfxVolume = sfxSlider.getValue();
             sfxSlider.repaint();
         }
+        SaveData.writeFile();
         SirtetWindow.frame.requestFocus();
     }
     public JPanel getPanel() {

@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="Sirtet:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/Sirtet_jar</output-path>
-    <root id="archive" name="Sirtet.jar">
-      <element id="module-output" name="Sirtet" />
-    </root>
-  </artifact>
-</component>

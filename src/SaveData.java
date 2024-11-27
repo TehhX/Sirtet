@@ -68,22 +68,25 @@ class SaveData {
         highScores[9].setName(fileString.substring(previousIndex, stringIndex));
     }
     public static void writeFile() {
-        try {
-            PrintWriter writer = new PrintWriter("Sirtet Data.txt");
-            writer.print(bgmVolume);
-            writer.print(sfxVolume);
-            for(int scoreIndex = 0; scoreIndex < 9; scoreIndex++) {
-                writer.print(highScores[scoreIndex].getScore() + ",");
+        Runnable threadRunnable = () -> {
+            try {
+                PrintWriter writer = new PrintWriter("Sirtet Data.txt");
+                writer.print(bgmVolume);
+                writer.print(sfxVolume);
+                for(int scoreIndex = 0; scoreIndex < 9; scoreIndex++) {
+                    writer.print(highScores[scoreIndex].getScore() + ",");
+                }
+                writer.print(highScores[9].getScore() + ".");
+                for(int nameIndex = 0; nameIndex < 9; nameIndex++) {
+                    writer.print(highScores[nameIndex].getName() + ",");
+                }
+                writer.print(highScores[9].getName() + ".");
+                writer.close();
+            } catch(Exception e) {
+                e.printStackTrace();
             }
-            writer.print(highScores[9].getScore() + ".");
-            for(int nameIndex = 0; nameIndex < 9; nameIndex++) {
-                writer.print(highScores[nameIndex].getName() + ",");
-            }
-            writer.print(highScores[9].getName() + ".");
-            writer.close();
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
+        };
+        new Thread(threadRunnable).start();
     }
     public static void insertScore(String currentName) {
         int scoreIndex = 0;
@@ -99,5 +102,6 @@ class SaveData {
         }
         highScores[scoreIndex].setScore(currentScore);
         highScores[scoreIndex].setName(currentName);
+        writeFile();
     }
 }
