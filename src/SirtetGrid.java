@@ -1,3 +1,4 @@
+import java.util.ConcurrentModificationException;
 import java.util.LinkedList;
 class SirtetGrid {
     /**
@@ -22,9 +23,9 @@ class SirtetGrid {
         addSonimortet();
     }
     public void addSonimortet(BlockType type) {
+        checkRows();
         sonimortetList.add(new Sonimortet(type, this));
         SirtetAudio.playAudio("blockPlace.wav");
-        checkRows();
         updateGrid(true);
     }
     public void addSonimortet() {
@@ -54,10 +55,14 @@ class SirtetGrid {
     public void updateGrid(boolean repaint) {
         grid = new boolean[gridX][gridY];
         if(sonimortetList.isEmpty()) return;
-        populateGrid();
-        if(repaint) parentScene.repaint();
+        try {
+            populateGrid();
+            if (repaint) parentScene.repaint();
+        } catch(ConcurrentModificationException cme) {
+            updateGrid(repaint);
+        }
     }
-    public void populateGrid() {
+    public void populateGrid() throws ConcurrentModificationException {
         for(Sonimortet sonimortet : sonimortetList) {
             for(SonimortetPositions positions : sonimortet.getPositions()) {
                 grid[positions.getX()][positions.getY()] = true;

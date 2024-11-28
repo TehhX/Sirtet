@@ -1,6 +1,4 @@
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.Scanner;
 class SaveData {
     /**
@@ -17,76 +15,53 @@ class SaveData {
         for(int highScoreIndex = 0; highScoreIndex < 10; highScoreIndex++) {
             highScores[highScoreIndex] = new HighScore();
         }
-        bgmVolume = 5;
-        sfxVolume = 5;
         currentScore = 0;
         readFile();
     }
     public static void readFile() {
-        String fileString;
         try {
             FileReader saveFile = new FileReader("Sirtet Data.txt");
-            fileString = new Scanner(saveFile).nextLine();
-        } catch(FileNotFoundException e) {
-            fileString = "551000,900,800,700,600,500,400,300,200,100.a,b,c,d,e,f,g,h,i,j.";
-        }
-        try {
-            bgmVolume = Integer.parseInt(fileString.substring(0, 1));
-            sfxVolume = Integer.parseInt(fileString.substring(1, 2));
-            int previousIndex = setScores(fileString, 2);
-            setNames(fileString, previousIndex);
-        } catch(NumberFormatException nfe) {
-            System.out.println("Inspect or Delete Sirtet Data.txt, file is corrupted.");
-            System.exit(1);
-        }
-    }
-    public static int setScores(String fileString, int previousIndex) {
-        int scoresIndex = 0;
-        int stringIndex = 2;
-        while(fileString.charAt(stringIndex) != '.') {
-            if(fileString.charAt(stringIndex) == ',') {
-                highScores[scoresIndex].setScore(Integer.parseInt(fileString.substring(previousIndex, stringIndex)));
-                scoresIndex++;
-                previousIndex = stringIndex + 1;
+            Scanner fileScanner = new Scanner(saveFile);
+            bgmVolume = Integer.parseInt(fileScanner.nextLine());
+            sfxVolume = Integer.parseInt(fileScanner.nextLine());
+            for(int scoreIndex = 0; scoreIndex < 10; scoreIndex++) {
+                highScores[scoreIndex].setScore(Integer.parseInt(fileScanner.nextLine()));
             }
-            stringIndex++;
-        }
-        highScores[9].setScore(Integer.parseInt(fileString.substring(previousIndex, stringIndex)));
-        return stringIndex + 1;
-    }
-    public static void setNames(String fileString, int previousIndex) {
-        int namesIndex = 0;
-        int stringIndex = previousIndex;
-        while(fileString.charAt(stringIndex) != '.') {
-            if(fileString.charAt(stringIndex) == ',') {
-                highScores[namesIndex].setName(fileString.substring(previousIndex, stringIndex));
-                previousIndex = stringIndex + 1;
-                namesIndex++;
+            for(int nameIndex = 0; nameIndex < 10; nameIndex++) {
+                highScores[nameIndex].setName(fileScanner.nextLine());
             }
-            stringIndex++;
+        } catch(Exception e) {
+            repairSave();
+            readFile();
         }
-        highScores[9].setName(fileString.substring(previousIndex, stringIndex));
     }
     public static void writeFile() {
         Runnable threadRunnable = () -> {
             try {
                 PrintWriter writer = new PrintWriter("Sirtet Data.txt");
-                writer.print(bgmVolume);
-                writer.print(sfxVolume);
-                for(int scoreIndex = 0; scoreIndex < 9; scoreIndex++) {
-                    writer.print(highScores[scoreIndex].getScore() + ",");
+                writer.println(bgmVolume);
+                writer.println(sfxVolume);
+                for(int scoreIndex = 0; scoreIndex < 10; scoreIndex++) {
+                    writer.println(highScores[scoreIndex].getScore());
                 }
-                writer.print(highScores[9].getScore() + ".");
-                for(int nameIndex = 0; nameIndex < 9; nameIndex++) {
-                    writer.print(highScores[nameIndex].getName() + ",");
+                for(int nameIndex = 0; nameIndex < 10; nameIndex++) {
+                    writer.println(highScores[nameIndex].getName());
                 }
-                writer.print(highScores[9].getName() + ".");
                 writer.close();
             } catch(Exception e) {
                 e.printStackTrace();
             }
         };
         new Thread(threadRunnable).start();
+    }
+    public static void repairSave() {
+        try {
+            PrintWriter writer = new PrintWriter("Sirtet Data.txt");
+            writer.print("3\n3\n1000\n900\n800\n700\n600\n500\n400\n300\n200\n100\na\nb\nc\nd\ne\nf\ng\nh\ni\nj");
+            writer.close();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
     public static void insertScore(String currentName) {
         int scoreIndex = 0;
