@@ -13,7 +13,7 @@ public class Sirtet {
      */
     static final int FRAME_SIZE_X = 600;
     static final int FRAME_SIZE_Y = 800;
-    static final Color SIRTET_GREEN = new Color(135, 232, 155);
+    static final Color SIRTET_GREEN = new Color(22, 207, 130);
     static final Font SILKSCREEN_60 = new Font("Silkscreen", Font.PLAIN, 60);
     static final Font SILKSCREEN_40 = new Font("Silkscreen", Font.PLAIN, 40);
     static final Font SILKSCREEN_30 = new Font("Silkscreen", Font.PLAIN, 30);

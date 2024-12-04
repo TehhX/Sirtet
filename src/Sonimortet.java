@@ -21,7 +21,6 @@ class Sonimortet {
     public void setStartingPositions() {
         int[][] startingPositions = getStartingPositions(type);
         if(!canPlace(startingPositions)) gameOver();
-        else parentGrid.restartTimer();
         for(int posIndex = 0; posIndex < 4; posIndex++) {
             positions[posIndex] = new SonimortetPositions(startingPositions[0][posIndex], startingPositions[1][posIndex]);
         }
@@ -112,6 +111,7 @@ class Sonimortet {
         GameplayTimers.decrementTimer();
     }
     public void softDrop() {
+        if(getHeight() == 0) hardDrop();
         shiftAll(0, 1);
         parentGrid.restartTimer();
     }

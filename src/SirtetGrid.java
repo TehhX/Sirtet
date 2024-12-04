@@ -24,9 +24,11 @@ class SirtetGrid {
     }
     public void addSonimortet(BlockType type) {
         checkRows();
+        restartTimer();
         sonimortetList.add(new Sonimortet(type, this));
         SirtetAudio.playAudio("blockPlace.wav");
         updateGrid(true);
+        new RuntimeException().printStackTrace();
     }
     public void addSonimortet() {
         addSonimortet(randomBlock());
