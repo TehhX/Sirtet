@@ -1,5 +1,5 @@
+import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
-import java.util.LinkedList;
 class SirtetGrid {
     /**
      * This class handles the grid logic, and has the master list of all sonimortets within. Also contains the timer
@@ -15,7 +15,8 @@ class SirtetGrid {
     private GameplayTimers timer;
     private GameplayScene parentScene;
     private int swapsTurn = 0;
-    private LinkedList<Sonimortet> sonimortetList = new LinkedList<>();
+    private ArrayList<Sonimortet> sonimortetList = new ArrayList<>();
+    private ArrayList<Sonimortet> sonimortetsToDelete = new ArrayList<>();
     public SirtetGrid(GameplayScene parentScene) {
         grid = new boolean[gridX][gridY];
         this.parentScene = parentScene;
@@ -24,11 +25,8 @@ class SirtetGrid {
     }
     public void addSonimortet(BlockType type) {
         checkRows();
-        restartTimer();
         sonimortetList.add(new Sonimortet(type, this));
         SirtetAudio.playAudio("blockPlace.wav");
-        updateGrid(true);
-        new RuntimeException().printStackTrace();
     }
     public void addSonimortet() {
         addSonimortet(randomBlock());
@@ -40,7 +38,7 @@ class SirtetGrid {
         return blockTypes[(int) (Math.random() * blockTypes.length)];
     }
     public Sonimortet getLastSonimortet() {
-        return sonimortetList.getLast();
+        return sonimortetList.get(sonimortetList.size() - 1);
     }
     public SonimortetPositions[] getLastPositions() {
         return getLastSonimortet().getPositions();
@@ -59,10 +57,13 @@ class SirtetGrid {
         if(sonimortetList.isEmpty()) return;
         try {
             populateGrid();
-            if (repaint) parentScene.repaint();
-        } catch(ConcurrentModificationException cme) {
+        } catch (ConcurrentModificationException ignored) {
             updateGrid(repaint);
+            return;
         }
+        deleteMissing();
+        sonimortetsToDelete.clear();
+        if (repaint) parentScene.repaint();
     }
     public void populateGrid() throws ConcurrentModificationException {
         for(Sonimortet sonimortet : sonimortetList) {
@@ -92,15 +93,27 @@ class SirtetGrid {
         boolean deleted;
         do {
             deleted = false;
-            for(Sonimortet sonimortet : sonimortetList) {
-                for(int posIndex = 0; posIndex < sonimortet.getPositions().length; posIndex++) {
-                    if(sonimortet.getPositions()[posIndex].getY() == yPos) {
-                        sonimortet.delete(posIndex);
+            for(int i = 0; i < sonimortetList.size(); i++) {
+                Sonimortet current = sonimortetList.get(i);
+                for(int posIndex = 0; posIndex < current.getPositions().length; posIndex++) {
+                    if(current.getPositions()[posIndex].getY() == yPos) {
+                        current.delete(posIndex);
+                        if(current.getPositions().length == 0) {
+                            sonimortetList.remove(current);
+                            sonimortetsToDelete.add(current);
+                        }
                         deleted = true;
                     }
                 }
             }
         } while(deleted);
+    }
+    public void deleteMissing() {
+        for(Sonimortet current : sonimortetList) {
+            for(Sonimortet currentDelete : sonimortetsToDelete) {
+                if(current == currentDelete) sonimortetList.remove(current);
+            }
+        }
     }
     public void shiftAbove(int yPos) {
         for(Sonimortet sonimortet : sonimortetList) {
@@ -127,7 +140,7 @@ class SirtetGrid {
     public boolean getGrid(int outerIndex, int innerIndex) {
         return grid[outerIndex][innerIndex];
     }
-    public LinkedList<Sonimortet> getSonimortetList() {
+    public ArrayList<Sonimortet> getSonimortetList() {
         return sonimortetList;
     }
 }

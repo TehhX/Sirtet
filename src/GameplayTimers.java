@@ -1,6 +1,7 @@
-import java.util.Timer;
-import java.util.TimerTask;
-class GameplayTimers {
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.Timer;
+class GameplayTimers implements ActionListener {
     /**
      * This class handles the softDrop timers to move the game of Sirtet along. It prevents the player
      * from sitting idle without pausing. The timers reduce in execution time the more blocks have been placed.
@@ -8,17 +9,14 @@ class GameplayTimers {
      * by one every time a new sonimortet is placed. An anonymous TimerTask class is used for the run
      * method to help with code readability, while keeping the class concise.
      */
-    private Timer bigTimer;
+    private static Timer timer;
     private static int tMinus = 1300;
     private static int timesDecremented = 0;
+    private SirtetGrid grid;
     public GameplayTimers(SirtetGrid grid) {
-        bigTimer = new Timer();
-        TimerTask smallTimer = new TimerTask() {
-            public void run() {
-                grid.getLastSonimortet().softDrop();
-            }
-        };
-        bigTimer.schedule(smallTimer, tMinus);
+        this.grid = grid;
+        timer = new Timer(tMinus, this);
+        timer.start();
     }
     public static void decrementTimer() {
         tMinus = (int) (Math.round(Math.pow(0.9822, timesDecremented - 392) + 200));
@@ -29,6 +27,11 @@ class GameplayTimers {
         tMinus = 1300;
     }
     public void stopTimer() {
-        bigTimer.cancel();
+        timer.stop();
+    }
+    public void actionPerformed(ActionEvent e) {
+        if(grid.getLastSonimortet().getHeight() == 0) grid.getLastSonimortet().hardDrop();
+        else grid.getLastSonimortet().softDrop();
+        try { grid.updateGrid(true); } catch(NullPointerException ignored) {}
     }
 }

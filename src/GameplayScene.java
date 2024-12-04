@@ -96,12 +96,12 @@ class GameplayScene extends JPanel implements KeyListener {
         if(isPaused) return;
         g.setColor(new Color(103, 215, 237));
         int yOffset = grid.getLastSonimortet().getHeight();
-        for (SonimortetPositions pos : grid.getLastPositions()) {
+        for(SonimortetPositions pos : grid.getLastPositions()) {
             g.fillRect(173 + 38 * pos.getX(), 132 + 38 * (pos.getY() + yOffset), 36, 36);
         }
         Image currentImage;
         try {
-            for (Sonimortet currentSonimortet : grid.getSonimortetList()) {
+            for(Sonimortet currentSonimortet : grid.getSonimortetList()) {
                 currentImage = Sirtet.gameplaySceneImages[currentSonimortet.getType().ordinal()];
                 for(SonimortetPositions currentPosition : currentSonimortet.getPositions()) {
                     g.drawImage(currentImage, 173 + 38 * currentPosition.getX(), 132 + 38 * currentPosition.getY(), 36, 36, Sirtet.observer);
@@ -132,10 +132,10 @@ class GameplayScene extends JPanel implements KeyListener {
         return heldGrid;
     }
     public void keyPressed(KeyEvent e) {
-        if(isPaused && e.getKeyCode() == 27) {
-            resumeGame();
+        if(isPaused) {
+            if(e.getKeyCode() == KeyEvent.VK_ESCAPE) resumeGame();
             return;
-        } else if(isPaused) return;
+        }
         switch(e.getKeyCode()) {
             case KeyEvent.VK_A:
                 grid.getLastSonimortet().shiftAll(-1, 0);
@@ -161,6 +161,7 @@ class GameplayScene extends JPanel implements KeyListener {
             case KeyEvent.VK_ESCAPE:
                 pauseGame();
         }
+        try { grid.updateGrid(true); } catch(NullPointerException ignored) {}
     }
     public SirtetGrid getGrid() {
         return grid;
