@@ -1,4 +1,5 @@
-import java.io.*;
+import java.io.FileReader;
+import java.io.PrintWriter;
 import java.util.Scanner;
 class SaveData {
     /**
