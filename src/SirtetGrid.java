@@ -132,7 +132,6 @@ class SirtetGrid {
         sonimortetList.remove(getLastSonimortet());
         updateGrid(false);
         addSonimortet(tempType);
-        updateGrid(true);
     }
     public BlockType getHeldType() {
         return held;

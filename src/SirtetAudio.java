@@ -1,7 +1,4 @@
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.*;
 import java.io.File;
 public class SirtetAudio {
     /**
@@ -29,6 +26,11 @@ public class SirtetAudio {
     public static void playAudio(String filePath) {
         try {
             Clip sfxClip = AudioSystem.getClip();
+            sfxClip.addLineListener(event -> {
+                if(LineEvent.Type.STOP.equals(event.getType())) {
+                    event.getLine().close();
+                }
+            });
             AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File("Assets/" + filePath));
             sfxClip.open(inputStream);
             FloatControl fc = (FloatControl) sfxClip.getControl(FloatControl.Type.MASTER_GAIN);
