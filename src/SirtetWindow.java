@@ -1,21 +1,19 @@
 import javax.swing.*;
+
+/**
+ * This class handles the main JFrame and all of its children. It can change the scene by an integer argument,
+ * removing the old scene before adding the new one. The frame will only be made visible once all checks
+ * done by the Sirtet class, such as loading media, are finished to prevent wasted resources.
+ */
 class SirtetWindow extends JFrame {
-    /**
-     * This class handles the main JFrame and all of its children. It can change the scene by an integer argument,
-     * removing the old scene before adding the new one. The frame will only be made visible once all checks
-     * done by the Sirtet class, such as loading media, are finished to prevent wasted resources.
-     */
-    public static JFrame frame;
+    public static JFrame frame = new JFrame("Sirtet");
     public static GameplayScene gameplayScene;
     public static MenuScene menuScene;
     public static HighScoreScene highScoreScene;
     public static GameOverScene gameOverScene;
+
     public SirtetWindow() {
-        frame = frameSetup();
-    }
-    public JFrame frameSetup() {
-        frame = new JFrame("Sirtet");
-        changeScene("Menu");
+        changeScene(SceneID.Menu);
         frame.setIconImage(Sirtet.icon);
         frame.setLayout(null);
         frame.setUndecorated(true);
@@ -24,48 +22,49 @@ class SirtetWindow extends JFrame {
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
         frame.setVisible(true);
-        return frame;
     }
+
     public static void removePreviousScene() {
         frame.requestFocus();
-        if(menuScene != null) {
+        if (menuScene != null) {
             frame.getContentPane().remove(menuScene.getPanel());
             menuScene = null;
-        } else if(gameplayScene != null) {
+        } else if (gameplayScene != null) {
             frame.getContentPane().remove(gameplayScene.getPanel());
             frame.removeKeyListener(gameplayScene);
             gameplayScene.getGrid().stopTimer();
             gameplayScene = null;
-        } else if(gameOverScene != null) {
+        } else if (gameOverScene != null) {
             frame.getContentPane().remove(gameOverScene.getPanel());
             gameOverScene = null;
-        } else if (highScoreScene != null){
+        } else if (highScoreScene != null) {
             frame.getContentPane().remove(highScoreScene.getPanel());
             frame.removeKeyListener(highScoreScene);
             highScoreScene = null;
         }
     }
-    public static void changeScene(String scene) {
+
+    public static void changeScene(SceneID scene) {
         removePreviousScene();
-        switch(scene) {
-            case "Menu":
+        switch (scene) {
+            case Menu:
                 menuScene = new MenuScene();
                 frame.getContentPane().add(menuScene.getPanel());
                 break;
-            case "Gameplay":
+            case Gameplay:
                 gameplayScene = new GameplayScene();
                 frame.addKeyListener(gameplayScene);
                 frame.getContentPane().add(gameplayScene.getPanel());
                 break;
-            case "GameOver":
-                gameOverScene = new GameOverScene();
-                frame.getContentPane().add(gameOverScene.getPanel());
-                gameOverScene.focusField();
-                break;
-            case "HighScore":
+            case Highscore:
                 highScoreScene = new HighScoreScene();
                 frame.addKeyListener(highScoreScene);
                 frame.getContentPane().add(highScoreScene.getPanel());
+                break;
+            case Gameover:
+                gameOverScene = new GameOverScene();
+                frame.getContentPane().add(gameOverScene.getPanel());
+                gameOverScene.focusField();
                 break;
         }
         frame.repaint();
