@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ConcurrentModificationException;
@@ -12,6 +13,7 @@ class GameplayScene extends JPanel implements KeyListener {
     private SirtetGrid grid;
     private JPanel panel;
     private JLabel paused;
+    private ReactiveButton quitButton;
     private boolean isPaused = false;
     private VolumeSlidersPanel volumeSlidersPanel;
     public GameplayScene() {
@@ -29,6 +31,11 @@ class GameplayScene extends JPanel implements KeyListener {
         paused.setFont(Sirtet.SILKSCREEN_60);
         paused.setBounds(63, 250, 474, 77);
         paused.setForeground(Color.black);
+        quitButton = new ReactiveButton(Sirtet.menuImages[2], Sirtet.menuImages[5], 425) {
+            public void actionPerformed(ActionEvent e) {
+                SirtetWindow.changeScene("Menu");
+            }
+        };
         updateScoreLabel();
         panel.add(score);
         panel.add(this);
@@ -40,6 +47,7 @@ class GameplayScene extends JPanel implements KeyListener {
         panel.add(paused);
         panel.add(volumeSlidersPanel.getPanel());
         panel.remove(score);
+        panel.add(quitButton.getPanel());
         panel.remove(this);
         panel.add(this);
         repaint();
@@ -50,6 +58,7 @@ class GameplayScene extends JPanel implements KeyListener {
         panel.remove(volumeSlidersPanel.getPanel());
         panel.remove(paused);
         panel.add(score);
+        panel.remove(quitButton.getPanel());
         panel.add(this);
         repaint();
     }

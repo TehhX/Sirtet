@@ -6,18 +6,14 @@ public class SirtetAudio {
      * sfx when a block is placed, for example.
      */
     static Clip bgmClip;
-    public SirtetAudio() {
-        try {
-            bgmClip = AudioSystem.getClip();
-            AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File("Assets/bgm.wav"));
-            bgmClip.open(inputStream);
-            FloatControl fc = (FloatControl) bgmClip.getControl(FloatControl.Type.MASTER_GAIN);
-            fc.setValue((float) ((Math.log(SaveData.bgmVolume / 9.0)) / Math.log(10.0) * 20.0));
-            bgmClip.loop(Clip.LOOP_CONTINUOUSLY);
-            bgmClip.start();
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
+    public SirtetAudio() throws Exception {
+        bgmClip = AudioSystem.getClip();
+        AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File("Assets/bgm.wav"));
+        bgmClip.open(inputStream);
+        FloatControl fc = (FloatControl) bgmClip.getControl(FloatControl.Type.MASTER_GAIN);
+        fc.setValue((float) ((Math.log(SaveData.bgmVolume / 9.0)) / Math.log(10.0) * 20.0));
+        bgmClip.loop(Clip.LOOP_CONTINUOUSLY);
+        bgmClip.start();
     }
     public static void updateBGMVolume() {
         FloatControl fc = (FloatControl) bgmClip.getControl(FloatControl.Type.MASTER_GAIN);

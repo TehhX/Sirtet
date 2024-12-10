@@ -22,11 +22,16 @@ public class Sirtet {
     static BufferedImage icon;
     static ImageObserver observer;
     public static void main(String[]args) {
-        loadFonts();
-        loadImages();
-        new SaveData();
-        new SirtetAudio();
-        new SirtetWindow();
+        try {
+            loadFonts();
+            loadImages();
+            new SaveData();
+            new SirtetAudio();
+            new SirtetWindow();
+        } catch(Exception e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
     }
     public static void loadImages() {
         observer = (img, infoflags, x, y, width, height) -> false;

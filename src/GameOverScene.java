@@ -14,13 +14,23 @@ class GameOverScene extends JPanel implements ActionListener {
     private JTextField nameField;
     public GameOverScene() {
         this.setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
-        JLabel gameOverLabel = new JLabel("<html><p style=\"text-align:center;\">Game Over!<br>Enter Your Name</p>", SwingConstants.CENTER);
+        JLabel gameOverLabel = new JLabel("<html><p style=\"text-align:center;\">Game Over!<br>Enter Your Name:</p>", SwingConstants.CENTER);
+        JLabel pointsLabel = new JLabel("Score: " + SaveData.currentScore, SwingConstants.CENTER);
         gameOverLabel.setForeground(Color.black);
-        gameOverLabel.setBounds(0, 275, 600, 100);
+        gameOverLabel.setBounds(0, 275, Sirtet.FRAME_SIZE_X, 100);
         gameOverLabel.setFont(Sirtet.SILKSCREEN_40);
+        pointsLabel.setForeground(Color.black);
+        pointsLabel.setBounds(0, 475, Sirtet.FRAME_SIZE_X, 52);
+        pointsLabel.setFont(Sirtet.SILKSCREEN_40);
         panel = new JPanel();
         panel.setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
         panel.setLayout(null);
+        panel.add(gameOverLabel);
+        panel.add(pointsLabel);
+        addNameField();
+        panel.add(this);
+    }
+    public void addNameField() {
         nameField = new JTextField();
         nameField.setBounds(150, 400, 300, 50);
         nameField.setForeground(Color.black);
@@ -29,10 +39,10 @@ class GameOverScene extends JPanel implements ActionListener {
         nameField.setHorizontalAlignment(JTextField.CENTER);
         nameField.setBackground(new Color(37, 218, 192));
         nameField.setBorder(null);
-        panel.add(gameOverLabel);
         panel.add(nameField);
-        panel.add(this);
-        SwingUtilities.invokeLater(() -> nameField.requestFocusInWindow());
+    }
+    public void focusField() {
+        nameField.requestFocusInWindow();
     }
     public JPanel getPanel() {
         return panel;
@@ -41,10 +51,12 @@ class GameOverScene extends JPanel implements ActionListener {
         String name = nameField.getText();
         if(name.length() > 10 || name.length() < 3 || name.contains(" ")) {
             JOptionPane.showMessageDialog(SirtetWindow.frame, "Name Must be 3-10 Characters, no spaces.");
+            nameField.setText("");
+            focusField();
             return;
         }
         SaveData.insertScore(name);
-        SirtetWindow.changeScene(3);
+        SirtetWindow.changeScene("HighScore");
     }
     public void paint(Graphics g) {
         super.paint(g);

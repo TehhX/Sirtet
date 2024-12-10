@@ -12,10 +12,10 @@ class SirtetWindow extends JFrame {
     public static GameOverScene gameOverScene;
     public SirtetWindow() {
         frame = frameSetup();
-        changeScene(0);
     }
     public JFrame frameSetup() {
         frame = new JFrame("Sirtet");
+        changeScene("Menu");
         frame.setIconImage(Sirtet.icon);
         frame.setLayout(null);
         frame.setUndecorated(true);
@@ -45,23 +45,24 @@ class SirtetWindow extends JFrame {
             highScoreScene = null;
         }
     }
-    public static void changeScene(int sceneNum) {
+    public static void changeScene(String scene) {
         removePreviousScene();
-        switch(sceneNum) {
-            case 0:
+        switch(scene) {
+            case "Menu":
                 menuScene = new MenuScene();
                 frame.getContentPane().add(menuScene.getPanel());
                 break;
-            case 1:
+            case "Gameplay":
                 gameplayScene = new GameplayScene();
                 frame.addKeyListener(gameplayScene);
                 frame.getContentPane().add(gameplayScene.getPanel());
                 break;
-            case 2:
+            case "GameOver":
                 gameOverScene = new GameOverScene();
                 frame.getContentPane().add(gameOverScene.getPanel());
+                gameOverScene.focusField();
                 break;
-            case 3:
+            case "HighScore":
                 highScoreScene = new HighScoreScene();
                 frame.addKeyListener(highScoreScene);
                 frame.getContentPane().add(highScoreScene.getPanel());

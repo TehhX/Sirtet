@@ -33,8 +33,7 @@ class Sonimortet {
     public void gameOver() {
         parentGrid.stopTimer();
         SirtetAudio.playAudio("gameOver.wav");
-        if(SaveData.currentScore > SaveData.highScores[9].getScore()) SirtetWindow.changeScene(2);
-        else SirtetWindow.changeScene(3);
+        SirtetWindow.changeScene("GameOver");
     }
     public boolean canPlace(int[][] positions) {
         for(int positionIndex = 0; positionIndex < 4; positionIndex++) {

@@ -15,17 +15,21 @@ class HighScoreScene extends JPanel implements KeyListener {
     private JLabel[] scoreLabels = new JLabel[10];
     public HighScoreScene() {
         loadLabels();
-        JLabel title = new JLabel("Highscores");
-        title.setBounds(0, 0, 0, 0);
-        title.setFont(Sirtet.SILKSCREEN_60);
-        title.setForeground(Color.black);
-        title.setBounds(90, 50, 421, 77);
+        JLabel titleLabel = new JLabel("Highscores");
+        JLabel returnLabel = new JLabel("ESC to Return");
+        titleLabel.setFont(Sirtet.SILKSCREEN_60);
+        titleLabel.setForeground(Color.black);
+        titleLabel.setBounds(90, 50, 421, 77);
+        returnLabel.setFont(Sirtet.SILKSCREEN_30);
+        returnLabel.setForeground(Color.black);
+        returnLabel.setBounds(165, 725, 270, 39);
         this.setOpaque(false);
         this.setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
         panel = new JPanel();
         panel.setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
         panel.setLayout(null);
-        panel.add(title);
+        panel.add(titleLabel);
+        panel.add(returnLabel);
         for(int labelIndex = 0; labelIndex < 10; labelIndex++) {
             panel.add(nameLabels[labelIndex]);
             panel.add(scoreLabels[labelIndex]);
@@ -35,15 +39,15 @@ class HighScoreScene extends JPanel implements KeyListener {
     }
     public void loadLabels() {
         for(int labelIndex = 0; labelIndex < 10; labelIndex++) {
-            indexLabels[labelIndex] = labelSetup(labelIndex + 1 + ": ");
-            nameLabels[labelIndex] = labelSetup(SaveData.highScores[labelIndex].getName());
-            scoreLabels[labelIndex] = labelSetup("" + SaveData.highScores[labelIndex].getScore());
+            indexLabels[labelIndex] = scoreLabelSetup(labelIndex + 1 + ": ");
+            nameLabels[labelIndex] = scoreLabelSetup(SaveData.highScores[labelIndex].getName());
+            scoreLabels[labelIndex] = scoreLabelSetup("" + SaveData.highScores[labelIndex].getScore());
             indexLabels[labelIndex].setBounds(20, 160 + labelIndex * 50, 100, 50);
             nameLabels[labelIndex].setBounds(80, 160 + labelIndex * 50, 300, 50);
             scoreLabels[labelIndex].setBounds(230, 160 + labelIndex * 50, 300, 50);
         }
     }
-    public JLabel labelSetup(String text) {
+    public JLabel scoreLabelSetup(String text) {
         JLabel label = new JLabel(text, SwingConstants.RIGHT);
         label.setFont(Sirtet.SILKSCREEN_30);
         label.setForeground(Color.black);
@@ -58,7 +62,7 @@ class HighScoreScene extends JPanel implements KeyListener {
         return panel;
     }
     public void keyPressed(KeyEvent e) {
-        if(e.getKeyCode() == 27) SirtetWindow.changeScene(0);
+        if(e.getKeyCode() == 27) SirtetWindow.changeScene("Menu");
     }
     public void keyTyped(KeyEvent e) {}
     public void keyReleased(KeyEvent e) {}
