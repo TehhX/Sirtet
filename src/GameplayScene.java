@@ -48,7 +48,7 @@ class GameplayScene extends JPanel implements KeyListener {
         grid.stopTimer();
         isPaused = true;
         panel.add(paused);
-        panel.add(volumeSlidersPanel.getPanel());
+        panel.add(volumeSlidersPanel);
         panel.remove(score);
         panel.add(quitButton);
         panel.remove(this);
@@ -59,7 +59,7 @@ class GameplayScene extends JPanel implements KeyListener {
     public void resumeGame() {
         grid.restartTimer();
         isPaused = false;
-        panel.remove(volumeSlidersPanel.getPanel());
+        panel.remove(volumeSlidersPanel);
         panel.remove(paused);
         panel.add(score);
         panel.remove(quitButton);

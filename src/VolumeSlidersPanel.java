@@ -9,30 +9,27 @@ import javax.swing.event.ChangeListener;
  */
 public class VolumeSlidersPanel extends JPanel implements ChangeListener {
     public static final int VOLUME_CENTER_X = 190;
-    private JPanel panel;
     private JSlider bgmSlider;
     private JSlider sfxSlider;
 
     public VolumeSlidersPanel(int xPos, int yPos) {
-        panel = new JPanel();
-        panel.setSize(600, 800);
-        panel.setOpaque(false);
-        panel.setLayout(null);
-        bgmSlider = sliderSetup(xPos, yPos, false);
-        sfxSlider = sliderSetup(xPos, yPos, true);
+        this.setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
+        this.setOpaque(false);
+        this.setLayout(null);
+        bgmSlider = sliderSetup();
+        sfxSlider = sliderSetup();
         bgmSlider.setBounds(xPos, yPos, 100, 50);
         sfxSlider.setBounds(xPos + 120, yPos, 100, 50);
         bgmSlider.setValue(SaveData.bgmVolume);
         sfxSlider.setValue(SaveData.sfxVolume);
-        panel.add(bgmSlider);
-        panel.add(sfxSlider);
+        this.add(bgmSlider);
+        this.add(sfxSlider);
     }
 
-    public JSlider sliderSetup(int xPos, int yPos, boolean sfx) {
+    public JSlider sliderSetup() {
         JSlider slider = new JSlider(0, 9);
         slider.setOpaque(false);
         slider.addChangeListener(this);
-        slider.setBounds(xPos + (sfx ? 120 : 0), yPos, 100, 50);
         return slider;
     }
 
@@ -46,9 +43,5 @@ public class VolumeSlidersPanel extends JPanel implements ChangeListener {
             sfxSlider.repaint();
         }
         SirtetWindow.frame.requestFocus();
-    }
-
-    public JPanel getPanel() {
-        return panel;
     }
 }

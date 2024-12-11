@@ -72,7 +72,7 @@ class SaveData {
 
     public static void insertScore(String currentName) {
         if (currentScore < highScores[9].getScore()) return;
-        currentScore -=25;
+        currentScore -= 25;
         int scoreIndex = 0;
         for (int listIndex = 0; listIndex < 10; listIndex++) {
             if (currentScore > highScores[listIndex].getScore()) {

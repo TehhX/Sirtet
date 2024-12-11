@@ -6,9 +6,8 @@ import java.awt.event.ActionListener;
 /**
  * This class contains the game over JPanel and everything within. It allows the user to enter their name
  * and then sends it off to SaveData.java to be inserted or thrown away, depending on whether it makes it
- * into the top 10 scores list. The user will be told if their name is over 7 characters, and asked to re-enter
- * if it is, as the high score scene can only display names up to a certain size. After receiving a name, it
- * switches to the high score scene. The gameOverLabel is written with HTML syntax so it can be center aligned.
+ * into the top 10 scores list. The user will be told if their name is over 10 characters, under 3, or contains spaces.
+ * These names will not be allowed. After receiving a name, it switches to the high score scene.
  */
 class GameOverScene extends JPanel implements ActionListener {
     private JPanel panel;
@@ -27,22 +26,23 @@ class GameOverScene extends JPanel implements ActionListener {
         panel = new JPanel();
         panel.setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
         panel.setLayout(null);
+        nameField = setField();
         panel.add(gameOverLabel);
         panel.add(pointsLabel);
-        addNameField();
+        panel.add(nameField);
         panel.add(this);
     }
 
-    public void addNameField() {
-        nameField = new JTextField();
-        nameField.setBounds(150, 400, 300, 50);
-        nameField.setForeground(Color.black);
-        nameField.setFont(Sirtet.SILKSCREEN_30);
-        nameField.addActionListener(this);
-        nameField.setHorizontalAlignment(JTextField.CENTER);
-        nameField.setBackground(new Color(37, 218, 192));
-        nameField.setBorder(null);
-        panel.add(nameField);
+    public JTextField setField() {
+        JTextField field = new JTextField();
+        field.setBounds(150, 400, 300, 50);
+        field.setForeground(Color.black);
+        field.setFont(Sirtet.SILKSCREEN_30);
+        field.addActionListener(this);
+        field.setHorizontalAlignment(JTextField.CENTER);
+        field.setBackground(new Color(37, 218, 192));
+        field.setBorder(null);
+        return field;
     }
 
     public void focusField() {

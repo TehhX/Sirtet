@@ -31,7 +31,7 @@ class MenuScene extends JPanel {
                 System.exit(0);
             }
         });
-        panel.add(new VolumeSlidersPanel(VolumeSlidersPanel.VOLUME_CENTER_X, 700).getPanel());
+        panel.add(new VolumeSlidersPanel(VolumeSlidersPanel.VOLUME_CENTER_X, 700));
         panel.add(this);
     }
 
