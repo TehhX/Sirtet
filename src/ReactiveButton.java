@@ -19,9 +19,9 @@ public abstract class ReactiveButton extends JPanel implements ActionListener, M
         this.inactiveImage = inactiveImage;
         this.activeImage = activeImage;
         this.yOffset = yOffset;
-        this.setLayout(null);
-        this.setOpaque(false);
-        this.setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
+        setLayout(null);
+        setOpaque(false);
+        setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
         buttonSetup();
     }
 
@@ -37,7 +37,7 @@ public abstract class ReactiveButton extends JPanel implements ActionListener, M
         int xSize = (int) button.getPreferredSize().getWidth();
         int ySize = (int) button.getPreferredSize().getHeight();
         button.setBounds(300 - xSize / 2, yOffset, xSize, ySize);
-        this.add(button);
+        add(button);
     }
 
     public void mouseEntered(MouseEvent ignored) {

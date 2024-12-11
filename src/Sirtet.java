@@ -64,8 +64,8 @@ public class Sirtet {
     }
 
     public static void loadFonts() throws Exception {
-        Font font = Font.createFont(Font.TRUETYPE_FONT, new File("Assets/Silkscreen-Regular.ttf"));
-        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        ge.registerFont(font);
+        GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(
+                Font.createFont(Font.TRUETYPE_FONT, new File("Assets/Silkscreen-Regular.ttf"))
+        );
     }
 }

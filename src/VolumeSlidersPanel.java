@@ -13,17 +13,17 @@ public class VolumeSlidersPanel extends JPanel implements ChangeListener {
     private JSlider sfxSlider;
 
     public VolumeSlidersPanel(int xPos, int yPos) {
-        this.setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
-        this.setOpaque(false);
-        this.setLayout(null);
+        setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
+        setOpaque(false);
+        setLayout(null);
         bgmSlider = sliderSetup();
         sfxSlider = sliderSetup();
         bgmSlider.setBounds(xPos, yPos, 100, 50);
         sfxSlider.setBounds(xPos + 120, yPos, 100, 50);
         bgmSlider.setValue(SaveData.bgmVolume);
         sfxSlider.setValue(SaveData.sfxVolume);
-        this.add(bgmSlider);
-        this.add(sfxSlider);
+        add(bgmSlider);
+        add(sfxSlider);
     }
 
     public JSlider sliderSetup() {

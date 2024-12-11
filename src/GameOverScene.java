@@ -14,7 +14,7 @@ class GameOverScene extends JPanel implements ActionListener {
     private JTextField nameField;
 
     public GameOverScene() {
-        this.setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
+        setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
         JLabel gameOverLabel = new JLabel("<html><p style=\"text-align:center;\">Game Over!<br>Enter Your Name:</p>", SwingConstants.CENTER);
         JLabel pointsLabel = new JLabel("Score: " + SaveData.currentScore, SwingConstants.CENTER);
         gameOverLabel.setForeground(Color.black);

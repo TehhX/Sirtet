@@ -5,7 +5,7 @@ import javax.swing.*;
  * removing the old scene before adding the new one. The frame will only be made visible once all checks
  * done by the Sirtet class, such as loading media, are finished to prevent wasted resources.
  */
-class SirtetWindow extends JFrame {
+class SirtetWindow {
     public static JFrame frame = new JFrame("Sirtet");
     public static GameplayScene gameplayScene;
     public static MenuScene menuScene;
@@ -27,10 +27,10 @@ class SirtetWindow extends JFrame {
     public static void removePreviousScene() {
         frame.requestFocus();
         if (menuScene != null) {
-            frame.getContentPane().remove(menuScene.getPanel());
+            frame.getContentPane().remove(menuScene);
             menuScene = null;
         } else if (gameplayScene != null) {
-            frame.getContentPane().remove(gameplayScene.getPanel());
+            frame.getContentPane().remove(gameplayScene);
             frame.removeKeyListener(gameplayScene);
             gameplayScene.getGrid().stopTimer();
             gameplayScene = null;
@@ -49,12 +49,12 @@ class SirtetWindow extends JFrame {
         switch (scene) {
             case Menu:
                 menuScene = new MenuScene();
-                frame.getContentPane().add(menuScene.getPanel());
+                frame.getContentPane().add(menuScene);
                 break;
             case Gameplay:
                 gameplayScene = new GameplayScene();
                 frame.addKeyListener(gameplayScene);
-                frame.getContentPane().add(gameplayScene.getPanel());
+                frame.getContentPane().add(gameplayScene);
                 break;
             case Highscore:
                 highScoreScene = new HighScoreScene();

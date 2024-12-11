@@ -7,43 +7,36 @@ import java.awt.event.ActionEvent;
  * quit to desktop, or change the bgm/sfx volumes. The JSliders communicate to SirtetAudio to change volume.
  */
 class MenuScene extends JPanel {
-    private JPanel panel;
-
     public MenuScene() {
-        this.setOpaque(false);
-        this.setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
-        panel = new JPanel();
-        panel.setLayout(null);
-        panel.setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
-        panel.add(new ReactiveButton(Sirtet.menuImages[0], Sirtet.menuImages[3], 280) {
+        setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
+        setLayout(null);
+        setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
+        JPanel menuBackground = new JPanel() {
+            public void paint(Graphics g) {
+                Image image = Sirtet.menuImages[6];
+                g.drawImage(image, 0, 0, Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y, Sirtet.observer);
+                image = Sirtet.menuImages[7];
+                g.drawImage(image, 600 / 2 - 388 / 2, 475, 388, 193, Sirtet.observer);
+            }
+        };
+        menuBackground.setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
+        add(new ReactiveButton(Sirtet.menuImages[0], Sirtet.menuImages[3], 280) {
             public void actionPerformed(ActionEvent ignored) {
                 SirtetWindow.changeScene(SceneID.Gameplay);
             }
         });
-        panel.add(new ReactiveButton(Sirtet.menuImages[1], Sirtet.menuImages[4], 340) {
+        add(new ReactiveButton(Sirtet.menuImages[1], Sirtet.menuImages[4], 340) {
             public void actionPerformed(ActionEvent ignored) {
                 SirtetWindow.changeScene(SceneID.Highscore);
             }
         });
-        panel.add(new ReactiveButton(Sirtet.menuImages[2], Sirtet.menuImages[5], 405) {
+        add(new ReactiveButton(Sirtet.menuImages[2], Sirtet.menuImages[5], 405) {
             public void actionPerformed(ActionEvent ignored) {
                 SaveData.writeFile();
                 System.exit(0);
             }
         });
-        panel.add(new VolumeSlidersPanel(VolumeSlidersPanel.VOLUME_CENTER_X, 700));
-        panel.add(this);
-    }
-
-    public void paint(Graphics g) {
-        super.paint(g);
-        Image image = Sirtet.menuImages[6];
-        g.drawImage(image, 0, 0, Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y, Sirtet.observer);
-        image = Sirtet.menuImages[7];
-        g.drawImage(image, 600 / 2 - 388 / 2, 475, 388, 193, Sirtet.observer);
-    }
-
-    public JPanel getPanel() {
-        return panel;
+        add(new VolumeSlidersPanel(VolumeSlidersPanel.VOLUME_CENTER_X, 700));
+        add(menuBackground);
     }
 }

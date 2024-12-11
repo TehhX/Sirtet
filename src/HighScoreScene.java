@@ -25,8 +25,8 @@ class HighScoreScene extends JPanel implements KeyListener {
         returnLabel.setFont(Sirtet.SILKSCREEN_30);
         returnLabel.setForeground(Color.black);
         returnLabel.setBounds(165, 725, 270, 39);
-        this.setOpaque(false);
-        this.setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
+        setOpaque(false);
+        setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
         panel = new JPanel();
         panel.setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
         panel.setLayout(null);

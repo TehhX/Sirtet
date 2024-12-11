@@ -37,7 +37,7 @@ class Sonimortet {
             case T:
                 return new int[][]{{4, 5, 5, 6}, {0, 0, 1, 0}};
             default:
-                throw new IllegalStateException("Unexpected value: " + type);
+                throw new IllegalStateException("Unexpected type: " + type);
         }
     }
 
@@ -50,7 +50,6 @@ class Sonimortet {
         for (int posIndex = 0; posIndex < 4; posIndex++) {
             positions[posIndex] = new SonimortetPositions(startingPositions[0][posIndex], startingPositions[1][posIndex]);
         }
-        parentGrid.updateGrid(true);
         parentGrid.restartTimer();
     }
 
