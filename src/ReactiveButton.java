@@ -12,22 +12,22 @@ import java.awt.image.BufferedImage;
 public abstract class ReactiveButton extends JPanel implements ActionListener, MouseListener {
     private JButton button;
     private int yOffset;
-    private BufferedImage inactiveImage;
-    private BufferedImage activeImage;
+    private ImageIcon inactiveImage;
+    private ImageIcon activeImage;
 
     public ReactiveButton(BufferedImage inactiveImage, BufferedImage activeImage, int yOffset) {
-        this.inactiveImage = inactiveImage;
-        this.activeImage = activeImage;
+        this.inactiveImage = new ImageIcon(inactiveImage);
+        this.activeImage = new ImageIcon(activeImage);
         this.yOffset = yOffset;
         setLayout(null);
         setOpaque(false);
-        setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
+        setSize(SirtetWindow.FRAME_SIZE_X, SirtetWindow.FRAME_SIZE_Y);
         buttonSetup();
     }
 
     public void buttonSetup() {
         button = new JButton();
-        button.setIcon(new ImageIcon(inactiveImage));
+        button.setIcon(inactiveImage);
         button.addActionListener(this);
         button.addMouseListener(this);
         button.setContentAreaFilled(false);
@@ -41,11 +41,11 @@ public abstract class ReactiveButton extends JPanel implements ActionListener, M
     }
 
     public void mouseEntered(MouseEvent ignored) {
-        button.setIcon(new ImageIcon(activeImage));
+        button.setIcon(activeImage);
     }
 
     public void mouseExited(MouseEvent ignored) {
-        button.setIcon(new ImageIcon(inactiveImage));
+        button.setIcon(inactiveImage);
     }
 
     public abstract void actionPerformed(ActionEvent ignored);

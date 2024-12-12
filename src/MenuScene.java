@@ -8,18 +8,18 @@ import java.awt.event.ActionEvent;
  */
 class MenuScene extends JPanel {
     public MenuScene() {
-        setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
+        setSize(SirtetWindow.FRAME_SIZE_X, SirtetWindow.FRAME_SIZE_Y);
         setLayout(null);
-        setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
+        setSize(SirtetWindow.FRAME_SIZE_X, SirtetWindow.FRAME_SIZE_Y);
         JPanel menuBackground = new JPanel() {
             public void paint(Graphics g) {
                 Image image = Sirtet.menuImages[6];
-                g.drawImage(image, 0, 0, Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y, Sirtet.observer);
+                g.drawImage(image, 0, 0, SirtetWindow.FRAME_SIZE_X, SirtetWindow.FRAME_SIZE_Y, Sirtet.observer);
                 image = Sirtet.menuImages[7];
                 g.drawImage(image, 600 / 2 - 388 / 2, 475, 388, 193, Sirtet.observer);
             }
         };
-        menuBackground.setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
+        menuBackground.setSize(SirtetWindow.FRAME_SIZE_X, SirtetWindow.FRAME_SIZE_Y);
         add(new ReactiveButton(Sirtet.menuImages[0], Sirtet.menuImages[3], 280) {
             public void actionPerformed(ActionEvent ignored) {
                 SirtetWindow.changeScene(SceneID.Gameplay);

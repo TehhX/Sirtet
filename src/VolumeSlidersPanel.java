@@ -13,7 +13,7 @@ public class VolumeSlidersPanel extends JPanel implements ChangeListener {
     private JSlider sfxSlider;
 
     public VolumeSlidersPanel(int xPos, int yPos) {
-        setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
+        setSize(SirtetWindow.FRAME_SIZE_X, SirtetWindow.FRAME_SIZE_Y);
         setOpaque(false);
         setLayout(null);
         bgmSlider = sliderSetup();

@@ -12,8 +12,8 @@ import java.util.ConcurrentModificationException;
 class GameplayScene extends JPanel implements KeyListener {
     private boolean isPaused = false;
     private SirtetGrid grid;
-    private JLabel score = labelSetup();
-    private JLabel paused = labelSetup();
+    private JLabel score = new JLabel();
+    private JLabel paused = new JLabel("Game Paused");
     private JPanel playPanel;
     private JPanel pausePanel;
     private ReactiveButton quitButton;
@@ -21,12 +21,12 @@ class GameplayScene extends JPanel implements KeyListener {
 
     public GameplayScene() {
         SaveData.currentScore = -25;
-        setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
+        SirtetWindow.labelSetupLeft(score, Sirtet.SILKSCREEN_60, 0, 0);
+        SirtetWindow.labelSetupCenter(paused, Sirtet.SILKSCREEN_60, 250);
+        genericPanelSetup(this);
         setBackground(Sirtet.SIRTET_GREEN);
-        setLayout(null);
+        setOpaque(true);
         volumeSlidersPanel = new VolumeSlidersPanel(VolumeSlidersPanel.VOLUME_CENTER_X, 350);
-        paused.setText("Game Paused");
-        paused.setBounds(63, 250, 474, 77);
         quitButton = new ReactiveButton(Sirtet.menuImages[2], Sirtet.menuImages[5], 425) {
             public void actionPerformed(ActionEvent ignored) {
                 SirtetWindow.changeScene(SceneID.Menu);
@@ -37,11 +37,10 @@ class GameplayScene extends JPanel implements KeyListener {
         pausePanelSetup();
     }
 
-    public JLabel labelSetup() {
-        JLabel label = new JLabel();
-        label.setForeground(Color.black);
-        label.setFont(Sirtet.SILKSCREEN_60);
-        return label;
+    public void genericPanelSetup(JPanel panel) {
+        panel.setLayout(null);
+        panel.setSize(SirtetWindow.FRAME_SIZE_X, SirtetWindow.FRAME_SIZE_Y);
+        panel.setOpaque(false);
     }
 
     public void playPanelSetup() {
@@ -78,18 +77,14 @@ class GameplayScene extends JPanel implements KeyListener {
                 g.drawImage(currentImage, 0, 0, Sirtet.observer);
             }
         };
-        playPanel.setLayout(null);
-        playPanel.setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
-        playPanel.setOpaque(false);
+        genericPanelSetup(playPanel);
         playPanel.add(score);
         add(playPanel);
     }
 
     public void pausePanelSetup() {
         pausePanel = new JPanel();
-        pausePanel.setLayout(null);
-        pausePanel.setOpaque(false);
-        pausePanel.setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
+        genericPanelSetup(pausePanel);
         pausePanel.add(quitButton);
         pausePanel.add(paused);
         pausePanel.add(volumeSlidersPanel);

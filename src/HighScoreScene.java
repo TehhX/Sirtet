@@ -1,5 +1,4 @@
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -10,62 +9,38 @@ import java.awt.event.KeyListener;
  * with it.
  */
 class HighScoreScene extends JPanel implements KeyListener {
-    private JPanel panel;
     private JLabel[] indexLabels = new JLabel[10];
     private JLabel[] nameLabels = new JLabel[10];
     private JLabel[] scoreLabels = new JLabel[10];
 
     public HighScoreScene() {
         loadLabels();
+        setBackground(Sirtet.SIRTET_GREEN);
         JLabel titleLabel = new JLabel("Highscores");
+        SirtetWindow.labelSetupCenter(titleLabel, Sirtet.SILKSCREEN_60, 50);
         JLabel returnLabel = new JLabel("ESC to Return");
-        titleLabel.setFont(Sirtet.SILKSCREEN_60);
-        titleLabel.setForeground(Color.black);
-        titleLabel.setBounds(90, 50, 421, 77);
-        returnLabel.setFont(Sirtet.SILKSCREEN_30);
-        returnLabel.setForeground(Color.black);
-        returnLabel.setBounds(165, 725, 270, 39);
-        setOpaque(false);
-        setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
-        panel = new JPanel();
-        panel.setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
-        panel.setLayout(null);
-        panel.add(titleLabel);
-        panel.add(returnLabel);
+        SirtetWindow.labelSetupCenter(returnLabel, Sirtet.SILKSCREEN_30, 725);
+        setLayout(null);
+        setSize(SirtetWindow.FRAME_SIZE_X, SirtetWindow.FRAME_SIZE_Y);
+        add(titleLabel);
+        add(returnLabel);
         for (int labelIndex = 0; labelIndex < 10; labelIndex++) {
-            panel.add(nameLabels[labelIndex]);
-            panel.add(scoreLabels[labelIndex]);
-            panel.add(indexLabels[labelIndex]);
+            add(nameLabels[labelIndex]);
+            add(scoreLabels[labelIndex]);
+            add(indexLabels[labelIndex]);
         }
-        panel.add(this);
     }
 
     public void loadLabels() {
         for (int labelIndex = 0; labelIndex < 10; labelIndex++) {
-            indexLabels[labelIndex] = scoreLabelSetup(labelIndex + 1 + ": ");
-            nameLabels[labelIndex] = scoreLabelSetup(SaveData.highScores[labelIndex].getName());
-            scoreLabels[labelIndex] = scoreLabelSetup("" + SaveData.highScores[labelIndex].getScore());
-            indexLabels[labelIndex].setBounds(20, 160 + labelIndex * 50, 100, 50);
-            nameLabels[labelIndex].setBounds(80, 160 + labelIndex * 50, 300, 50);
-            scoreLabels[labelIndex].setBounds(230, 160 + labelIndex * 50, 300, 50);
+            HighScore currentHS = SaveData.highScores[labelIndex];
+            indexLabels[labelIndex] = new JLabel(labelIndex + 1 + ": ");
+            SirtetWindow.labelSetupRight(indexLabels[labelIndex], Sirtet.SILKSCREEN_30, 110, 160 + labelIndex * 50);
+            nameLabels[labelIndex] = new JLabel(currentHS.getName());
+            SirtetWindow.labelSetupRight(nameLabels[labelIndex], Sirtet.SILKSCREEN_30, 360, 160 + labelIndex * 50);
+            scoreLabels[labelIndex] = new JLabel("" + currentHS.getScore());
+            SirtetWindow.labelSetupRight(scoreLabels[labelIndex], Sirtet.SILKSCREEN_30, 550, 160 + labelIndex * 50);
         }
-    }
-
-    public JLabel scoreLabelSetup(String text) {
-        JLabel label = new JLabel(text, SwingConstants.RIGHT);
-        label.setFont(Sirtet.SILKSCREEN_30);
-        label.setForeground(Color.black);
-        return label;
-    }
-
-    public void paint(Graphics g) {
-        super.paint(g);
-        g.setColor(Sirtet.SIRTET_GREEN);
-        g.fillRect(0, 0, Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
-    }
-
-    public JPanel getPanel() {
-        return panel;
     }
 
     public void keyPressed(KeyEvent e) {

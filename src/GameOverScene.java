@@ -10,27 +10,20 @@ import java.awt.event.ActionListener;
  * These names will not be allowed. After receiving a name, it switches to the high score scene.
  */
 class GameOverScene extends JPanel implements ActionListener {
-    private JPanel panel;
     private JTextField nameField;
 
     public GameOverScene() {
-        setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
-        JLabel gameOverLabel = new JLabel("<html><p style=\"text-align:center;\">Game Over!<br>Enter Your Name:</p>", SwingConstants.CENTER);
-        JLabel pointsLabel = new JLabel("Score: " + SaveData.currentScore, SwingConstants.CENTER);
-        gameOverLabel.setForeground(Color.black);
-        gameOverLabel.setBounds(0, 275, Sirtet.FRAME_SIZE_X, 100);
-        gameOverLabel.setFont(Sirtet.SILKSCREEN_40);
-        pointsLabel.setForeground(Color.black);
-        pointsLabel.setBounds(0, 475, Sirtet.FRAME_SIZE_X, 52);
-        pointsLabel.setFont(Sirtet.SILKSCREEN_40);
-        panel = new JPanel();
-        panel.setSize(Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
-        panel.setLayout(null);
+        setSize(SirtetWindow.FRAME_SIZE_X, SirtetWindow.FRAME_SIZE_Y);
+        setLayout(null);
+        setBackground(Sirtet.SIRTET_GREEN);
+        JLabel gameOverLabel = new JLabel("<html><p style=\"text-align:center;\">Game Over!<br>Enter Your Name:</p>");
+        SirtetWindow.labelSetupCenter(gameOverLabel, Sirtet.SILKSCREEN_40, 275);
+        JLabel pointsLabel = new JLabel("Score: " + SaveData.currentScore);
+        SirtetWindow.labelSetupCenter(pointsLabel, Sirtet.SILKSCREEN_40, 475);
         nameField = setField();
-        panel.add(gameOverLabel);
-        panel.add(pointsLabel);
-        panel.add(nameField);
-        panel.add(this);
+        add(gameOverLabel);
+        add(pointsLabel);
+        add(nameField);
     }
 
     public JTextField setField() {
@@ -45,15 +38,7 @@ class GameOverScene extends JPanel implements ActionListener {
         return field;
     }
 
-    public void focusField() {
-        nameField.requestFocusInWindow();
-    }
-
-    public JPanel getPanel() {
-        return panel;
-    }
-
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent ignored) {
         String name = nameField.getText();
         if (name.length() > 10 || name.length() < 3 || name.contains(" ")) {
             JOptionPane.showMessageDialog(SirtetWindow.frame, "Name Must be 3-10 Characters, no spaces.");
@@ -65,9 +50,7 @@ class GameOverScene extends JPanel implements ActionListener {
         SirtetWindow.changeScene(SceneID.Highscore);
     }
 
-    public void paint(Graphics g) {
-        super.paint(g);
-        g.setColor(Sirtet.SIRTET_GREEN);
-        g.fillRect(0, 0, Sirtet.FRAME_SIZE_X, Sirtet.FRAME_SIZE_Y);
+    public void focusField() {
+        nameField.requestFocusInWindow();
     }
 }
