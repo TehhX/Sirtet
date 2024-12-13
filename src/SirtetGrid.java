@@ -11,7 +11,7 @@ class SirtetGrid {
     static final int gridSizeX = 10;
     static final int gridSizeY = 16;
     private boolean[][] grid;
-    private BlockType held = randomBlock();
+    private BlockID held = randomBlock();
     private int rowsCleared = 0;
     private GameplayTimers timer;
     private GameplayScene parentScene;
@@ -26,10 +26,10 @@ class SirtetGrid {
         addSonimortet();
     }
 
-    public void addSonimortet(BlockType type) {
+    public void addSonimortet(BlockID type) {
         checkRows();
         sonimortetList.add(new Sonimortet(type, this));
-        SirtetAudio.playAudio("blockPlace.wav");
+        SirtetAudio.playAudio(AudioID.BlockPlace);
     }
 
     public void addSonimortet() {
@@ -38,9 +38,9 @@ class SirtetGrid {
         swapsTurn = 0;
     }
 
-    public BlockType randomBlock() {
-        BlockType[] blockTypes = BlockType.values();
-        return blockTypes[(int) (Math.random() * blockTypes.length)];
+    public BlockID randomBlock() {
+        BlockID[] blockIDS = BlockID.values();
+        return blockIDS[(int) (Math.random() * blockIDS.length)];
     }
 
     public Sonimortet getLastSonimortet() {
@@ -141,14 +141,14 @@ class SirtetGrid {
     public void swapHeld() {
         if (swapsTurn == 3) return;
         swapsTurn++;
-        BlockType tempType = held;
+        BlockID tempType = held;
         held = getLastSonimortet().getType();
         sonimortetList.remove(getLastSonimortet());
         updateGrid(false);
         addSonimortet(tempType);
     }
 
-    public BlockType getHeldType() {
+    public BlockID getHeldType() {
         return held;
     }
 

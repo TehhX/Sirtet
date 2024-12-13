@@ -7,12 +7,12 @@
  * instances within from memory, and their panels/frames.
  */
 class Sonimortet {
-    private BlockType type;
+    private BlockID type;
     private int rotation;
     private SirtetGrid parentGrid;
     private SonimortetPositions[] positions;
 
-    public Sonimortet(BlockType type, SirtetGrid parentGrid) {
+    public Sonimortet(BlockID type, SirtetGrid parentGrid) {
         rotation = 0;
         this.type = type;
         this.parentGrid = parentGrid;
@@ -20,7 +20,7 @@ class Sonimortet {
         setStartingPositions();
     }
 
-    public static int[][] getStartingPositions(BlockType type) {
+    public static int[][] getStartingPositions(BlockID type) {
         switch (type) {
             case O:
                 return new int[][]{{4, 5, 4, 5}, {0, 0, 1, 1}};
@@ -55,7 +55,7 @@ class Sonimortet {
 
     public void gameOver() {
         parentGrid.stopTimer();
-        SirtetAudio.playAudio("gameOver.wav");
+        SirtetAudio.playAudio(AudioID.GameOver);
         SirtetWindow.changeScene(SceneID.Gameover);
     }
 
@@ -140,7 +140,7 @@ class Sonimortet {
     }
 
     public void rotateClock() {
-        if (type == BlockType.O) return;
+        if (type == BlockID.O) return;
         switch (rotation) {
             case 0:
                 rotate0(false);
@@ -160,7 +160,7 @@ class Sonimortet {
     }
 
     public void rotateCounter() {
-        if (type == BlockType.O) return;
+        if (type == BlockID.O) return;
         switch (rotation) {
             case 0:
                 rotate3(true);
@@ -328,7 +328,7 @@ class Sonimortet {
         return true;
     }
 
-    public BlockType getType() {
+    public BlockID getType() {
         return type;
     }
 

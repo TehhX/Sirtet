@@ -3,10 +3,9 @@ import java.io.PrintWriter;
 import java.util.Scanner;
 
 /**
- * This class handles all high scores, and their associated names, along with volume settings. It reads and
- * writes to and from the text file named Sirtet Data.txt. If Sirtet Data.txt does not exist on read,
- * a copy will be made with pre-made data. However, if Sirtet Data.txt does exist and is corrupted,
- * it will fail to load, and close the program until the user fixes or deletes the file.
+ * This class handles all high scores, and their associated names along with volume settings. It reads and
+ * writes to and from the text file named Sirtet Data.txt. If Sirtet Data.txt does not exist or is corrupted,
+ * a copy will be made with pre-made data.
  */
 class SaveData {
     static HighScore[] highScores = new HighScore[10];
@@ -41,20 +40,22 @@ class SaveData {
     }
 
     public static void writeFile() {
-        try {
-            PrintWriter writer = new PrintWriter("Sirtet Data.txt");
-            writer.println(bgmVolume);
-            writer.println(sfxVolume);
-            for (int scoreIndex = 0; scoreIndex < 10; scoreIndex++) {
-                writer.println(highScores[scoreIndex].getScore());
+        new Thread(() -> {
+            try {
+                PrintWriter writer = new PrintWriter("Sirtet Data.txt");
+                writer.println(bgmVolume);
+                writer.println(sfxVolume);
+                for (int scoreIndex = 0; scoreIndex < 10; scoreIndex++) {
+                    writer.println(highScores[scoreIndex].getScore());
+                }
+                for (int nameIndex = 0; nameIndex < 10; nameIndex++) {
+                    writer.println(highScores[nameIndex].getName());
+                }
+                writer.close();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            for (int nameIndex = 0; nameIndex < 10; nameIndex++) {
-                writer.println(highScores[nameIndex].getName());
-            }
-            writer.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        }).start();
     }
 
     public static void repairSave() {
@@ -83,6 +84,6 @@ class SaveData {
         }
         highScores[scoreIndex].setScore(currentScore);
         highScores[scoreIndex].setName(currentName);
-        new Thread(SaveData::writeFile).start();
+        writeFile();
     }
 }

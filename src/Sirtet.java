@@ -49,7 +49,7 @@ public class Sirtet {
     }
 
     public static void loadMenuImages() throws Exception {
-        menuImages = new BufferedImage[]{
+        menuImages = new BufferedImage[] {
                 ImageIO.read(new File("Assets/playButton.png")),
                 ImageIO.read(new File("Assets/highscoreButton.png")),
                 ImageIO.read(new File("Assets/quitButton.png")),

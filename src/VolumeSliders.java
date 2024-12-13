@@ -7,12 +7,12 @@ import javax.swing.event.ChangeListener;
  * are used by multiple other classes, it made sense to make them their own class to have
  * it editable all in the same place.
  */
-public class VolumeSlidersPanel extends JPanel implements ChangeListener {
+class VolumeSliders extends JPanel implements ChangeListener {
     public static final int VOLUME_CENTER_X = 190;
     private JSlider bgmSlider;
     private JSlider sfxSlider;
 
-    public VolumeSlidersPanel(int xPos, int yPos) {
+    public VolumeSliders(int xPos, int yPos) {
         setSize(SirtetWindow.FRAME_SIZE_X, SirtetWindow.FRAME_SIZE_Y);
         setOpaque(false);
         setLayout(null);

@@ -17,7 +17,7 @@ class GameplayScene extends JPanel implements KeyListener {
     private JPanel playPanel;
     private JPanel pausePanel;
     private ReactiveButton quitButton;
-    private VolumeSlidersPanel volumeSlidersPanel;
+    private VolumeSliders volumeSliders;
 
     public GameplayScene() {
         SaveData.currentScore = -25;
@@ -26,7 +26,7 @@ class GameplayScene extends JPanel implements KeyListener {
         genericPanelSetup(this);
         setBackground(Sirtet.SIRTET_GREEN);
         setOpaque(true);
-        volumeSlidersPanel = new VolumeSlidersPanel(VolumeSlidersPanel.VOLUME_CENTER_X, 350);
+        volumeSliders = new VolumeSliders(VolumeSliders.VOLUME_CENTER_X, 350);
         quitButton = new ReactiveButton(Sirtet.menuImages[2], Sirtet.menuImages[5], 425) {
             public void actionPerformed(ActionEvent ignored) {
                 SirtetWindow.changeScene(SceneID.Menu);
@@ -87,7 +87,7 @@ class GameplayScene extends JPanel implements KeyListener {
         genericPanelSetup(pausePanel);
         pausePanel.add(quitButton);
         pausePanel.add(paused);
-        pausePanel.add(volumeSlidersPanel);
+        pausePanel.add(volumeSliders);
     }
 
     public void pauseGame() {
@@ -115,19 +115,19 @@ class GameplayScene extends JPanel implements KeyListener {
                 return;
             case 1:
                 SaveData.currentScore += 100;
-                SirtetAudio.playAudio("oneRow.wav");
+                SirtetAudio.playAudio(AudioID.OneRow);
                 break;
             case 2:
                 SaveData.currentScore += 250;
-                SirtetAudio.playAudio("twoRow.wav");
+                SirtetAudio.playAudio(AudioID.TwoRow);
                 break;
             case 3:
                 SaveData.currentScore += 600;
-                SirtetAudio.playAudio("threeRow.wav");
+                SirtetAudio.playAudio(AudioID.ThreeRow);
                 break;
             default:
                 SaveData.currentScore += 1650;
-                SirtetAudio.playAudio("fourRow.wav");
+                SirtetAudio.playAudio(AudioID.FourRow);
         }
         SaveData.currentScore -= 25;
         updateScoreLabel();

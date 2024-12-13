@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage;
  * This class creates a button using provided images and offset. The images will be shown when the button is hovered over,
  * and when not. yOffset specifies how far down the panel the button will be, while the x position is always centered.
  */
-public abstract class ReactiveButton extends JPanel implements ActionListener, MouseListener {
+abstract class ReactiveButton extends JPanel implements ActionListener, MouseListener {
     private JButton button;
     private int yOffset;
     private ImageIcon inactiveImage;
@@ -22,11 +22,12 @@ public abstract class ReactiveButton extends JPanel implements ActionListener, M
         setLayout(null);
         setOpaque(false);
         setSize(SirtetWindow.FRAME_SIZE_X, SirtetWindow.FRAME_SIZE_Y);
+        button = new JButton();
         buttonSetup();
+        add(button);
     }
 
     public void buttonSetup() {
-        button = new JButton();
         button.setIcon(inactiveImage);
         button.addActionListener(this);
         button.addMouseListener(this);
@@ -37,7 +38,6 @@ public abstract class ReactiveButton extends JPanel implements ActionListener, M
         int xSize = (int) button.getPreferredSize().getWidth();
         int ySize = (int) button.getPreferredSize().getHeight();
         button.setBounds(300 - xSize / 2, yOffset, xSize, ySize);
-        add(button);
     }
 
     public void mouseEntered(MouseEvent ignored) {

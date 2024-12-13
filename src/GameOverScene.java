@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
  * This class contains the game over JPanel and everything within. It allows the user to enter their name
  * and then sends it off to SaveData.java to be inserted or thrown away, depending on whether it makes it
  * into the top 10 scores list. The user will be told if their name is over 10 characters, under 3, or contains spaces.
- * These names will not be allowed. After receiving a name, it switches to the high score scene.
+ * These names will not be allowed. After receiving a name, it switches to the high score scene and inserts the score.
  */
 class GameOverScene extends JPanel implements ActionListener {
     private JTextField nameField;
@@ -20,22 +20,21 @@ class GameOverScene extends JPanel implements ActionListener {
         SirtetWindow.labelSetupCenter(gameOverLabel, Sirtet.SILKSCREEN_40, 275);
         JLabel pointsLabel = new JLabel("Score: " + SaveData.currentScore);
         SirtetWindow.labelSetupCenter(pointsLabel, Sirtet.SILKSCREEN_40, 475);
-        nameField = setField();
+        nameField = new JTextField();
+        setField();
         add(gameOverLabel);
         add(pointsLabel);
         add(nameField);
     }
 
-    public JTextField setField() {
-        JTextField field = new JTextField();
-        field.setBounds(150, 400, 300, 50);
-        field.setForeground(Color.black);
-        field.setFont(Sirtet.SILKSCREEN_30);
-        field.addActionListener(this);
-        field.setHorizontalAlignment(JTextField.CENTER);
-        field.setBackground(new Color(37, 218, 192));
-        field.setBorder(null);
-        return field;
+    public void setField() {
+        nameField.setBounds(150, 400, 300, 50);
+        nameField.setForeground(Color.black);
+        nameField.setFont(Sirtet.SILKSCREEN_30);
+        nameField.addActionListener(this);
+        nameField.setHorizontalAlignment(JTextField.CENTER);
+        nameField.setBackground(new Color(37, 218, 192));
+        nameField.setBorder(null);
     }
 
     public void actionPerformed(ActionEvent ignored) {

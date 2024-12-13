@@ -1,8 +1,5 @@
-/**
- * This enum handles what Sonimortets are called. The square-looking block is O, the long 1x4 is I etc. This
- * helps understand what ordinal pertains to which shaped piece type.
- */
-enum BlockType {
+///  Handles what Sonimortet block types are called.
+enum BlockID {
     O,
     I,
     S,
@@ -12,10 +9,20 @@ enum BlockType {
     T
 }
 
-/// This enum handles what scenes are called.
+/// Handles what scenes are called.
 enum SceneID {
     Menu,
     Gameplay,
     Highscore,
     Gameover
+}
+
+/// Handles what audio files are called.
+enum AudioID {
+    BlockPlace,
+    OneRow,
+    TwoRow,
+    ThreeRow,
+    FourRow,
+    GameOver
 }
