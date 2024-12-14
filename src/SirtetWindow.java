@@ -59,12 +59,12 @@ class SirtetWindow {
                 frame.addKeyListener(gameplayScene);
                 frame.getContentPane().add(gameplayScene);
                 break;
-            case Highscore:
+            case HighScore:
                 highScoreScene = new HighScoreScene();
                 frame.addKeyListener(highScoreScene);
                 frame.getContentPane().add(highScoreScene);
                 break;
-            case Gameover:
+            case GameOver:
                 gameOverScene = new GameOverScene();
                 frame.getContentPane().add(gameOverScene);
                 gameOverScene.focusField();

@@ -46,7 +46,7 @@ class GameOverScene extends JPanel implements ActionListener {
             return;
         }
         SaveData.insertScore(name);
-        SirtetWindow.changeScene(SceneID.Highscore);
+        SirtetWindow.changeScene(SceneID.HighScore);
     }
 
     public void focusField() {

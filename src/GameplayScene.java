@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ConcurrentModificationException;
@@ -27,11 +26,7 @@ class GameplayScene extends JPanel implements KeyListener {
         setBackground(Sirtet.SIRTET_GREEN);
         setOpaque(true);
         volumeSliders = new VolumeSliders(VolumeSliders.VOLUME_CENTER_X, 350);
-        quitButton = new ReactiveButton(Sirtet.menuImages[2], Sirtet.menuImages[5], 425) {
-            public void actionPerformed(ActionEvent ignored) {
-                SirtetWindow.changeScene(SceneID.Menu);
-            }
-        };
+        quitButton = new ReactiveButton(Sirtet.menuImages[2], Sirtet.menuImages[5], 425, e -> SirtetWindow.changeScene(SceneID.Menu));
         grid = new SirtetGrid(this);
         playPanelSetup();
         pausePanelSetup();
@@ -64,11 +59,10 @@ class GameplayScene extends JPanel implements KeyListener {
                     repaint();
                     return;
                 }
-                boolean[][] heldGrid = getHeldGrid();
                 currentImage = Sirtet.gameplaySceneImages[grid.getHeldType().ordinal()];
                 for (int xPos = 0; xPos < 3; xPos++) {
                     for (int yPos = 0; yPos < 4; yPos++) {
-                        if (heldGrid[xPos][yPos]) {
+                        if (getHeldGrid()[xPos][yPos]) {
                             g.drawImage(currentImage, 30 + 38 * xPos, 170 + 38 * yPos, 37, 37, Sirtet.observer);
                         }
                     }
@@ -125,9 +119,12 @@ class GameplayScene extends JPanel implements KeyListener {
                 SaveData.currentScore += 600;
                 SirtetAudio.playAudio(AudioID.ThreeRow);
                 break;
-            default:
+            case 4:
                 SaveData.currentScore += 1650;
                 SirtetAudio.playAudio(AudioID.FourRow);
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + rowsCleared);
         }
         SaveData.currentScore -= 25;
         updateScoreLabel();

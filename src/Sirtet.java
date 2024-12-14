@@ -1,4 +1,6 @@
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
@@ -17,14 +19,16 @@ public class Sirtet {
     static final Font SILKSCREEN_40 = new Font("Silkscreen", Font.PLAIN, 40);
     static final Font SILKSCREEN_30 = new Font("Silkscreen", Font.PLAIN, 30);
     static BufferedImage[] gameplaySceneImages = new BufferedImage[8];
-    static BufferedImage[] menuImages;
+    static BufferedImage[] menuImages = new BufferedImage[8];
     static BufferedImage icon;
     static ImageObserver observer;
+    static Clip[] audioClips = new Clip[AudioID.values().length];
 
     public static void main(String[] args) {
         try {
             loadFonts();
             loadImages();
+            loadAudio();
             new SaveData();
             new SirtetAudio();
             new SirtetWindow();
@@ -42,28 +46,28 @@ public class Sirtet {
     }
 
     public static void loadGameplayImages() throws Exception {
-        for (int i = 0; i < 7; i++) {
-            gameplaySceneImages[i] = ImageIO.read(new File("Assets/piece" + i + ".png"));
+        for (int imageIndex = 0; imageIndex < 7; imageIndex++) {
+            gameplaySceneImages[imageIndex] = ImageIO.read(new File("Assets/" + BlockID.values()[imageIndex] + " Piece.png"));
         }
-        gameplaySceneImages[7] = ImageIO.read(new File("Assets/gameplayScene.png"));
+        gameplaySceneImages[7] = ImageIO.read(new File("Assets/GameplayScene.png"));
     }
 
     public static void loadMenuImages() throws Exception {
-        menuImages = new BufferedImage[] {
-                ImageIO.read(new File("Assets/playButton.png")),
-                ImageIO.read(new File("Assets/highscoreButton.png")),
-                ImageIO.read(new File("Assets/quitButton.png")),
-                ImageIO.read(new File("Assets/playButtonActive.png")),
-                ImageIO.read(new File("Assets/highscoreButtonActive.png")),
-                ImageIO.read(new File("Assets/quitButtonActive.png")),
-                ImageIO.read(new File("Assets/menuScene.png")),
-                ImageIO.read(new File("Assets/controlsImage.png"))
-        };
+        for(int imageIndex = 0; imageIndex < ImageID.values().length; imageIndex++) {
+            menuImages[imageIndex] = ImageIO.read(new File("Assets/" + ImageID.values()[imageIndex] + ".png"));
+        }
     }
 
     public static void loadFonts() throws Exception {
         GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(
                 Font.createFont(Font.TRUETYPE_FONT, new File("Assets/Silkscreen-Regular.ttf"))
         );
+    }
+
+    public static void loadAudio() throws Exception {
+        for (int clipIndex = 0; clipIndex < audioClips.length; clipIndex++) {
+            audioClips[clipIndex] = AudioSystem.getClip();
+            audioClips[clipIndex].open(AudioSystem.getAudioInputStream(new File("Assets/" + AudioID.values()[clipIndex] + ".wav")));
+        }
     }
 }

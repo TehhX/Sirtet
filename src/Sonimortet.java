@@ -56,7 +56,7 @@ class Sonimortet {
     public void gameOver() {
         parentGrid.stopTimer();
         SirtetAudio.playAudio(AudioID.GameOver);
-        SirtetWindow.changeScene(SceneID.Gameover);
+        SirtetWindow.changeScene(SceneID.GameOver);
     }
 
     public boolean canPlace(int[][] positions) {
