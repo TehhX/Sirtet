@@ -39,7 +39,7 @@ public class Sirtet {
     }
 
     public static void loadImages() throws Exception {
-        observer = (img, infoflags, x, y, width, height) -> false;
+        observer = (a, b, c, d, e, f) -> false;
         icon = ImageIO.read(new File("Assets/Icon.png"));
         loadGameplayImages();
         loadMenuImages();

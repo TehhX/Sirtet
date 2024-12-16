@@ -8,18 +8,13 @@ import javax.swing.event.ChangeListener;
  * it editable all in the same place.
  */
 class VolumeSliders extends JPanel implements ChangeListener {
-    public static final int VOLUME_CENTER_X = 190;
-    private JSlider bgmSlider;
-    private JSlider sfxSlider;
+    private JSlider bgmSlider = sliderSetup();
+    private JSlider sfxSlider = sliderSetup();
 
-    public VolumeSliders(int xPos, int yPos) {
-        setSize(SirtetWindow.FRAME_SIZE_X, SirtetWindow.FRAME_SIZE_Y);
-        setOpaque(false);
-        setLayout(null);
-        bgmSlider = sliderSetup();
-        sfxSlider = sliderSetup();
-        bgmSlider.setBounds(xPos, yPos, 100, 50);
-        sfxSlider.setBounds(xPos + 120, yPos, 100, 50);
+    public VolumeSliders(int yPos) {
+        SirtetWindow.basicPanelSetup(this, false);
+        bgmSlider.setBounds(190, yPos, 100, 50);
+        sfxSlider.setBounds(310, yPos, 100, 50);
         bgmSlider.setValue(SaveData.bgmVolume);
         sfxSlider.setValue(SaveData.sfxVolume);
         add(bgmSlider);

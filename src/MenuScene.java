@@ -18,7 +18,7 @@ class MenuScene extends JPanel {
         add(new ReactiveButton(Sirtet.menuImages[0], Sirtet.menuImages[3], 260, e -> SirtetWindow.changeScene(SceneID.Gameplay)));
         add(new ReactiveButton(Sirtet.menuImages[1], Sirtet.menuImages[4], 320, e -> SirtetWindow.changeScene(SceneID.HighScore)));
         add(new ReactiveButton(Sirtet.menuImages[2], Sirtet.menuImages[5], 380, e-> { SaveData.writeFile(); System.exit(0); }));
-        add(new VolumeSliders(VolumeSliders.VOLUME_CENTER_X, 700));
+        add(new VolumeSliders(700));
         add(backgroundPanel);
     }
 }

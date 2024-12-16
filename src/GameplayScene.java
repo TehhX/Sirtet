@@ -21,7 +21,7 @@ class GameplayScene extends JPanel implements KeyListener {
     public GameplayScene() {
         SaveData.currentScore = -25;
         SirtetWindow.basicPanelSetup(this, true);
-        volumeSliders = new VolumeSliders(VolumeSliders.VOLUME_CENTER_X, 350);
+        volumeSliders = new VolumeSliders(350);
         quitButton = new ReactiveButton(Sirtet.menuImages[2], Sirtet.menuImages[5], 425, e -> SirtetWindow.changeScene(SceneID.Menu));
         grid = new SirtetGrid(this);
         playPanelSetup();
@@ -44,7 +44,7 @@ class GameplayScene extends JPanel implements KeyListener {
                             g.drawImage(currentImage, 173 + 38 * currentPosition.getX(), 132 + 38 * currentPosition.getY(), Sirtet.observer);
                         }
                     }
-                } catch (ConcurrentModificationException e) {
+                } catch (ConcurrentModificationException cme) {
                     repaint();
                     return;
                 }
