@@ -36,6 +36,5 @@ enum ImageID {
     PlayButtonActive,
     HighScoreButtonActive,
     QuitButtonActive,
-    MenuScene,
-    ControlsImage
+    MenuScene
 }

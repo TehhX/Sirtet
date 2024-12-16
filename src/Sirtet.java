@@ -19,7 +19,7 @@ public class Sirtet {
     static final Font SILKSCREEN_40 = new Font("Silkscreen", Font.PLAIN, 40);
     static final Font SILKSCREEN_30 = new Font("Silkscreen", Font.PLAIN, 30);
     static BufferedImage[] gameplaySceneImages = new BufferedImage[8];
-    static BufferedImage[] menuImages = new BufferedImage[8];
+    static BufferedImage[] menuImages = new BufferedImage[7];
     static BufferedImage icon;
     static ImageObserver observer;
     static Clip[] audioClips = new Clip[AudioID.values().length];

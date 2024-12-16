@@ -18,13 +18,10 @@ class SirtetAudio {
     }
 
     public static void playAudio(AudioID audioID) {
-        new Thread(() -> {
-            Clip clip = Sirtet.audioClips[audioID.ordinal()];
-            clip.stop();
-            FloatControl fc = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            fc.setValue((float) ((Math.log(SaveData.sfxVolume / 9.0)) / Math.log(10.0) * 20.0));
-            clip.setMicrosecondPosition(0);
-            clip.start();
-        }).start();
+        Sirtet.audioClips[audioID.ordinal()].stop();
+        FloatControl fc = (FloatControl) Sirtet.audioClips[audioID.ordinal()].getControl(FloatControl.Type.MASTER_GAIN);
+        fc.setValue((float) ((Math.log(SaveData.sfxVolume / 9.0)) / Math.log(10.0) * 20.0));
+        Sirtet.audioClips[audioID.ordinal()].setMicrosecondPosition(0);
+        Sirtet.audioClips[audioID.ordinal()].start();
     }
 }

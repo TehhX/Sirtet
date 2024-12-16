@@ -14,14 +14,10 @@ class HighScoreScene extends JPanel implements KeyListener {
     private JLabel[] scoreLabels = new JLabel[10];
 
     public HighScoreScene() {
+        SirtetWindow.basicPanelSetup(this, true);
         loadLabels();
-        setBackground(Sirtet.SIRTET_GREEN);
-        JLabel titleLabel = new JLabel("Highscores");
-        SirtetWindow.labelSetupCenter(titleLabel, Sirtet.SILKSCREEN_60, 50);
-        JLabel returnLabel = new JLabel("ESC to Return");
-        SirtetWindow.labelSetupCenter(returnLabel, Sirtet.SILKSCREEN_30, 725);
-        setLayout(null);
-        setSize(SirtetWindow.FRAME_SIZE_X, SirtetWindow.FRAME_SIZE_Y);
+        JLabel titleLabel = SirtetWindow.labelSetupCenter("Highscores", Sirtet.SILKSCREEN_60, 50);
+        JLabel returnLabel = SirtetWindow.labelSetupCenter("ESC to Return", Sirtet.SILKSCREEN_30, 725);
         add(titleLabel);
         add(returnLabel);
         for (int labelIndex = 0; labelIndex < 10; labelIndex++) {
@@ -34,12 +30,9 @@ class HighScoreScene extends JPanel implements KeyListener {
     public void loadLabels() {
         for (int labelIndex = 0; labelIndex < 10; labelIndex++) {
             HighScore currentHS = SaveData.highScores[labelIndex];
-            indexLabels[labelIndex] = new JLabel(labelIndex + 1 + ": ");
-            SirtetWindow.labelSetupRight(indexLabels[labelIndex], Sirtet.SILKSCREEN_30, 110, 160 + labelIndex * 50);
-            nameLabels[labelIndex] = new JLabel(currentHS.getName());
-            SirtetWindow.labelSetupRight(nameLabels[labelIndex], Sirtet.SILKSCREEN_30, 360, 160 + labelIndex * 50);
-            scoreLabels[labelIndex] = new JLabel("" + currentHS.getScore());
-            SirtetWindow.labelSetupRight(scoreLabels[labelIndex], Sirtet.SILKSCREEN_30, 550, 160 + labelIndex * 50);
+            indexLabels[labelIndex] = SirtetWindow.labelSetupRight(labelIndex + 1 + ": ", Sirtet.SILKSCREEN_30, 110, 160 + labelIndex * 50);
+            nameLabels[labelIndex] = SirtetWindow.labelSetupRight(currentHS.getName(), Sirtet.SILKSCREEN_30, 360, 160 + labelIndex * 50);
+            scoreLabels[labelIndex] = SirtetWindow.labelSetupRight("" + currentHS.getScore(), Sirtet.SILKSCREEN_30, 550, 160 + labelIndex * 50);
         }
     }
 
