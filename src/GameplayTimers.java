@@ -37,6 +37,6 @@ class GameplayTimers implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (grid.getLastSonimortet().getHeight() == 0) grid.getLastSonimortet().hardDrop();
         else grid.getLastSonimortet().softDrop();
-        try { grid.updateGrid(true); } catch (NullPointerException ignored) {}
+        grid.updateGrid(true);
     }
 }

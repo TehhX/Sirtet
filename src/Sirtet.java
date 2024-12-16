@@ -14,14 +14,13 @@ import java.io.File;
  * force-quits before even displaying the frame, to not waste time.
  */
 public class Sirtet {
-    static final Color SIRTET_GREEN = new Color(22, 207, 130);
     static final Font SILKSCREEN_60 = new Font("Silkscreen", Font.PLAIN, 60);
     static final Font SILKSCREEN_40 = new Font("Silkscreen", Font.PLAIN, 40);
     static final Font SILKSCREEN_30 = new Font("Silkscreen", Font.PLAIN, 30);
     static BufferedImage[] gameplaySceneImages = new BufferedImage[8];
     static BufferedImage[] menuImages = new BufferedImage[7];
     static BufferedImage icon;
-    static ImageObserver observer;
+    static ImageObserver observer = (a, b, c, d, e, f) -> false;
     static Clip[] audioClips = new Clip[AudioID.values().length];
 
     public static void main(String[] args) {
@@ -39,7 +38,6 @@ public class Sirtet {
     }
 
     public static void loadImages() throws Exception {
-        observer = (a, b, c, d, e, f) -> false;
         icon = ImageIO.read(new File("Assets/Icon.png"));
         loadGameplayImages();
         loadMenuImages();

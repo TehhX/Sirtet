@@ -75,7 +75,6 @@ class GameplayScene extends JPanel implements KeyListener {
         isPaused = true;
         remove(playPanel);
         add(pausePanel);
-        repaint();
     }
 
     public void resumeGame() {
@@ -83,7 +82,6 @@ class GameplayScene extends JPanel implements KeyListener {
         isPaused = false;
         remove(pausePanel);
         add(playPanel);
-        repaint();
     }
 
     public void pointIncrease(int rowsCleared) {
@@ -133,8 +131,11 @@ class GameplayScene extends JPanel implements KeyListener {
 
     public void keyPressed(KeyEvent e) {
         if (isPaused) {
-            if (e.getKeyCode() == KeyEvent.VK_ESCAPE) resumeGame();
-            return;
+            if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                resumeGame();
+                grid.updateGrid(true);
+                return;
+            }
         }
         switch (e.getKeyCode()) {
             case KeyEvent.VK_A:
@@ -161,7 +162,7 @@ class GameplayScene extends JPanel implements KeyListener {
             case KeyEvent.VK_ESCAPE:
                 pauseGame();
         }
-        try { grid.updateGrid(true); } catch (NullPointerException ignored) {}
+        grid.updateGrid(true);
     }
 
     public SirtetGrid getGrid() {

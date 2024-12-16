@@ -17,7 +17,6 @@ class SirtetGrid {
     private GameplayScene parentScene;
     private int swapsTurn = 0;
     private ArrayList<Sonimortet> sonimortetList = new ArrayList<>();
-    private ArrayList<Sonimortet> sonimortetsToDelete = new ArrayList<>();
 
     public SirtetGrid(GameplayScene parentScene) {
         grid = new boolean[gridSizeX][gridSizeY];
@@ -39,11 +38,11 @@ class SirtetGrid {
     }
 
     public BlockID randomBlock() {
-        BlockID[] blockIDS = BlockID.values();
-        return blockIDS[(int) (Math.random() * blockIDS.length)];
+        return BlockID.values()[(int) (Math.random() * BlockID.values().length)];
     }
 
     public Sonimortet getLastSonimortet() {
+        if (sonimortetList.isEmpty()) return null;
         return sonimortetList.get(sonimortetList.size() - 1);
     }
 
@@ -61,16 +60,13 @@ class SirtetGrid {
     }
 
     public void updateGrid(boolean repaint) {
-        grid = new boolean[gridSizeX][gridSizeY];
-        if (sonimortetList.isEmpty()) return;
         try {
+            grid = new boolean[gridSizeX][gridSizeY];
             populateGrid();
         } catch (ConcurrentModificationException ignored) {
             updateGrid(repaint);
             return;
-        }
-        deleteMissing();
-        sonimortetsToDelete.clear();
+        } catch (NullPointerException ignored) {}
         if (repaint) parentScene.repaint();
     }
 
@@ -84,11 +80,7 @@ class SirtetGrid {
 
     public void checkRows() {
         for (int yPos = gridSizeY - 1; yPos >= 0; yPos--) {
-            int rowFilledCount = 0;
-            for (int xPos = 0; xPos < gridSizeX; xPos++) {
-                if (grid[xPos][yPos]) rowFilledCount++;
-            }
-            if (rowFilledCount == gridSizeX) {
+            if (rowFilled(yPos)) {
                 clearRow(yPos);
                 shiftAbove(yPos);
                 updateGrid(false);
@@ -97,6 +89,14 @@ class SirtetGrid {
         }
         parentScene.pointIncrease(rowsCleared);
         rowsCleared = 0;
+    }
+
+    public boolean rowFilled(int yPos) {
+        int rowFilledCount = 0;
+        for (int xPos = 0; xPos < gridSizeX; xPos++) {
+            if (grid[xPos][yPos]) rowFilledCount++;
+        }
+        return rowFilledCount == gridSizeX;
     }
 
     public void clearRow(int yPos) {
@@ -108,24 +108,13 @@ class SirtetGrid {
                 Sonimortet current = sonimortetList.get(i);
                 for (int posIndex = 0; posIndex < current.getPositions().length; posIndex++) {
                     if (current.getPositions()[posIndex].getY() == yPos) {
-                        current.delete(posIndex);
-                        if (current.getPositions().length == 0) {
-                            sonimortetList.remove(current);
-                            sonimortetsToDelete.add(current);
-                        }
                         deleted = true;
+                        current.delete(posIndex);
+                        if (current.getPositions().length == 0) sonimortetList.remove(current);
                     }
                 }
             }
         } while (deleted);
-    }
-
-    public void deleteMissing() {
-        for (Sonimortet current : sonimortetList) {
-            for (Sonimortet currentDelete : sonimortetsToDelete) {
-                if (current == currentDelete) sonimortetList.remove(current);
-            }
-        }
     }
 
     public void shiftAbove(int yPos) {

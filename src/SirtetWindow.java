@@ -103,7 +103,7 @@ class SirtetWindow {
     }
 
     public static void basicPanelSetup(JPanel panel, boolean opaque) {
-        panel.setBackground(Sirtet.SIRTET_GREEN);
+        panel.setBackground(new Color(22, 207, 130));
         panel.setSize(FRAME_SIZE_X, FRAME_SIZE_Y);
         panel.setOpaque(opaque);
         panel.setLayout(null);

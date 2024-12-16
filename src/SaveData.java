@@ -40,22 +40,20 @@ class SaveData {
     }
 
     public static void writeFile() {
-        new Thread(() -> {
-            try {
-                PrintWriter writer = new PrintWriter("Sirtet Data.txt");
-                writer.println(bgmVolume);
-                writer.println(sfxVolume);
-                for (int scoreIndex = 0; scoreIndex < 10; scoreIndex++) {
-                    writer.println(highScores[scoreIndex].getScore());
-                }
-                for (int nameIndex = 0; nameIndex < 10; nameIndex++) {
-                    writer.println(highScores[nameIndex].getName());
-                }
-                writer.close();
-            } catch (Exception e) {
-                e.printStackTrace();
+        try {
+            PrintWriter writer = new PrintWriter("Sirtet Data.txt");
+            writer.println(bgmVolume);
+            writer.println(sfxVolume);
+            for (int scoreIndex = 0; scoreIndex < 10; scoreIndex++) {
+                writer.println(highScores[scoreIndex].getScore());
             }
-        }).start();
+            for (int nameIndex = 0; nameIndex < 10; nameIndex++) {
+                writer.println(highScores[nameIndex].getName());
+            }
+            writer.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void repairSave() {
