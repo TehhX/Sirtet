@@ -35,8 +35,8 @@ class GameOverScene extends JPanel implements ActionListener {
 
     public void actionPerformed(ActionEvent ignored) {
         String name = nameField.getText();
-        if (name.length() > 10 || name.length() < 3 || name.contains(" ")) {
-            JOptionPane.showMessageDialog(SirtetWindow.frame, "Name Must be 3-10 Characters, no spaces.");
+        if (name.length() > 10 || name.length() < 3) {
+            JOptionPane.showMessageDialog(SirtetWindow.frame, "Name Must be 3-10 Characters.");
             nameField.setText("");
             focusField();
             return;

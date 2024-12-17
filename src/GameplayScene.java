@@ -13,19 +13,17 @@ class GameplayScene extends JPanel implements KeyListener {
     private SirtetGrid grid;
     private JLabel score = SirtetWindow.labelSetupLeft("", Sirtet.SILKSCREEN_60, 0, 0);
     private JLabel paused = SirtetWindow.labelSetupCenter("Game Paused", Sirtet.SILKSCREEN_60, 250);
-    private JPanel playPanel;
+    private ReactiveButton quitButton = new ReactiveButton(Sirtet.menuImages[2], Sirtet.menuImages[5], 425, e -> SirtetWindow.changeScene(SceneID.Menu));
+    private VolumeSliders volumeSliders = new VolumeSliders(350);
     private JPanel pausePanel = new JPanel();
-    private ReactiveButton quitButton;
-    private VolumeSliders volumeSliders;
+    private JPanel playPanel;
 
     public GameplayScene() {
         SaveData.currentScore = -25;
         SirtetWindow.basicPanelSetup(this, true);
-        volumeSliders = new VolumeSliders(350);
-        quitButton = new ReactiveButton(Sirtet.menuImages[2], Sirtet.menuImages[5], 425, e -> SirtetWindow.changeScene(SceneID.Menu));
-        grid = new SirtetGrid(this);
         playPanelSetup();
         pausePanelSetup();
+        grid = new SirtetGrid(this);
     }
 
     public void playPanelSetup() {
@@ -68,20 +66,24 @@ class GameplayScene extends JPanel implements KeyListener {
         pausePanel.add(quitButton);
         pausePanel.add(paused);
         pausePanel.add(volumeSliders);
+        pausePanel.setVisible(false);
+        add(pausePanel);
     }
 
     public void pauseGame() {
         grid.stopTimer();
-        isPaused = true;
-        remove(playPanel);
-        add(pausePanel);
+        invertPause();
     }
 
     public void resumeGame() {
+        invertPause();
         grid.restartTimer();
-        isPaused = false;
-        remove(pausePanel);
-        add(playPanel);
+    }
+
+    public void invertPause() {
+        isPaused = !isPaused;
+        pausePanel.setVisible(isPaused);
+        playPanel.setVisible(!isPaused);
     }
 
     public void pointIncrease(int rowsCleared) {
@@ -134,8 +136,8 @@ class GameplayScene extends JPanel implements KeyListener {
             if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                 resumeGame();
                 grid.updateGrid(true);
-                return;
             }
+            return;
         }
         switch (e.getKeyCode()) {
             case KeyEvent.VK_A:

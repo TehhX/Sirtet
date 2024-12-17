@@ -9,9 +9,9 @@ import java.awt.event.ActionListener;
  * by one every time a new Sonimortet is placed.
  */
 class GameplayTimers implements ActionListener {
-    private static Timer timer;
     private static int tMinus = 1342;
     private static int timesDecremented = 0;
+    private static Timer timer;
     private SirtetGrid grid;
 
     public GameplayTimers(SirtetGrid grid) {

@@ -1,18 +1,10 @@
-/// Contains individual high scores and their associated names, along with getter/setter methods.
+/// Contains individual high scores and their associated names, along with getter/setter methods and toString override.
 class HighScore {
-    private int score;
     private String name;
+    private int score;
 
-    public HighScore() {
-        score = 0;
-        name = null;
-    }
-
-    public int getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
+    public HighScore(String name, int score) {
+        this.name = name;
         this.score = score;
     }
 
@@ -20,7 +12,11 @@ class HighScore {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public int getScore() {
+        return score;
+    }
+
+    public String toString() {
+        return name + "\n" + score;
     }
 }
