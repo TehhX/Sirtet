@@ -46,7 +46,7 @@ class SaveData {
     public static void repairSave() {
         try {
             PrintWriter writer = new PrintWriter("Sirtet Data.txt");
-            writer.print("3\n3\nJex\n45000\nPajitnov\n24700\nFreeman\n22500\nKitsuragi\n21025\nBlaidd\n19990\nRiebeck\n16570\nMundy\n14000\nWinston\n11050\nNito\n8500\nFring\n4350");
+            writer.print("3\n3\nJex\n45000\nPajitnov\n24700\nKazuma\n19000\nKitsuragi\n15000\nGenichiro\n12000\nRiebeck\n10000\nMundy\n8500\nWinston\n4200\nBlaidd\n3000\nFring\n1250");
             writer.close();
         } catch (Exception e) {
             e.printStackTrace();

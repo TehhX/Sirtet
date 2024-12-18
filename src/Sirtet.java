@@ -1,6 +1,7 @@
 import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
@@ -18,7 +19,7 @@ public class Sirtet {
     static final Font SILKSCREEN_40 = new Font("Silkscreen", Font.PLAIN, 40);
     static final Font SILKSCREEN_30 = new Font("Silkscreen", Font.PLAIN, 30);
     static BufferedImage[] gameplaySceneImages = new BufferedImage[8];
-    static BufferedImage[] menuImages = new BufferedImage[7];
+    static BufferedImage[] menuImages = new BufferedImage[6];
     static BufferedImage icon;
     static ImageObserver observer = (a, b, c, d, e, f) -> false;
     static Clip[] audioClips = new Clip[AudioID.values().length];
@@ -33,33 +34,24 @@ public class Sirtet {
             new SirtetWindow();
         } catch (Exception e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(new JFrame(), "Load Error, Check Stack Trace");
             System.exit(1);
         }
     }
 
     public static void loadImages() throws Exception {
         icon = ImageIO.read(new File("Assets/Icon.png"));
-        loadGameplayImages();
-        loadMenuImages();
-    }
-
-    public static void loadGameplayImages() throws Exception {
         for (int imageIndex = 0; imageIndex < 7; imageIndex++) {
             gameplaySceneImages[imageIndex] = ImageIO.read(new File("Assets/" + BlockID.values()[imageIndex] + " Piece.png"));
         }
         gameplaySceneImages[7] = ImageIO.read(new File("Assets/GameplayScene.png"));
-    }
-
-    public static void loadMenuImages() throws Exception {
         for(int imageIndex = 0; imageIndex < ImageID.values().length; imageIndex++) {
             menuImages[imageIndex] = ImageIO.read(new File("Assets/" + ImageID.values()[imageIndex] + ".png"));
         }
     }
 
     public static void loadFonts() throws Exception {
-        GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(
-                Font.createFont(Font.TRUETYPE_FONT, new File("Assets/Silkscreen-Regular.ttf"))
-        );
+        GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Assets/Silkscreen-Regular.ttf")));
     }
 
     public static void loadAudio() throws Exception {

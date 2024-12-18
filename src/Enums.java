@@ -33,8 +33,7 @@ enum ImageID {
     PlayButton,
     HighScoreButton,
     QuitButton,
-    PlayButtonActive,
-    HighScoreButtonActive,
-    QuitButtonActive,
-    MenuScene
+    MenuButton,
+    MenuScene,
+    SoundIcons
 }

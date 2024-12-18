@@ -9,28 +9,26 @@ import java.awt.event.ActionListener;
  * into the top 10 scores list. The user will be told if their name is over 10 characters, under 3, or contains spaces.
  * These names will not be allowed. After receiving a name, it switches to the high score scene and inserts the score.
  */
-class GameOverScene extends JPanel implements ActionListener {
-    private JTextField nameField;
+class GameOverScene extends SirtetPanel implements ActionListener {
+    private JTextField nameField = nameField();
 
     public GameOverScene() {
-        SirtetWindow.basicPanelSetup(this, true);
-        JLabel gameOverLabel = SirtetWindow.labelSetupCenter("<html><p style=\"text-align:center;\">Game Over!<br>Enter Your Name:</p>", Sirtet.SILKSCREEN_40, 275);
-        JLabel pointsLabel = SirtetWindow.labelSetupCenter("Score: " + SaveData.currentScore, Sirtet.SILKSCREEN_40, 475);
-        nameField = new JTextField();
-        setField();
-        add(gameOverLabel);
-        add(pointsLabel);
+        super(true);
+        add(SirtetWindow.labelCenter("<html><p style=\"text-align:center;\">Game Over!<br>Enter Your Name:</p>", Sirtet.SILKSCREEN_40, 275));
+        add(SirtetWindow.labelCenter("Score: " + SaveData.currentScore, Sirtet.SILKSCREEN_40, 475));
         add(nameField);
     }
 
-    public void setField() {
-        nameField.setOpaque(false);
-        nameField.setBounds(150, 400, 300, 50);
-        nameField.setForeground(Color.black);
-        nameField.setFont(Sirtet.SILKSCREEN_30);
-        nameField.addActionListener(this);
-        nameField.setHorizontalAlignment(JTextField.CENTER);
-        nameField.setBorder(null);
+    public JTextField nameField() {
+        JTextField field = new JTextField();
+        field.setOpaque(false);
+        field.setBounds(150, 400, 300, 50);
+        field.setForeground(Color.black);
+        field.setFont(Sirtet.SILKSCREEN_30);
+        field.addActionListener(this);
+        field.setHorizontalAlignment(JTextField.CENTER);
+        field.setBorder(null);
+        return field;
     }
 
     public void actionPerformed(ActionEvent ignored) {

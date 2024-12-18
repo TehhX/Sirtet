@@ -80,13 +80,13 @@ class SirtetWindow {
         return label;
     }
 
-    public static JLabel labelSetupLeft(String text, Font font, int xPos, int yPos) {
+    public static JLabel labelLeft(String text, Font font, int xPos, int yPos) {
         JLabel label = genericLabel(font, text);
         label.setBounds(xPos, yPos, label.getPreferredSize().width, label.getPreferredSize().height);
         return label;
     }
 
-    public static JLabel labelSetupCenter(String text, Font font, int yPos) {
+    public static JLabel labelCenter(String text, Font font, int yPos) {
         JLabel label = genericLabel(font, text);
         int labelWidth = label.getPreferredSize().width;
         int labelHeight = label.getPreferredSize().height;
@@ -94,18 +94,11 @@ class SirtetWindow {
         return label;
     }
 
-    public static JLabel labelSetupRight(String text, Font font, int xPos, int yPos) {
+    public static JLabel labelRight(String text, Font font, int xPos, int yPos) {
         JLabel label = genericLabel(font, text);
         int labelWidth = label.getPreferredSize().width;
         int labelHeight = label.getPreferredSize().height;
         label.setBounds(xPos - labelWidth, yPos, labelWidth, labelHeight);
         return label;
-    }
-
-    public static void basicPanelSetup(JPanel panel, boolean opaque) {
-        panel.setBackground(new Color(22, 207, 130));
-        panel.setSize(FRAME_SIZE_X, FRAME_SIZE_Y);
-        panel.setOpaque(opaque);
-        panel.setLayout(null);
     }
 }

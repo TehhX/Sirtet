@@ -8,26 +8,23 @@ import java.util.ConcurrentModificationException;
  * This class handles the main gameplay scene, and all within. It also needs a SirtetGrid object to pass user
  * input to.
  */
-class GameplayScene extends JPanel implements KeyListener {
+class GameplayScene extends SirtetPanel implements KeyListener {
     private boolean isPaused = false;
     private SirtetGrid grid;
-    private JLabel score = SirtetWindow.labelSetupLeft("", Sirtet.SILKSCREEN_60, 0, 0);
-    private JLabel paused = SirtetWindow.labelSetupCenter("Game Paused", Sirtet.SILKSCREEN_60, 250);
-    private ReactiveButton quitButton = new ReactiveButton(Sirtet.menuImages[2], Sirtet.menuImages[5], 425, e -> SirtetWindow.changeScene(SceneID.Menu));
-    private VolumeSliders volumeSliders = new VolumeSliders(350);
-    private JPanel pausePanel = new JPanel();
+    private JLabel score = SirtetWindow.labelLeft("", Sirtet.SILKSCREEN_60, 0, 0);
+    private JPanel pausePanel = new SirtetPanel(false);
     private JPanel playPanel;
 
     public GameplayScene() {
+        super(true);
         SaveData.currentScore = -25;
-        SirtetWindow.basicPanelSetup(this, true);
         playPanelSetup();
         pausePanelSetup();
         grid = new SirtetGrid(this);
     }
 
     public void playPanelSetup() {
-        playPanel = new JPanel() {
+        playPanel = new SirtetPanel(false) {
             public void paint(Graphics g) {
                 super.paint(g);
                 g.setColor(new Color(87, 223, 255));
@@ -56,16 +53,14 @@ class GameplayScene extends JPanel implements KeyListener {
                 g.drawImage(Sirtet.gameplaySceneImages[7], 0, 0, Sirtet.observer);
             }
         };
-        SirtetWindow.basicPanelSetup(playPanel, false);
         playPanel.add(score);
         add(playPanel);
     }
 
     public void pausePanelSetup() {
-        SirtetWindow.basicPanelSetup(pausePanel, false);
-        pausePanel.add(quitButton);
-        pausePanel.add(paused);
-        pausePanel.add(volumeSliders);
+        pausePanel.add(new ReactiveButton(Sirtet.menuImages[3], 400, e -> SirtetWindow.changeScene(SceneID.Menu)));
+        pausePanel.add(SirtetWindow.labelCenter("Game Paused", Sirtet.SILKSCREEN_60, 250));
+        pausePanel.add(new VolumeSliders());
         pausePanel.setVisible(false);
         add(pausePanel);
     }
@@ -89,30 +84,29 @@ class GameplayScene extends JPanel implements KeyListener {
     public void pointIncrease(int rowsCleared) {
         switch (rowsCleared) {
             case -1:
-                SaveData.currentScore += 50;
+                SaveData.currentScore += 25;
                 break;
             case 0:
                 return;
             case 1:
-                SaveData.currentScore += 100;
+                SaveData.currentScore += 75;
                 SirtetAudio.playAudio(AudioID.OneRow);
                 break;
             case 2:
-                SaveData.currentScore += 250;
+                SaveData.currentScore += 225;
                 SirtetAudio.playAudio(AudioID.TwoRow);
                 break;
             case 3:
-                SaveData.currentScore += 600;
+                SaveData.currentScore += 575;
                 SirtetAudio.playAudio(AudioID.ThreeRow);
                 break;
             case 4:
-                SaveData.currentScore += 1650;
+                SaveData.currentScore += 1625;
                 SirtetAudio.playAudio(AudioID.FourRow);
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + rowsCleared);
         }
-        SaveData.currentScore -= 25;
         updateScoreLabel();
     }
 
