@@ -1,7 +1,6 @@
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.awt.*;
 
 /**
  * This class holds a JPanel with JSliders within. Because these same JSliders and their functionality
@@ -20,12 +19,7 @@ class VolumeSliders extends SirtetPanel implements ChangeListener {
         sfxSlider.setValue(SaveData.sfxVolume);
         add(bgmSlider);
         add(sfxSlider);
-        add(new SirtetPanel(false) {
-            public void paint(Graphics g) {
-                super.paint(g);
-                g.drawImage(Sirtet.menuImages[5], 169, 732, 157, 22, Sirtet.observer);
-            }
-        });
+        add(new SirtetPanel(false, g -> g.drawImage(Sirtet.menuImages[5], 162, 732, 157, 22, Sirtet.observer)));
     }
 
     public JSlider sliderSetup() {

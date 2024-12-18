@@ -9,100 +9,102 @@ import java.util.ConcurrentModificationException;
  * input to.
  */
 class GameplayScene extends SirtetPanel implements KeyListener {
-    private boolean isPaused = false;
-    private SirtetGrid grid;
     private JLabel score = SirtetWindow.labelLeft("", Sirtet.SILKSCREEN_60, 0, 0);
-    private JPanel pausePanel = new SirtetPanel(false);
-    private JPanel playPanel;
+    private JPanel pausePanel = pausePanelSetup();
+    private JPanel playPanel = playPanelSetup();
+    private boolean isPaused = false;
+    private SirtetGrid grid = new SirtetGrid(this);
 
     public GameplayScene() {
         super(true);
-        SaveData.currentScore = -25;
-        playPanelSetup();
-        pausePanelSetup();
-        grid = new SirtetGrid(this);
-    }
-
-    public void playPanelSetup() {
-        playPanel = new SirtetPanel(false) {
-            public void paint(Graphics g) {
-                super.paint(g);
-                g.setColor(new Color(87, 223, 255));
-                int lastHeight = grid.getLastSonimortet().getHeight();
-                for (SonimortetPositions pos : grid.getLastPositions()) {
-                    g.fillRect(173 + 38 * pos.getX(), 132 + 38 * (pos.getY() + lastHeight), 36, 36);
-                }
-                try {
-                    for (Sonimortet currentSonimortet : grid.getSonimortetList()) {
-                        Image currentImage = Sirtet.gameplaySceneImages[currentSonimortet.getType().ordinal()];
-                        for (SonimortetPositions currentPosition : currentSonimortet.getPositions()) {
-                            g.drawImage(currentImage, 173 + 38 * currentPosition.getX(), 132 + 38 * currentPosition.getY(), Sirtet.observer);
-                        }
-                    }
-                } catch (ConcurrentModificationException cme) {
-                    repaint();
-                    return;
-                }
-                for (int xPos = 0; xPos < 3; xPos++) {
-                    for (int yPos = 0; yPos < 4; yPos++) {
-                        if (getHeldGrid()[xPos][yPos]) {
-                            g.drawImage(Sirtet.gameplaySceneImages[grid.getHeldType().ordinal()], 30 + 38 * xPos, 170 + 38 * yPos, 37, 37, Sirtet.observer);
-                        }
-                    }
-                }
-                g.drawImage(Sirtet.gameplaySceneImages[7], 0, 0, Sirtet.observer);
-            }
-        };
-        playPanel.add(score);
+        SaveData.currentScore = 0;
+        updateScoreLabel();
         add(playPanel);
-    }
-
-    public void pausePanelSetup() {
-        pausePanel.add(new ReactiveButton(Sirtet.menuImages[3], 400, e -> SirtetWindow.changeScene(SceneID.Menu)));
-        pausePanel.add(SirtetWindow.labelCenter("Game Paused", Sirtet.SILKSCREEN_60, 250));
-        pausePanel.add(new VolumeSliders());
-        pausePanel.setVisible(false);
         add(pausePanel);
     }
 
-    public void pauseGame() {
-        grid.stopTimer();
-        invertPause();
+    public SirtetPanel playPanelSetup() {
+        SirtetPanel panel = new SirtetPanel(false, g -> {
+            drawPremonition(g);
+            drawReal(g);
+            drawHeld(g);
+            g.drawImage(Sirtet.gameplaySceneImages[7], 0, 0, Sirtet.observer);
+        });
+        panel.add(score);
+        return panel;
     }
 
-    public void resumeGame() {
-        invertPause();
-        grid.restartTimer();
+    public void drawPremonition(Graphics g) {
+        g.setColor(new Color(87, 223, 255));
+        int height = grid.getLastSonimortet().getHeight();
+        for (SonimortetPositions pos : grid.getLastPositions()) {
+            g.fillRect(173 + 38 * pos.getX(), 132 + 38 * (pos.getY() + height), 36, 36);
+        }
+    }
+
+    public void drawReal(Graphics g) {
+        try {
+            for (Sonimortet currentSonimortet : grid.getSonimortetList()) {
+                Image currentImage = Sirtet.gameplaySceneImages[currentSonimortet.getType().ordinal()];
+                for (SonimortetPositions currentPosition : currentSonimortet.getPositions()) {
+                    g.drawImage(currentImage, 173 + 38 * currentPosition.getX(), 132 + 38 * currentPosition.getY(), Sirtet.observer);
+                }
+            }
+        } catch (ConcurrentModificationException ignored) {
+            drawReal(g);
+        }
+    }
+
+    public void drawHeld(Graphics g) {
+        boolean[][] heldGrid = new boolean[3][4];
+        int[][] startPos = Sonimortet.getStartingPositions(grid.getHeldType());
+        for (int inner = 0; inner < 4; inner++) {
+            heldGrid[startPos[0][inner] - 4][startPos[1][inner]] = true;
+        }
+        for (int xPos = 0; xPos < 3; xPos++) {
+            for (int yPos = 0; yPos < 4; yPos++) {
+                if (heldGrid[xPos][yPos]) {
+                    g.drawImage(Sirtet.gameplaySceneImages[grid.getHeldType().ordinal()], 30 + 38 * xPos, 170 + 38 * yPos, 37, 37, Sirtet.observer);
+                }
+            }
+        }
+    }
+
+    public SirtetPanel pausePanelSetup() {
+        SirtetPanel panel = new SirtetPanel(false);
+        panel.add(new ReactiveButton(Sirtet.menuImages[3], 400, e -> SirtetWindow.changeScene(SceneID.Menu)));
+        panel.add(SirtetWindow.labelCenter("Game Paused", Sirtet.SILKSCREEN_60, 250));
+        panel.add(new VolumeSliders());
+        panel.setVisible(false);
+        return panel;
     }
 
     public void invertPause() {
         isPaused = !isPaused;
+        if (isPaused) grid.stopTimer();
+        else grid.restartTimer();
         pausePanel.setVisible(isPaused);
         playPanel.setVisible(!isPaused);
+        grid.updateGrid(true);
     }
 
     public void pointIncrease(int rowsCleared) {
+        SirtetAudio.playAudio(AudioID.values()[rowsCleared + 1]);
         switch (rowsCleared) {
-            case -1:
+            case 0:
                 SaveData.currentScore += 25;
                 break;
-            case 0:
-                return;
             case 1:
-                SaveData.currentScore += 75;
-                SirtetAudio.playAudio(AudioID.OneRow);
+                SaveData.currentScore += 100;
                 break;
             case 2:
-                SaveData.currentScore += 225;
-                SirtetAudio.playAudio(AudioID.TwoRow);
+                SaveData.currentScore += 250;
                 break;
             case 3:
-                SaveData.currentScore += 575;
-                SirtetAudio.playAudio(AudioID.ThreeRow);
+                SaveData.currentScore += 600;
                 break;
             case 4:
-                SaveData.currentScore += 1625;
-                SirtetAudio.playAudio(AudioID.FourRow);
+                SaveData.currentScore += 1650;
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + rowsCleared);
@@ -116,23 +118,9 @@ class GameplayScene extends SirtetPanel implements KeyListener {
         score.setBounds(550 - width, 35, width, 50);
     }
 
-    public boolean[][] getHeldGrid() {
-        boolean[][] heldGrid = new boolean[3][4];
-        int[][] startPos = Sonimortet.getStartingPositions(grid.getHeldType());
-        for (int inner = 0; inner < 4; inner++) {
-            heldGrid[startPos[0][inner] - 4][startPos[1][inner]] = true;
-        }
-        return heldGrid;
-    }
-
     public void keyPressed(KeyEvent e) {
-        if (isPaused) {
-            if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                resumeGame();
-                grid.updateGrid(true);
-            }
-            return;
-        }
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) invertPause();
+        if (isPaused) return;
         switch (e.getKeyCode()) {
             case KeyEvent.VK_A:
                 grid.getLastSonimortet().shiftAll(-1, 0);
@@ -154,9 +142,6 @@ class GameplayScene extends SirtetPanel implements KeyListener {
                 break;
             case KeyEvent.VK_F:
                 grid.swapHeld();
-                break;
-            case KeyEvent.VK_ESCAPE:
-                pauseGame();
         }
         grid.updateGrid(true);
     }

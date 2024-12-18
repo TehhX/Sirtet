@@ -15,9 +15,9 @@ class HighScoreScene extends SirtetPanel implements KeyListener {
 
     public HighScoreScene() {
         super(true);
-        loadLabels();
         add(SirtetWindow.labelCenter("Highscores", Sirtet.SILKSCREEN_60, 50));
         add(SirtetWindow.labelCenter("ESC to Return", Sirtet.SILKSCREEN_30, 725));
+        loadLabels();
         for (int labelIndex = 0; labelIndex < 10; labelIndex++) {
             add(nameLabels[labelIndex]);
             add(scoreLabels[labelIndex]);

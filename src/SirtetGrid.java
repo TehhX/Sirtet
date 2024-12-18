@@ -10,7 +10,7 @@ import java.util.ConcurrentModificationException;
 class SirtetGrid {
     static final int gridSizeX = 10;
     static final int gridSizeY = 16;
-    private boolean[][] grid;
+    private boolean[][] grid = new boolean[gridSizeX][gridSizeY];
     private BlockID held = randomBlock();
     private int rowsCleared = 0;
     private GameplayTimers timer;
@@ -19,21 +19,18 @@ class SirtetGrid {
     private ArrayList<Sonimortet> sonimortetList = new ArrayList<>();
 
     public SirtetGrid(GameplayScene parentScene) {
-        grid = new boolean[gridSizeX][gridSizeY];
         this.parentScene = parentScene;
         GameplayTimers.resetTimer();
-        addSonimortet();
+        addSonimortet(randomBlock());
     }
 
     public void addSonimortet(BlockID type) {
-        checkRows();
         sonimortetList.add(new Sonimortet(type, this));
-        SirtetAudio.playAudio(AudioID.BlockPlace);
     }
 
     public void addSonimortet() {
+        checkRows();
         addSonimortet(randomBlock());
-        parentScene.pointIncrease(-1);
         swapsTurn = 0;
     }
 
@@ -85,6 +82,7 @@ class SirtetGrid {
                 shiftAbove(yPos);
                 updateGrid(false);
                 checkRows();
+                return;
             }
         }
         parentScene.pointIncrease(rowsCleared);

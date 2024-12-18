@@ -82,17 +82,14 @@ class Sonimortet {
         int x = positions[index].getX();
         int y = positions[index].getY();
         if (isEdge(x, xOffset, y, yOffset)) return false;
-        if (parentGrid.getGrid(x + xOffset, y + yOffset)) {
-            return isSameSonimortet(x, xOffset, y, yOffset);
-        }
+        if (parentGrid.getGrid(x + xOffset, y + yOffset)) return isSameSonimortet(x, xOffset, y, yOffset);
         return true;
     }
 
     public boolean isEdge(int x, int xOffset, int y, int yOffset) {
         if (y + yOffset > 15) return true;
         if (x + xOffset < 0 && xOffset < 0) return true;
-        if (x + xOffset > 9 && xOffset > 0) return true;
-        return false;
+        return x + xOffset > 9 && xOffset > 0;
     }
 
     public boolean isSameSonimortet(int thisX, int xOffset, int thisY, int yOffset) {
