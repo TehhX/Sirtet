@@ -1,6 +1,11 @@
 import javax.swing.*;
 import java.awt.*;
 
+/// Interface for use with SirtetPanel's paint method, the background of a panel
+interface PanelPainter {
+    void paint(Graphics g);
+}
+
 /**
  * This is the class that all scene classes extend and use as a starting point to make themselves into their own panels
  * to be added to the frame. It has some initial setup that all panels use, and accepts a PaintPanel interface to paint
@@ -25,9 +30,4 @@ class SirtetPanel extends JPanel {
         super.paint(g);
         if (panelPainter != null) panelPainter.paint(g);
     }
-}
-
-/// Interface for use with SirtetPanel's paint method, the background of a panel
-interface PanelPainter {
-    void paint(Graphics g);
 }

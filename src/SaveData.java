@@ -1,3 +1,4 @@
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.PrintWriter;
 import java.util.Scanner;
@@ -26,7 +27,7 @@ class SaveData {
             for (int index = 0; index < 10; index++) {
                 highScores[index] = new HighScore(fileScanner.nextLine(), Integer.parseInt(fileScanner.nextLine()));
             }
-        } catch (Exception e) {
+        } catch (FileNotFoundException | NumberFormatException e) {
             repairSave();
             readFile();
         }
@@ -65,6 +66,6 @@ class SaveData {
         }
         for (int index = 9; index > newIndex; index--) highScores[index] = highScores[index - 1];
         highScores[newIndex] = new HighScore(currentName, currentScore);
-        writeFile();
+        new Thread(SaveData::writeFile).start();
     }
 }

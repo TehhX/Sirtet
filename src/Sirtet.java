@@ -45,7 +45,7 @@ public class Sirtet {
             gameplaySceneImages[imageIndex] = ImageIO.read(new File("Assets/" + BlockID.values()[imageIndex] + " Piece.png"));
         }
         gameplaySceneImages[7] = ImageIO.read(new File("Assets/GameplayScene.png"));
-        for(int imageIndex = 0; imageIndex < ImageID.values().length; imageIndex++) {
+        for (int imageIndex = 0; imageIndex < ImageID.values().length; imageIndex++) {
             menuImages[imageIndex] = ImageIO.read(new File("Assets/" + ImageID.values()[imageIndex] + ".png"));
         }
     }
