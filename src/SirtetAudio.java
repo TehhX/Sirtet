@@ -3,12 +3,12 @@ import javax.sound.sampled.FloatControl;
 
 /**
  * This class loads and plays audio clips when required, such as the background track on launch, and individual
- * sfx when a block is placed, for example.
- */
+ * sfx when a block is placed, for example. Will start the BGM when constructor is called. */
 class SirtetAudio {
     public SirtetAudio() {
         Sirtet.audioClips[0].loop(Clip.LOOP_CONTINUOUSLY);
         updateBGMVolume();
+
         Sirtet.audioClips[0].start();
     }
 
@@ -17,10 +17,13 @@ class SirtetAudio {
         fc.setValue((float) ((Math.log(SaveData.bgmVolume / 9.0)) / Math.log(10.0) * 20.0));
     }
 
+    /// For playing sfx. No class object needed so long as class already called from PSVM.
     public static void playAudio(AudioID audioID) {
         Sirtet.audioClips[audioID.ordinal()].stop();
+
         FloatControl fc = (FloatControl) Sirtet.audioClips[audioID.ordinal()].getControl(FloatControl.Type.MASTER_GAIN);
         fc.setValue((float) ((Math.log(SaveData.sfxVolume / 9.0)) / Math.log(10.0) * 20.0));
+
         Sirtet.audioClips[audioID.ordinal()].setMicrosecondPosition(0);
         Sirtet.audioClips[audioID.ordinal()].start();
     }

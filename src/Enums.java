@@ -1,4 +1,4 @@
-///  Handles what Sonimortet block types are called.
+///  Handles what Sonimortet block types are called
 enum BlockID {
     O,
     I,
@@ -9,7 +9,7 @@ enum BlockID {
     T
 }
 
-/// Handles what scenes are called.
+/// Handles what scenes are called
 enum SceneID {
     Menu,
     Gameplay,
@@ -17,7 +17,7 @@ enum SceneID {
     GameOver
 }
 
-/// Handles what audio files are called.
+/// Handles what audio files are called
 enum AudioID {
     BackgroundMusic,
     BlockPlace,
@@ -28,7 +28,7 @@ enum AudioID {
     GameOver
 }
 
-/// Handles what image files are called.
+/// Handles what image files are called
 enum ImageID {
     PlayButton,
     HighScoreButton,
