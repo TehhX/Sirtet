@@ -145,9 +145,7 @@ class Sonimortet {
     /// Gets the height from nearest downwards collision
     public int getHeight() {
         int height = 0;
-
-        while (allCanMove(0, height))
-            height++;
+        while (allCanMove(0, ++height));
 
         return height - 1;
     }

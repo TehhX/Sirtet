@@ -30,8 +30,7 @@ class SirtetPanel extends JPanel {
 
     /**
      * Paint method for painting assets/components on the panel. Uses the panel-painter interface if passed.
-     * If not passed, it will be null and skipped.
-     */
+     * If not passed, it will be null and skipped. */
     public void paint(Graphics g) {
         super.paint(g);
 
