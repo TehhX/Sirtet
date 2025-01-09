@@ -33,8 +33,22 @@ class SirtetPanel extends JPanel {
      * If not passed, it will be null and skipped. */
     public void paint(Graphics g) {
         super.paint(g);
-
         if (panelPainter != null)
             panelPainter.paint(g);
     }
+}
+
+abstract class SirtetScene extends SirtetPanel {
+    public SirtetScene(boolean opaque, PanelPainter panelPainter) {
+        super(opaque, panelPainter);
+        setVisible(false);
+    }
+
+    public SirtetScene(boolean opaque) {
+        this(opaque, null);
+    }
+
+    abstract void addScene(JFrame parentFrame);
+
+    abstract void removeScene(JFrame parentFrame);
 }

@@ -7,11 +7,11 @@ import java.awt.image.BufferedImage;
 /**
  * This class creates a button using provided images and offset. The images will be shown when the button is hovered over,
  * and when not. yPos specifies how far down the panel the button will be, while the x position is always centered. */
-class ReactiveButton extends JButton implements MouseListener {
+class SirtetButton extends JButton implements MouseListener {
     private ImageIcon inactiveImage;
     private ImageIcon activeImage;
 
-    public ReactiveButton(BufferedImage image, int yPos, ActionListener actionListener) {
+    public SirtetButton(BufferedImage image, int yPos, ActionListener actionListener) {
         this.inactiveImage = new ImageIcon(image);
 
         setIcon(inactiveImage);
