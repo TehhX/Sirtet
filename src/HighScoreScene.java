@@ -41,8 +41,19 @@ class HighScoreScene extends SirtetScene implements KeyListener {
             SirtetWindow.changeScene(SceneID.Menu);
     }
 
+    public void reloadLabel(JLabel label, String text, int xPos, int yPos) {
+        label.setText(text);
+        final int preferredWidth = label.getPreferredSize().width;
+        final int preferredHeight = label.getPreferredSize().height;
+        label.setBounds(xPos - preferredWidth, yPos, preferredWidth, preferredHeight);
+    }
+
     void addScene(JFrame parentFrame) {
         parentFrame.addKeyListener(this);
+        for (int i = 0; i < 10; i++) {
+            reloadLabel(scoreLabels[i], "" + SaveData.highScores[i].getScore(), 550, 160 + i * 50);
+            reloadLabel(nameLabels[i], SaveData.highScores[i].getName(), 360, 160 + i * 50);
+        }
         setVisible(true);
     }
 
