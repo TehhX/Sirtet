@@ -6,6 +6,9 @@
  * call the GameOver() method, which handles removing the GameplayScene, SirtetGrid, and all object
  * instances within from memory, and their panels/frames. */
 class Sonimortet {
+    final int xInd = 0; // Index of x in position array
+    final int yInd = 1; // Index of y in position array
+
     private int rotation;
 
     private BlockID type;
@@ -55,7 +58,7 @@ class Sonimortet {
         }
 
         for (int i = 0; i < 4; i++)
-            positions[i] = new SonimortetPositions(startingPositions[0][i], startingPositions[1][i]);
+            positions[i] = new SonimortetPositions(startingPositions[xInd][i], startingPositions[yInd][i]);
 
         parentGrid.restartTimer();
     }
@@ -70,7 +73,7 @@ class Sonimortet {
     /// Checks to see if sonimortet can be placed at given position array
     public boolean canPlace(int[][] positions) {
         for (int i = 0; i < 4; i++)
-            if (parentGrid.getGrid(positions[0][i], positions[1][i]))
+            if (parentGrid.getGrid(positions[xInd][i], positions[yInd][i]))
                 return false;
 
         return true;
@@ -108,16 +111,13 @@ class Sonimortet {
 
     /// Checks to see if moving to an offset would move the sonimortet off the grid, aka is at the edge
     public boolean isEdge(int x, int xOffset, int y, int yOffset) {
-        // If going off bottom
-        if (y + yOffset > 15)
+        if (y + yOffset > SirtetGrid.gridSizeY - 1) // Going off bottom
             return true;
 
-        // If going off left
-        if (x + xOffset < 0 && xOffset < 0)
+        if (x + xOffset < 0) // Going off left
             return true;
 
-        // If going off right
-        return x + xOffset > 9 && xOffset > 0;
+        return (x + xOffset > SirtetGrid.gridSizeX - 1); // Going off right
     }
 
     /// Checks to see if an occupied offset is the same piece as this sonimortet
@@ -147,7 +147,7 @@ class Sonimortet {
         int height = 0;
         while (allCanMove(0, ++height));
 
-        return height - 1;
+        return --height;
     }
 
     /// Drops to bottommost possible position
@@ -369,7 +369,7 @@ class Sonimortet {
     }
 
     public boolean canRotate(int[] shiftX, int[] shiftY, boolean invert) {
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < positions.length; i++) {
             if (!singleCanMove(i, shiftX[i], shiftY[i], invert)) {
                 if (allCanMove(-1, 0)) {
                     shiftAll(-1, 0);
