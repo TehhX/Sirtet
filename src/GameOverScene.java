@@ -10,11 +10,11 @@ import java.awt.event.ActionListener;
  * will not be allowed. After receiving a name, it inserts the score, and switches to the high score scene. */
 class GameOverScene extends SirtetScene implements ActionListener {
     private JTextField nameField = nameField();
+    private JLabel scoreLabel;
 
     public GameOverScene() {
         super(true);
         add(new LabelCenter("<html><p style=\"text-align:center;\">Game Over!<br>Enter Your Name:</p>", FontID.Silk40, 275));
-        add(new LabelCenter("Score: " + SaveData.currentScore, FontID.Silk40, 475));
         add(nameField);
     }
 
@@ -53,11 +53,14 @@ class GameOverScene extends SirtetScene implements ActionListener {
 
     void addScene(JFrame parentFrame) {
         setVisible(true);
+        scoreLabel = new LabelCenter("Score: " + SaveData.currentScore, FontID.Silk40, 475);
+        add(scoreLabel);
         nameField.setText("");
         focusField();
     }
 
     void removeScene(JFrame parentFrame) {
+        remove(scoreLabel);
         setVisible(false);
     }
 }

@@ -1,5 +1,3 @@
-import sun.nio.ch.sctp.SctpNet;
-
 import javax.swing.*;
 import java.awt.*;
 

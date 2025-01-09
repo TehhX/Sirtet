@@ -65,7 +65,7 @@ class SaveData {
 
     /// Inserts score at correct position, moves all names below down by one, starts a new thread to write the file
     public static void insertScore(String currentName) {
-        currentScore -= 25;
+        System.out.println(currentScore);
         if (currentScore < highScores[9].getScore())
             return;
 

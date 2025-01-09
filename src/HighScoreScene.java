@@ -35,15 +35,6 @@ class HighScoreScene extends SirtetScene implements KeyListener {
         }
     }
 
-    public void reloadLabels() {
-        for (int i = 0; i < 10; i++) {
-            HighScore currentHS = SaveData.highScores[i];
-
-            nameLabels[i] = new LabelRight(currentHS.getName(), FontID.Silk30, 360, 160 + i * 50);
-            scoreLabels[i] = new LabelRight("" + currentHS.getScore(), FontID.Silk30, 550, 160 + i * 50);
-        }
-    }
-
     /// When escape is pressed go to main menu, else do nothing
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
@@ -51,9 +42,7 @@ class HighScoreScene extends SirtetScene implements KeyListener {
     }
 
     void addScene(JFrame parentFrame) {
-        System.out.println("Highscore reloaded");
         parentFrame.addKeyListener(this);
-        reloadLabels();
         setVisible(true);
     }
 

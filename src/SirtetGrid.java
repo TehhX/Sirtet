@@ -19,7 +19,7 @@ class SirtetGrid {
 
     private GameplayTimers timer;
 
-    private GameplayScene parentScene;
+    protected GameplayScene parentScene;
 
     private ArrayList<Sonimortet> sonimortetList = new ArrayList<>();
 

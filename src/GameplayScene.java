@@ -11,7 +11,7 @@ class GameplayScene extends SirtetScene implements KeyListener {
     private JLabel score = new LabelCenter("", FontID.Silk60, 0);
     private JPanel pausePanel = pausePanelSetup();
     private JPanel playPanel = playPanelSetup();
-    private boolean isPaused = false;
+    private boolean isPaused;
     private SirtetGrid grid;
 
     public GameplayScene() {
@@ -164,8 +164,11 @@ class GameplayScene extends SirtetScene implements KeyListener {
     }
 
     public void addScene(JFrame parentFrame) {
-        SaveData.currentScore = 0;
         grid = new SirtetGrid(this);
+        SaveData.currentScore = 0;
+        if (isPaused)
+            invertPause();
+        updateScoreLabel();
         parentFrame.addKeyListener(this);
         parentFrame.getContentPane().add(this);
         setVisible(true);

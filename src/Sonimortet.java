@@ -62,6 +62,7 @@ class Sonimortet {
 
     /// Goes to game over etc.
     public void gameOver() {
+        SaveData.currentScore -= 25;
         parentGrid.stopTimer();
         SirtetAudio.playAudio(AudioID.GameOver);
         SirtetWindow.changeScene(SceneID.GameOver);
