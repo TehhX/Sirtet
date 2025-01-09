@@ -8,21 +8,18 @@
 class Sonimortet {
     final int xInd = 0; // Index of x in position array
     final int yInd = 1; // Index of y in position array
-
+    final int startingPositionsLength = 4;
     private int rotation;
 
     private BlockID type;
-
     private SirtetGrid parentGrid;
-
     private SonimortetPositions[] positions;
 
     public Sonimortet(BlockID type, SirtetGrid parentGrid) {
         rotation = 0;
         this.type = type;
         this.parentGrid = parentGrid;
-        positions = new SonimortetPositions[4];
-
+        positions = new SonimortetPositions[startingPositionsLength];
         setStartingPositions();
     }
 
@@ -57,7 +54,7 @@ class Sonimortet {
             return;
         }
 
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < startingPositionsLength; i++)
             positions[i] = new SonimortetPositions(startingPositions[xInd][i], startingPositions[yInd][i]);
 
         parentGrid.restartTimer();
@@ -65,6 +62,7 @@ class Sonimortet {
 
     /// Goes to game over etc.
     public void gameOver() {
+        SaveData.currentScore -= 25;
         parentGrid.stopTimer();
         SirtetAudio.playAudio(AudioID.GameOver);
         SirtetWindow.changeScene(SceneID.GameOver);
@@ -72,40 +70,35 @@ class Sonimortet {
 
     /// Checks to see if sonimortet can be placed at given position array
     public boolean canPlace(int[][] positions) {
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < startingPositionsLength; i++)
             if (parentGrid.getGrid(positions[xInd][i], positions[yInd][i]))
                 return false;
-
         return true;
     }
 
     /// Checks to see if the whole sonimortet can move to an offset
     public boolean allCanMove(int xOffset, int yOffset) {
-        for (int i = 0; i < positions.length; i++)
+        for (int i = 0; i < startingPositionsLength; i++)
             if (!singleCanMove(i, xOffset, yOffset, false))
                 return false;
-
         return true;
     }
 
     /// Checks to see if a single piece of this sonimortet can move to an offset
     public boolean singleCanMove(int index, int xOffset, int yOffset, boolean invert) {
+        parentGrid.updateGrid(false);
         if (invert) {
             xOffset *= -1;
             yOffset *= -1;
         }
-
-        parentGrid.updateGrid(false);
 
         int x = positions[index].getX();
         int y = positions[index].getY();
 
         if (isEdge(x, xOffset, y, yOffset))
             return false;
-
         if (parentGrid.getGrid(x + xOffset, y + yOffset))
             return isSameSonimortet(x, xOffset, y, yOffset);
-
         return true;
     }
 
@@ -113,10 +106,8 @@ class Sonimortet {
     public boolean isEdge(int x, int xOffset, int y, int yOffset) {
         if (y + yOffset > SirtetGrid.gridSizeY - 1) // Going off bottom
             return true;
-
         if (x + xOffset < 0) // Going off left
             return true;
-
         return (x + xOffset > SirtetGrid.gridSizeX - 1); // Going off right
     }
 
@@ -125,7 +116,6 @@ class Sonimortet {
         for (SonimortetPositions position : positions)
             if (position.getX() == thisX + xOffset && position.getY() == thisY + yOffset)
                 return true;
-
         return false;
     }
 
@@ -153,7 +143,6 @@ class Sonimortet {
     /// Drops to bottommost possible position
     public void hardDrop() {
         shiftAll(0, getHeight());
-
         parentGrid.addSonimortet();
         GameplayTimers.decrementTimer();
     }
@@ -359,7 +348,7 @@ class Sonimortet {
         if (!canRotate(shiftX, shiftY, invert))
             return;
 
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < startingPositionsLength; i++)
             positions[i].shiftSingle(shiftX[i], shiftY[i], invert);
 
         if (invert)
@@ -369,7 +358,7 @@ class Sonimortet {
     }
 
     public boolean canRotate(int[] shiftX, int[] shiftY, boolean invert) {
-        for (int i = 0; i < positions.length; i++) {
+        for (int i = 0; i < startingPositionsLength; i++) {
             if (!singleCanMove(i, shiftX[i], shiftY[i], invert)) {
                 if (allCanMove(-1, 0)) {
                     shiftAll(-1, 0);

@@ -11,122 +11,46 @@ class SirtetWindow {
 
     static JFrame frame = new JFrame("Sirtet");
 
-    static GameplayScene gameplayScene;
-    static MenuScene menuScene;
-    static HighScoreScene highScoreScene;
-    static GameOverScene gameOverScene;
+    static SceneID currentScene = null;
+    static SirtetScene[] sceneArray = new SirtetScene[4];
 
     public SirtetWindow() {
-        changeScene(SceneID.Menu);
+        sceneArray[SceneID.Menu.ordinal()] = new MenuScene();
+        sceneArray[SceneID.Gameplay.ordinal()] = new GameplayScene();
+        sceneArray[SceneID.HighScore.ordinal()] = new HighScoreScene();
+        sceneArray[SceneID.GameOver.ordinal()] = new GameOverScene();
+        for (SirtetScene sirtetScene : sceneArray)
+            frame.getContentPane().add(sirtetScene);
 
+        changeScene(SceneID.Menu);
         frame.setIconImage(Sirtet.icon);
         frame.setLayout(null);
         frame.setUndecorated(true);
         frame.setSize(FRAME_SIZE_X, FRAME_SIZE_Y);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
         frame.setVisible(true);
     }
 
-    public static void removePreviousScene() {
-        /// Removes menu scene
-        if (menuScene != null) {
-            frame.getContentPane().remove(menuScene);
-            menuScene = null;
-        }
-
-        /// Removes gameplay scene
-        else if (gameplayScene != null) {
-            frame.getContentPane().remove(gameplayScene);
-            frame.removeKeyListener(gameplayScene);
-            gameplayScene.getGrid().stopTimer();
-            gameplayScene = null;
-        }
-
-        /// Removes game over scene
-        else if (gameOverScene != null) {
-            frame.getContentPane().remove(gameOverScene);
-            gameOverScene = null;
-        }
-
-        /// Removes high score scene
-        else if (highScoreScene != null) {
-            frame.getContentPane().remove(highScoreScene);
-            frame.removeKeyListener(highScoreScene);
-            highScoreScene = null;
-        }
-    }
-
     public static void changeScene(SceneID scene) {
+        if (currentScene != null)
+            sceneArray[currentScene.ordinal()].removeScene();
+
+        currentScene = scene;
         frame.requestFocus();
-        removePreviousScene();
+        sceneArray[currentScene.ordinal()].addScene();
+    }
 
-        switch (scene) {
-        case Menu:
-            menuScene = new MenuScene();
-            frame.getContentPane().add(menuScene);
-            break;
-        case Gameplay:
-            gameplayScene = new GameplayScene();
-            frame.addKeyListener(gameplayScene);
-            frame.getContentPane().add(gameplayScene);
-            break;
-        case HighScore:
-            highScoreScene = new HighScoreScene();
-            frame.addKeyListener(highScoreScene);
-            frame.getContentPane().add(highScoreScene);
-            break;
-        case GameOver:
-            gameOverScene = new GameOverScene();
-            frame.getContentPane().add(gameOverScene);
-            gameOverScene.focusField();
-            break;
+    public static Font getFont(FontID fontID) {
+        switch (fontID) {
+        case Silk30:
+            return new Font("Silkscreen", Font.PLAIN, 30);
+        case Silk40:
+            return new Font("Silkscreen", Font.PLAIN, 40);
+        case Silk60:
+            return new Font("Silkscreen", Font.PLAIN, 60);
         default:
-            throw new IllegalStateException("Unexpected value: " + scene);
+            throw new RuntimeException("Unexpected Value: " + fontID);
         }
-
-        frame.repaint();
-    }
-
-    /// Generic label setup and return for all other label setups
-    public static JLabel genericLabel(Font font, String text) {
-        JLabel label = new JLabel(text);
-
-        label.setForeground(Color.black);
-        label.setFont(font);
-
-        return label;
-    }
-
-    /// Returns a label justified left
-    public static JLabel labelLeft(String text, Font font, int xPos, int yPos) {
-        JLabel label = genericLabel(font, text);
-
-        label.setBounds(xPos, yPos, label.getPreferredSize().width, label.getPreferredSize().height);
-
-        return label;
-    }
-
-    /// Returns a label justified center
-    public static JLabel labelCenter(String text, Font font, int yPos) {
-        JLabel label = genericLabel(font, text);
-
-        int labelWidth = label.getPreferredSize().width;
-        int labelHeight = label.getPreferredSize().height;
-        label.setBounds((FRAME_SIZE_X - labelWidth) / 2, yPos, labelWidth, labelHeight);
-
-        return label;
-    }
-
-    /// Returns a label justified right
-    public static JLabel labelRight(String text, Font font, int xPos, int yPos) {
-        JLabel label = genericLabel(font, text);
-
-        int labelWidth = label.getPreferredSize().width;
-        int labelHeight = label.getPreferredSize().height;
-        label.setBounds(xPos - labelWidth, yPos, labelWidth, labelHeight);
-
-        return label;
     }
 }
