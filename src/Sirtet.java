@@ -14,12 +14,15 @@ import java.io.File;
  * be loaded, the program force-quits before even displaying the frame, to not waste time. However, if an error occurs,
  * a message pane will be displayed before exiting. */
 public class Sirtet {
+    static final Font SILKSCREEN_60 = new Font("Silkscreen", Font.PLAIN, 60);
+    static final Font SILKSCREEN_40 = new Font("Silkscreen", Font.PLAIN, 40);
+    static final Font SILKSCREEN_30 = new Font("Silkscreen", Font.PLAIN, 30);
 
     static BufferedImage[] gameplaySceneImages = new BufferedImage[8];
     static BufferedImage[] menuImages = new BufferedImage[6];
     static BufferedImage icon;
 
-    /** Creates an ImageObserver interface for BufferedImage to load images with throughout the project.
+    /* Creates an ImageObserver interface for BufferedImage to load images with throughout the project.
      * It returns false. */
     static ImageObserver observer = (a, b, c, d, e, f) -> false;
 
@@ -35,10 +38,11 @@ public class Sirtet {
             new SaveData();
             new SirtetAudio();
             new SirtetWindow();
-        // If a file does not exist/cannot be found etc.
+        /// If a file does not exist/cannot be found etc.
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(new JFrame(), "Load Error, Check Stack Trace");
+
             System.exit(1);
         }
     }

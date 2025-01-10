@@ -19,7 +19,7 @@ class SirtetGrid {
 
     private GameplayTimers timer;
 
-    protected GameplayScene parentScene;
+    private GameplayScene parentScene;
 
     private ArrayList<Sonimortet> sonimortetList = new ArrayList<>();
 
@@ -72,14 +72,12 @@ class SirtetGrid {
     public void updateGrid(boolean repaint) {
         try {
             populateGrid();
-        }
-        // Recursively calls itself if list is being modified by other process
-        catch (ConcurrentModificationException ignored) {
+        /// Recursively calls itself if list is being modified by other process
+        } catch (ConcurrentModificationException ignored) {
             updateGrid(repaint);
             return;
-        }
-        // If given index not present i.e. deleted recently do nothing
-        catch (NullPointerException ignored) {}
+        /// If given index not present i.e. deleted recently do nothing
+        } catch (NullPointerException ignored) {}
 
         if (repaint)
             parentScene.repaint();
