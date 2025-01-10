@@ -1,4 +1,3 @@
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -8,32 +7,38 @@ import java.util.ConcurrentModificationException;
  * This class handles the main gameplay scene, and all within. It also needs a SirtetGrid object to pass user
  * input to. */
 class GameplayScene extends SirtetScene implements KeyListener {
-    private JLabel score = new LabelCenter("", FontID.Silk60, 0);
-    private JPanel pausePanel = pausePanelSetup();
-    private JPanel playPanel = playPanelSetup();
+    private static SirtetLabel score = new SirtetLabel(60);
+    public static SirtetGrid grid;
     private boolean isPaused;
-    private SirtetGrid grid;
+
+    private SirtetPanel pausePanel = pausePanelSetup();
+    private SirtetPanel playPanel = playPanelSetup();
+
+    private SirtetButton returnButton;
 
     public GameplayScene() {
-        super(true);
+        super(false);
+
         updateScoreLabel();
         add(playPanel);
         add(pausePanel);
     }
 
-    public SirtetPanel playPanelSetup() {
-        SirtetPanel panel = new SirtetPanel(false, g -> {
+    /// Sets up and returns the play panel
+    private SirtetPanel playPanelSetup() {
+        SirtetPanel panel = new SirtetPanel(true, g -> {
             drawPremonition(g);
             drawReal(g);
             drawHeld(g);
             g.drawImage(Sirtet.gameplaySceneImages[7], 0, 0, Sirtet.observer);
         });
         panel.add(score);
+
         return panel;
     }
 
     /// Method to draw the translucent cyan sonimortet used to hard-drop
-    public void drawPremonition(Graphics g) {
+    private void drawPremonition(Graphics g) {
         g.setColor(new Color(87, 223, 255));
         int height = grid.getLastSonimortet().getHeight();
         for (SonimortetPositions pos : grid.getLastPositions())
@@ -41,13 +46,18 @@ class GameplayScene extends SirtetScene implements KeyListener {
     }
 
     /// Method to draw all sonimortets in SirtetGrid's master list
-    public void drawReal(Graphics g) {
+    private void drawReal(Graphics g) {
         try {
             for (Sonimortet currentSonimortet : grid.getSonimortetList()) {
-                Image currentImage = Sirtet.gameplaySceneImages[currentSonimortet.getType().ordinal()];
-
                 for (SonimortetPositions currentPosition : currentSonimortet.getPositions())
-                    g.drawImage(currentImage, 173 + 38 * currentPosition.getX(), 132 + 38 * currentPosition.getY(), Sirtet.observer);
+                    g.drawImage(
+                        Sirtet.gameplaySceneImages[currentSonimortet.getType().ordinal()],
+                        173 + 38 * currentPosition.getX(),
+                        132 + 38 * currentPosition.getY(),
+                        36,
+                        36,
+                        Sirtet.observer
+                    );
             }
         }
         // Will keep recursively calling itself if the list is being modified until the list is ready
@@ -57,37 +67,61 @@ class GameplayScene extends SirtetScene implements KeyListener {
     }
 
     /// Method to draw the held piece
-    public void drawHeld(Graphics g) {
+    private void drawHeld(Graphics g) {
         boolean[][] heldGrid = new boolean[3][4];
         int[][] startPos = Sonimortet.getStartingPositions(grid.getHeldType());
 
         for (int i = 0; i < 4; i++)
             heldGrid[startPos[0][i] - 4][startPos[1][i]] = true;
-        
+
         for (int xPos = 0; xPos < 3; xPos++)
             for (int yPos = 0; yPos < 4; yPos++)
                 if (heldGrid[xPos][yPos])
-                    g.drawImage(Sirtet.gameplaySceneImages[grid.getHeldType().ordinal()], 30 + 38 * xPos, 170 + 38 * yPos, 37, 37, Sirtet.observer);
+                    g.drawImage(
+                        Sirtet.gameplaySceneImages[grid.getHeldType().ordinal()],
+                        30 + 38 * xPos,
+                        170 + 38 * yPos,
+                        37,
+                        37,
+                        Sirtet.observer
+                    );
     }
 
     /// Sets up and returns the pause panel
-    public SirtetPanel pausePanelSetup() {
-        SirtetPanel panel = new SirtetPanel(false);
-        panel.add(new SirtetButton(Sirtet.menuImages[3], 400, () -> SirtetWindow.changeScene(SceneID.Menu)));
-        panel.add(new LabelCenter("Game Paused", FontID.Silk60, 250));
+    private SirtetPanel pausePanelSetup() {
+        SirtetPanel panel = new SirtetPanel(true);
+        returnButton = new SirtetButton(
+            "RETURN",
+            () -> SirtetWindow.changeScene(SceneID.Menu),
+            350,
+            45
+        );
+        panel.add(returnButton);
+        panel.add(new LabelCenter("Game Paused", 60, 250));
         panel.add(new VolumeSliders());
         panel.setVisible(false);
         return panel;
     }
 
+    /// Updates the score label with new score, keeps it justified right with respect to new width
+    public static void updateScoreLabel() {
+        score.setText(SaveData.currentScore + "");
+        int width = (int) score.getPreferredSize().getWidth();
+        score.setBounds(550 - width, 35, width, 50);
+    }
+
     /// If paused, play. If playing, pause. Repaints and updates as well
-    public void invertPause() {
+    private void invertPause() {
         isPaused = !isPaused;
 
-        if (isPaused)
+        if (isPaused) {
             grid.stopTimer();
-        else
+            returnButton.addButtonListener();
+        }
+        else {
             grid.restartTimer();
+            returnButton.removeButtonListener();
+        }
 
         pausePanel.setVisible(isPaused);
         playPanel.setVisible(!isPaused);
@@ -96,7 +130,7 @@ class GameplayScene extends SirtetScene implements KeyListener {
     }
 
     /// Plays score audio, increases points given an amount of rows cleared in a single turn, updates score label
-    public void pointIncrease(int rowsCleared) {
+    public static void pointIncrease(int rowsCleared) {
         SirtetAudio.playAudio(AudioID.values()[rowsCleared + 1]);
 
         switch (rowsCleared) {
@@ -120,13 +154,6 @@ class GameplayScene extends SirtetScene implements KeyListener {
         }
 
         updateScoreLabel();
-    }
-
-    /// Updates the score label with new score, keeps it justified right with respect to new width
-    public void updateScoreLabel() {
-        score.setText(SaveData.currentScore + "");
-        int width = (int) score.getPreferredSize().getWidth();
-        score.setBounds(550 - width, 35, width, 50);
     }
 
     /// Takes user input, calls methods in accordance. If paused && input != esc, do nothing
@@ -164,23 +191,28 @@ class GameplayScene extends SirtetScene implements KeyListener {
     }
 
     public void addScene() {
-        grid = new SirtetGrid(this);
-        SaveData.currentScore = 0;
+        grid = new SirtetGrid();
+
         if (isPaused)
             invertPause();
+
+        SaveData.currentScore = 0;
         updateScoreLabel();
+
         SirtetWindow.frame.addKeyListener(this);
         SirtetWindow.frame.getContentPane().add(this);
         setVisible(true);
     }
 
     public void removeScene() {
+        grid.stopTimer();
         grid = null;
+
         SirtetWindow.frame.removeKeyListener(this);
         SirtetWindow.frame.getContentPane().remove(this);
         setVisible(false);
     }
 
-    public void keyTyped(KeyEvent e) {}
-    public void keyReleased(KeyEvent e) {}
+    public void keyTyped(KeyEvent ignored) {}
+    public void keyReleased(KeyEvent ignored) {}
 }

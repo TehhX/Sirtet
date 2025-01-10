@@ -19,13 +19,9 @@ class SirtetGrid {
 
     private GameplayTimers timer;
 
-    protected GameplayScene parentScene;
-
     private ArrayList<Sonimortet> sonimortetList = new ArrayList<>();
 
-    public SirtetGrid(GameplayScene parentScene) {
-        this.parentScene = parentScene;
-
+    public SirtetGrid() {
         GameplayTimers.resetTimer();
         addSonimortet(randomBlock());
     }
@@ -82,7 +78,7 @@ class SirtetGrid {
         catch (NullPointerException ignored) {}
 
         if (repaint)
-            parentScene.repaint();
+            SirtetWindow.sceneArray[SceneID.Gameplay.ordinal()].repaint();
     }
 
     /// Resets grid, fills from list
@@ -106,7 +102,7 @@ class SirtetGrid {
                 return;
             }
 
-        parentScene.pointIncrease(rowsCleared);
+        GameplayScene.pointIncrease(rowsCleared);
         rowsCleared = 0;
     }
 

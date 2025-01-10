@@ -14,7 +14,7 @@ class GameOverScene extends SirtetScene implements ActionListener {
 
     public GameOverScene() {
         super(true);
-        add(new LabelCenter("<html><p style=\"text-align:center;\">Game Over!<br>Enter Your Name:</p>", FontID.Silk40, 275));
+        add(new LabelCenter("<html><p style=\"text-align:center;\">Game Over!<br>Enter Your Name:</p>", 40, 275));
         add(nameField);
     }
 
@@ -24,7 +24,7 @@ class GameOverScene extends SirtetScene implements ActionListener {
         field.setOpaque(false);
         field.setBounds(150, 400, 300, 50);
         field.setForeground(Color.black);
-        field.setFont(SirtetWindow.getFont(FontID.Silk30));
+        field.setFont(SirtetWindow.getFont(30));
         field.addActionListener(this);
         field.setHorizontalAlignment(JTextField.CENTER);
         field.setBorder(null);
@@ -51,15 +51,15 @@ class GameOverScene extends SirtetScene implements ActionListener {
         nameField.requestFocusInWindow();
     }
 
-    void addScene() {
+    public void addScene() {
         setVisible(true);
-        scoreLabel = new LabelCenter("Score: " + SaveData.currentScore, FontID.Silk40, 475);
+        scoreLabel = new LabelCenter("Score: " + SaveData.currentScore, 40, 475);
         add(scoreLabel);
         nameField.setText("");
         focusField();
     }
 
-    void removeScene() {
+    public void removeScene() {
         remove(scoreLabel);
         setVisible(false);
     }

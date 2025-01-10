@@ -14,39 +14,37 @@ import java.io.File;
  * be loaded, the program force-quits before even displaying the frame, to not waste time. However, if an error occurs,
  * a message pane will be displayed before exiting. */
 public class Sirtet {
-
     static BufferedImage[] gameplaySceneImages = new BufferedImage[8];
-    static BufferedImage[] menuImages = new BufferedImage[6];
+    static BufferedImage[] menuImages = new BufferedImage[2];
     static BufferedImage icon;
 
-    /** Creates an ImageObserver interface for BufferedImage to load images with throughout the project.
-     * It returns false. */
     static ImageObserver observer = (a, b, c, d, e, f) -> false;
 
     static Clip[] audioClips = new Clip[AudioID.values().length];
 
-    /// Loads all assets, calls constructors of necessary classes
     public static void main(String[] args) {
         try {
             loadFonts();
             loadImages();
             loadAudio();
-
             new SaveData();
             new SirtetAudio();
             new SirtetWindow();
+        }
         // If a file does not exist/cannot be found etc.
-        } catch (Exception e) {
+        catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(new JFrame(), "Load Error, Check Stack Trace");
+            JOptionPane.showMessageDialog(null, "Load Error, Check Stack Trace");
             System.exit(1);
         }
     }
 
+    /// Loads all images into memory
     public static void loadImages() throws Exception {
         icon = ImageIO.read(new File("Assets/Icon.png"));
 
         gameplaySceneImages[7] = ImageIO.read(new File("Assets/GameplayScene.png"));
+
         for (int i = 0; i < 7; i++)
             gameplaySceneImages[i] = ImageIO.read(new File("Assets/" + BlockID.values()[i] + " Piece.png"));
 
@@ -54,10 +52,15 @@ public class Sirtet {
             menuImages[i] = ImageIO.read(new File("Assets/" + ImageID.values()[i] + ".png"));
     }
 
+    /// Creates the Silkscreen font to use in-game
     public static void loadFonts() throws Exception {
-        GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Assets/Silkscreen-Regular.ttf")));
+        GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(
+            Font.createFont(Font.TRUETYPE_FONT,
+            new File("Assets/Silkscreen-Regular.ttf"))
+        );
     }
 
+    /// Creates audio clips for all audio files in-game
     public static void loadAudio() throws Exception {
         for (int i = 0; i < audioClips.length; i++) {
             audioClips[i] = AudioSystem.getClip();
