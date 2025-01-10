@@ -50,7 +50,7 @@ class GameplayScene extends SirtetScene implements KeyListener {
                     g.drawImage(currentImage, 173 + 38 * currentPosition.getX(), 132 + 38 * currentPosition.getY(), Sirtet.observer);
             }
         }
-        /// Will keep recursively calling itself if the list is being modified until the list is ready
+        // Will keep recursively calling itself if the list is being modified until the list is ready
         catch (ConcurrentModificationException ignored) {
             drawReal(g);
         }
@@ -73,7 +73,7 @@ class GameplayScene extends SirtetScene implements KeyListener {
     /// Sets up and returns the pause panel
     public SirtetPanel pausePanelSetup() {
         SirtetPanel panel = new SirtetPanel(false);
-        panel.add(new SirtetButton(Sirtet.menuImages[3], 400, e -> SirtetWindow.changeScene(SceneID.Menu)));
+        panel.add(new SirtetButton(Sirtet.menuImages[3], 400, () -> SirtetWindow.changeScene(SceneID.Menu)));
         panel.add(new LabelCenter("Game Paused", FontID.Silk60, 250));
         panel.add(new VolumeSliders());
         panel.setVisible(false);

@@ -50,7 +50,7 @@ class VolumeSliders extends SirtetPanel implements ChangeListener {
         SirtetWindow.frame.requestFocus();
     }
 
-    public static void updateAllSliders() {
+    private static void updateAllSliders() {
         for (VolumeSliders sliders : masterSlidersList) {
             sliders.bgmSlider.setValue(SaveData.bgmVolume);
             sliders.sfxSlider.setValue(SaveData.sfxVolume);

@@ -19,7 +19,6 @@ class SirtetWindow {
         sceneArray[SceneID.Gameplay.ordinal()] = new GameplayScene();
         sceneArray[SceneID.HighScore.ordinal()] = new HighScoreScene();
         sceneArray[SceneID.GameOver.ordinal()] = new GameOverScene();
-
         for (SirtetScene sirtetScene : sceneArray)
             frame.getContentPane().add(sirtetScene);
 

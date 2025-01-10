@@ -5,9 +5,13 @@ class MenuScene extends SirtetScene {
     public MenuScene() {
         super(false);
         add(new VolumeSliders());
-        add(new SirtetButton(Sirtet.menuImages[ImageID.PlayButton.ordinal()], 260, e -> SirtetWindow.changeScene(SceneID.Gameplay)));
-        add(new SirtetButton(Sirtet.menuImages[ImageID.HighScoreButton.ordinal()], 320, e -> SirtetWindow.changeScene(SceneID.HighScore)));
-        add(new SirtetButton(Sirtet.menuImages[ImageID.QuitButton.ordinal()], 380, e -> {SaveData.writeFile();System.exit(0);}));
+        add(new SirtetButton(Sirtet.menuImages[ImageID.PlayButton.ordinal()], 260, () -> SirtetWindow.changeScene(SceneID.Gameplay)));
+        add(new SirtetButton(Sirtet.menuImages[ImageID.HighScoreButton.ordinal()], 320, () -> SirtetWindow.changeScene(SceneID.HighScore)));
+        add(new SirtetButton(Sirtet.menuImages[ImageID.QuitButton.ordinal()], 380, () -> {
+            Sirtet.audioClips[AudioID.BackgroundMusic.ordinal()].stop();
+            SaveData.writeFile();
+            System.exit(0);
+        }));
         add(new SirtetPanel(false, g -> g.drawImage(Sirtet.menuImages[ImageID.MenuScene.ordinal()], 0, 0, Sirtet.observer)));
     }
 

@@ -30,7 +30,7 @@ class SaveData {
             for (int i = 0; i < 10; i++)
                 highScores[i] = new HighScore(fileScanner.nextLine(), Integer.parseInt(fileScanner.nextLine()));
 
-        /// If file does not exist or is corrupted, repair and retry
+        // If file does not exist or is corrupted, repair and retry
         } catch (FileNotFoundException | NumberFormatException e) {
             repairSave();
             readFile();
