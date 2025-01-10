@@ -9,20 +9,22 @@ class SirtetWindow {
     static final int FRAME_SIZE_X = 600;
     static final int FRAME_SIZE_Y = 800;
 
-    static final JFrame frame = new JFrame("Sirtet");
-
-    static SceneID currentScene = null;
+    public static SceneID currentScene = null;
     static SirtetScene[] sceneArray = new SirtetScene[4];
+
+    static final JFrame frame = new JFrame("Sirtet");
 
     public SirtetWindow() {
         sceneArray[SceneID.Menu.ordinal()] = new MenuScene();
         sceneArray[SceneID.Gameplay.ordinal()] = new GameplayScene();
         sceneArray[SceneID.HighScore.ordinal()] = new HighScoreScene();
         sceneArray[SceneID.GameOver.ordinal()] = new GameOverScene();
+
         for (SirtetScene sirtetScene : sceneArray)
             frame.getContentPane().add(sirtetScene);
 
         changeScene(SceneID.Menu);
+
         frame.setIconImage(Sirtet.icon);
         frame.setLayout(null);
         frame.setUndecorated(true);
@@ -41,16 +43,7 @@ class SirtetWindow {
         sceneArray[currentScene.ordinal()].addScene();
     }
 
-    public static Font getFont(FontID fontID) {
-        switch (fontID) {
-        case Silk30:
-            return new Font("Silkscreen", Font.PLAIN, 30);
-        case Silk40:
-            return new Font("Silkscreen", Font.PLAIN, 40);
-        case Silk60:
-            return new Font("Silkscreen", Font.PLAIN, 60);
-        default:
-            throw new RuntimeException("Unexpected Value: " + fontID);
-        }
+    public static Font getFont(int pixelSize) {
+        return new Font("Silkscreen", Font.PLAIN, pixelSize);
     }
 }

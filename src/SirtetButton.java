@@ -1,63 +1,96 @@
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
+import java.awt.event.MouseMotionListener;
 
 /**
  * This class creates a button using provided images and offset. The images will be shown when the button is hovered over,
  * and when not. yPos specifies how far down the panel the button will be, while the x position is always centered. */
-class SirtetButton extends JButton implements MouseListener, ActionListener {
-    private final ImageIcon inactiveImage;
-    private final ImageIcon activeImage;
+class SirtetButton extends SirtetPanel implements MouseMotionListener, MouseListener {
+    static final float defaultMultiplier = 0.75f;
+
     private final ButtonClick buttonClick;
+    private final SirtetLabel label = new SirtetLabel();
+    private boolean isIn = true;
 
-    public SirtetButton(BufferedImage image, int yPos, ButtonClick buttonClick) {
-        this.inactiveImage = new ImageIcon(image);
+    private final Font offFont;
+    private final Font hoverFont;
+
+    private final Rectangle offBounds;
+    private final Rectangle hoverBounds;
+
+    public SirtetButton(String text, ButtonClick buttonClick, int yPos, int pixelSize, float hoverMultiplier) {
+        super(false);
+
         this.buttonClick = buttonClick;
+        label.setText(text);
 
-        // Setup
-        addMouseListener(this);
-        addActionListener(this);
-        setIcon(inactiveImage);
-        setContentAreaFilled(false);
-        setFocusable(false);
-        setBorder(null);
-        setBackground(null);
+        offFont = SirtetWindow.getFont(pixelSize);
+        hoverFont = new Font("Silkscreen", Font.PLAIN, (int) (pixelSize * hoverMultiplier));
 
-        // Center and get size of image
-        int xSize = (int) getPreferredSize().getWidth();
-        int ySize = (int) getPreferredSize().getHeight();
-        setBounds((SirtetWindow.FRAME_SIZE_X - xSize) / 2, yPos, xSize, ySize);
+        label.setFont(offFont);
+        offBounds = new Rectangle(
+            (int) ((SirtetWindow.FRAME_SIZE_X - label.getPreferredSize().width) / 2.0),
+            yPos,
+            label.getPreferredSize().width,
+            label.getPreferredSize().height
+        );
 
-        // Make new image of size: 0.75 * size
-        xSize = (int) (xSize * 0.75);
-        ySize = (int) (ySize * 0.75);
-        activeImage = new ImageIcon(image.getScaledInstance(xSize, ySize, BufferedImage.SCALE_DEFAULT));
+        label.setFont(hoverFont);
+        hoverBounds = new Rectangle(
+            (int) (offBounds.getX() + offBounds.getWidth() * (1 - hoverMultiplier) / 2.0),
+            (int) (offBounds.getY() + offBounds.getHeight() * (1 - hoverMultiplier) / 2.0),
+            label.getPreferredSize().width,
+            label.getPreferredSize().height
+        );
+
+        invertLabel();
+        add(label);
     }
 
-    /// Sets button icon to 75% scale image when moused-over
-    public void mouseEntered(MouseEvent ignored) {
-        setIcon(activeImage);
+    public SirtetButton(String text, ButtonClick buttonClick, int yPos, int pixelSize) {
+        this(text, buttonClick, yPos, pixelSize, defaultMultiplier);
     }
 
-    /// Resets button icon to 100% scale image when mouse leaves boundaries
-    public void mouseExited(MouseEvent ignored) {
-        setIcon(inactiveImage);
+    private void invertLabel() {
+        isIn = !isIn;
+        label.setFont(isIn ? hoverFont : offFont);
+        label.setBounds(isIn ? hoverBounds : offBounds);
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public void mouseMoved(MouseEvent e) {
+        final boolean inToOut = offBounds.contains(e.getPoint()) && !isIn;
+        final boolean outToIn = !offBounds.contains(e.getPoint()) && isIn;
+
+        if (outToIn || inToOut)
+            invertLabel();
+    }
+
+    public void mousePressed(MouseEvent ignored) {
+        if (!isIn)
+            return;
+
         buttonClick.onClick();
-        mouseExited(null);
+        invertLabel();
+    }
+
+    public void addButtonListener() {
+        SirtetWindow.frame.addMouseListener(this);
+        SirtetWindow.frame.addMouseMotionListener(this);
+    }
+
+    public void removeButtonListener() {
+        SirtetWindow.frame.removeMouseListener(this);
+        SirtetWindow.frame.removeMouseMotionListener(this);
     }
 
     interface ButtonClick {
         void onClick();
     }
 
-    // Below methods not in use
+    public void mouseDragged(MouseEvent e) {}
     public void mouseClicked(MouseEvent ignored) {}
-    public void mousePressed(MouseEvent ignored) {}
     public void mouseReleased(MouseEvent ignored) {}
+    public void mouseEntered(MouseEvent ignored) {}
+    public void mouseExited(MouseEvent ignored) {}
 }

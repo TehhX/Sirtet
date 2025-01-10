@@ -14,7 +14,7 @@ enum SceneID {
     Menu,
     Gameplay,
     HighScore,
-    GameOver
+    GameOver,
 }
 
 /// Handles what audio files are called
@@ -30,17 +30,6 @@ enum AudioID {
 
 /// Handles what image files are called
 enum ImageID {
-    PlayButton,
-    HighScoreButton,
-    QuitButton,
-    MenuButton,
     MenuScene,
     SoundIcons
-}
-
-/// Handles font sized
-enum FontID {
-    Silk30,
-    Silk40,
-    Silk60
 }
