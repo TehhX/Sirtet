@@ -8,14 +8,14 @@ import java.util.ArrayList;
  * are used by multiple other classes, it made sense to make them their own class to have
  * it editable all in the same place. */
 class VolumeSliders extends SirtetPanel implements ChangeListener {
-    private static ArrayList<VolumeSliders> slidersArrayList = new ArrayList<>();
+    private static ArrayList<VolumeSliders> masterSlidersList = new ArrayList<>();
 
     private JSlider bgmSlider = sliderSetup();
     private JSlider sfxSlider = sliderSetup();
 
     public VolumeSliders() {
         super(false);
-        slidersArrayList.add(this);
+        masterSlidersList.add(this);
 
         bgmSlider.setBounds(191, 720, 100, 50);
         bgmSlider.setValue(SaveData.bgmVolume);
@@ -51,7 +51,7 @@ class VolumeSliders extends SirtetPanel implements ChangeListener {
     }
 
     public static void updateAllSliders() {
-        for (VolumeSliders sliders : slidersArrayList) {
+        for (VolumeSliders sliders : masterSlidersList) {
             sliders.bgmSlider.setValue(SaveData.bgmVolume);
             sliders.sfxSlider.setValue(SaveData.sfxVolume);
         }
