@@ -35,12 +35,11 @@ class SirtetWindow {
 
     public static void changeScene(SceneID scene) {
         if (currentScene != null)
-            sceneArray[currentScene.ordinal()].removeScene(frame);
+            sceneArray[currentScene.ordinal()].removeScene();
 
         currentScene = scene;
-        sceneArray[currentScene.ordinal()].addScene(frame);
         frame.requestFocus();
-        frame.repaint();
+        sceneArray[currentScene.ordinal()].addScene();
     }
 
     public static Font getFont(FontID fontID) {

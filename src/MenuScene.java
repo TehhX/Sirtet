@@ -13,11 +13,11 @@ class MenuScene extends SirtetScene {
         add(new SirtetPanel(false, g -> g.drawImage(Sirtet.menuImages[ImageID.MenuScene.ordinal()], 0, 0, Sirtet.observer)));
     }
 
-    void addScene(JFrame parentFrame) {
+    void addScene() {
         setVisible(true);
     }
 
-    void removeScene(JFrame parentFrame) {
+    void removeScene() {
         setVisible(false);
     }
 }

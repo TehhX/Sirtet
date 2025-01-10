@@ -48,14 +48,14 @@ class HighScoreScene extends SirtetScene implements KeyListener {
         }
     }
 
-    void addScene(JFrame parentFrame) {
-        parentFrame.addKeyListener(this);
+    void addScene() {
+        SirtetWindow.frame.addKeyListener(this);
         reloadAllLabels();
         setVisible(true);
     }
 
-    void removeScene(JFrame parentFrame) {
-        parentFrame.removeKeyListener(this);
+    void removeScene() {
+        SirtetWindow.frame.removeKeyListener(this);
         setVisible(false);
     }
 

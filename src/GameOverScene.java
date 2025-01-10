@@ -51,7 +51,7 @@ class GameOverScene extends SirtetScene implements ActionListener {
         nameField.requestFocusInWindow();
     }
 
-    void addScene(JFrame parentFrame) {
+    void addScene() {
         setVisible(true);
         scoreLabel = new LabelCenter("Score: " + SaveData.currentScore, FontID.Silk40, 475);
         add(scoreLabel);
@@ -59,7 +59,7 @@ class GameOverScene extends SirtetScene implements ActionListener {
         focusField();
     }
 
-    void removeScene(JFrame parentFrame) {
+    void removeScene() {
         remove(scoreLabel);
         setVisible(false);
     }

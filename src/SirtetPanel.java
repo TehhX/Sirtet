@@ -48,7 +48,7 @@ abstract class SirtetScene extends SirtetPanel {
         this(opaque, null);
     }
 
-    abstract void addScene(JFrame parentFrame);
+    abstract void addScene();
 
-    abstract void removeScene(JFrame parentFrame);
+    abstract void removeScene();
 }

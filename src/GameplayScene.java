@@ -163,21 +163,21 @@ class GameplayScene extends SirtetScene implements KeyListener {
             grid.updateGrid(true);
     }
 
-    public void addScene(JFrame parentFrame) {
+    public void addScene() {
         grid = new SirtetGrid(this);
         SaveData.currentScore = 0;
         if (isPaused)
             invertPause();
         updateScoreLabel();
-        parentFrame.addKeyListener(this);
-        parentFrame.getContentPane().add(this);
+        SirtetWindow.frame.addKeyListener(this);
+        SirtetWindow.frame.getContentPane().add(this);
         setVisible(true);
     }
 
-    public void removeScene(JFrame parentFrame) {
+    public void removeScene() {
         grid = null;
-        parentFrame.removeKeyListener(this);
-        parentFrame.getContentPane().remove(this);
+        SirtetWindow.frame.removeKeyListener(this);
+        SirtetWindow.frame.getContentPane().remove(this);
         setVisible(false);
     }
 
