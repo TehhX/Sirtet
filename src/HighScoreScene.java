@@ -35,12 +35,6 @@ class HighScoreScene extends SirtetScene implements KeyListener {
         }
     }
 
-    /// When escape is pressed go to main menu, else do nothing
-    public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
-            SirtetWindow.changeScene(SceneID.Menu);
-    }
-
     public void reloadLabel(JLabel label, String text, int xPos, int yPos) {
         label.setText(text);
         final int preferredWidth = label.getPreferredSize().width;
@@ -60,6 +54,12 @@ class HighScoreScene extends SirtetScene implements KeyListener {
     void removeScene(JFrame parentFrame) {
         parentFrame.removeKeyListener(this);
         setVisible(false);
+    }
+
+    /// When escape is pressed go to main menu, else do nothing
+    public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
+            SirtetWindow.changeScene(SceneID.Menu);
     }
 
     public void keyTyped(KeyEvent e) {}
