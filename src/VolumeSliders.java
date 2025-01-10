@@ -1,6 +1,7 @@
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import java.util.ArrayList;
 
 /**
  * This class holds a JPanel with JSliders within. Because these same JSliders and their functionality
@@ -12,6 +13,7 @@ class VolumeSliders extends SirtetPanel implements ChangeListener {
 
     public VolumeSliders() {
         super(false);
+        VolumeSlidersMaster.addSliderObject(this);
 
         bgmSlider.setBounds(191, 720, 100, 50);
         bgmSlider.setValue(SaveData.bgmVolume);
@@ -27,10 +29,8 @@ class VolumeSliders extends SirtetPanel implements ChangeListener {
     /// Sets up and returns a JSlider object
     public JSlider sliderSetup() {
         JSlider slider = new JSlider(0, 9);
-
         slider.setOpaque(false);
         slider.addChangeListener(this);
-
         return slider;
     }
 
@@ -44,6 +44,29 @@ class VolumeSliders extends SirtetPanel implements ChangeListener {
         else if (e.getSource() == sfxSlider)
             SaveData.sfxVolume = sfxSlider.getValue();
 
+        VolumeSlidersMaster.updateAll();
+
         SirtetWindow.frame.requestFocus();
+    }
+
+    public void updateSliders() {
+        bgmSlider.setValue(SaveData.bgmVolume);
+        sfxSlider.setValue(SaveData.sfxVolume);
+    }
+}
+
+/**
+ * This class exists simply to update the values of all volume sliders objects when a value is changed in only one
+ * of them. Without this, the values would be inconsistent between different VolumeSlider objects. */
+class VolumeSlidersMaster {
+    private static ArrayList<VolumeSliders> slidersArray = new ArrayList<>();
+
+    public static void addSliderObject(VolumeSliders slidersObject) {
+        slidersArray.add(slidersObject);
+    }
+
+    public static void updateAll() {
+        for (VolumeSliders sliders : slidersArray)
+            sliders.updateSliders();
     }
 }

@@ -26,8 +26,10 @@ class SaveData {
 
             bgmVolume = Integer.parseInt(fileScanner.nextLine());
             sfxVolume = Integer.parseInt(fileScanner.nextLine());
+
             for (int i = 0; i < 10; i++)
                 highScores[i] = new HighScore(fileScanner.nextLine(), Integer.parseInt(fileScanner.nextLine()));
+
         /// If file does not exist or is corrupted, repair and retry
         } catch (FileNotFoundException | NumberFormatException e) {
             repairSave();
@@ -39,7 +41,6 @@ class SaveData {
     public static void writeFile() {
         try {
             PrintWriter writer = new PrintWriter("Sirtet Data.txt");
-
             writer.println(bgmVolume + "\n" + sfxVolume);
 
             for (HighScore highScore : highScores)
@@ -55,7 +56,6 @@ class SaveData {
     public static void repairSave() {
         try {
             PrintWriter writer = new PrintWriter("Sirtet Data.txt");
-
             writer.print("3\n3\nJex\n45000\nPajitnov\n24700\nKazuma\n19000\nKitsuragi\n15000\nGenichiro\n12000\nRiebeck\n10000\nMundy\n8500\nWinston\n4200\nBlaidd\n3000\nFring\n1250");
             writer.close();
         } catch (Exception e) {
