@@ -37,10 +37,3 @@ enum ImageID {
     MenuScene,
     SoundIcons
 }
-
-/// Handles font sized
-enum FontID {
-    Silk30,
-    Silk40,
-    Silk60
-}

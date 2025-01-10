@@ -8,13 +8,14 @@ import java.awt.event.ActionListener;
  * and then sends it off to SaveData.java to be inserted or thrown away, depending on whether it makes it
  * into the top 10 scores list. The user will be told if their name is over 10 characters or under 3, as these names
  * will not be allowed. After receiving a name, it inserts the score, and switches to the high score scene. */
-class GameOverScene extends SirtetScene implements ActionListener {
+class GameOverScene extends SirtetPanel implements ActionListener {
     private JTextField nameField = nameField();
-    private JLabel scoreLabel;
 
     public GameOverScene() {
         super(true);
-        add(new LabelCenter("<html><p style=\"text-align:center;\">Game Over!<br>Enter Your Name:</p>", FontID.Silk40, 275));
+
+        add(SirtetWindow.labelCenter("<html><p style=\"text-align:center;\">Game Over!<br>Enter Your Name:</p>", Sirtet.SILKSCREEN_40, 275));
+        add(SirtetWindow.labelCenter("Score: " + SaveData.currentScore, Sirtet.SILKSCREEN_40, 475));
         add(nameField);
     }
 
@@ -24,10 +25,11 @@ class GameOverScene extends SirtetScene implements ActionListener {
         field.setOpaque(false);
         field.setBounds(150, 400, 300, 50);
         field.setForeground(Color.black);
-        field.setFont(SirtetWindow.getFont(FontID.Silk30));
+        field.setFont(Sirtet.SILKSCREEN_30);
         field.addActionListener(this);
         field.setHorizontalAlignment(JTextField.CENTER);
         field.setBorder(null);
+
         return field;
     }
 
@@ -49,18 +51,5 @@ class GameOverScene extends SirtetScene implements ActionListener {
     ///  Called when field needs to become focused to accept user-input
     public void focusField() {
         nameField.requestFocusInWindow();
-    }
-
-    void addScene() {
-        setVisible(true);
-        scoreLabel = new LabelCenter("Score: " + SaveData.currentScore, FontID.Silk40, 475);
-        add(scoreLabel);
-        nameField.setText("");
-        focusField();
-    }
-
-    void removeScene() {
-        remove(scoreLabel);
-        setVisible(false);
     }
 }
