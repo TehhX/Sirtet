@@ -27,27 +27,30 @@ class HighScoreScene extends SirtetScene implements KeyListener {
     /// Sets up label arrays for use in the scene
     public void loadLabels() {
         for (int i = 0; i < 10; i++) {
-            HighScore currentHS = SaveData.highScores[i];
-
             indexLabels[i] = new LabelRight(i + 1 + ": ", FontID.Silk30, 110, 160 + i * 50);
-            nameLabels[i] = new LabelRight(currentHS.getName(), FontID.Silk30, 360, 160 + i * 50);
-            scoreLabels[i] = new LabelRight("" + currentHS.getScore(), FontID.Silk30, 550, 160 + i * 50);
+            nameLabels[i] = new LabelRight("", FontID.Silk30, 0, 0);
+            scoreLabels[i] = new LabelRight("", FontID.Silk30, 0, 0);
         }
     }
 
-    public void reloadLabel(JLabel label, String text, int xPos, int yPos) {
-        label.setText(text);
-        final int preferredWidth = label.getPreferredSize().width;
-        final int preferredHeight = label.getPreferredSize().height;
-        label.setBounds(xPos - preferredWidth, yPos, preferredWidth, preferredHeight);
+    /// Updates labels to reflect changes with the help of method "reloadLabel()"
+    public void reloadAllLabels() {
+        for (int i = 0; i < 10; i++) {
+            scoreLabels[i].setText("" + SaveData.highScores[i].getScore());
+            int width = scoreLabels[i].getPreferredSize().width;
+            int height = scoreLabels[i].getPreferredSize().height;
+            scoreLabels[i].setBounds(550 - width, 160 + i * 50, width, height);
+
+            nameLabels[i].setText(SaveData.highScores[i].getName());
+            width = nameLabels[i].getPreferredSize().width;
+            height = nameLabels[i].getPreferredSize().height;
+            nameLabels[i].setBounds(360 - width, 160 + i * 50, width, height);
+        }
     }
 
     void addScene(JFrame parentFrame) {
         parentFrame.addKeyListener(this);
-        for (int i = 0; i < 10; i++) {
-            reloadLabel(scoreLabels[i], "" + SaveData.highScores[i].getScore(), 550, 160 + i * 50);
-            reloadLabel(nameLabels[i], SaveData.highScores[i].getName(), 360, 160 + i * 50);
-        }
+        reloadAllLabels();
         setVisible(true);
     }
 
