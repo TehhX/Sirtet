@@ -9,7 +9,7 @@ class SirtetWindow {
     static final int FRAME_SIZE_X = 600;
     static final int FRAME_SIZE_Y = 800;
 
-    static JFrame frame = new JFrame("Sirtet");
+    static final JFrame frame = new JFrame("Sirtet");
 
     static SceneID currentScene = null;
     static SirtetScene[] sceneArray = new SirtetScene[4];

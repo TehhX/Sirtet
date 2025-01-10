@@ -6,14 +6,14 @@ import java.awt.*;
  * to be added to the frame. It has some initial setup that all panels use, and accepts a PaintPanel interface to paint
  * the background with. This can be null so that nothing is painted. */
 class SirtetPanel extends JPanel {
-    PanelPainter panelPainter;
+    private final PanelPainter panelPainter;
 
     public SirtetPanel(boolean opaque, PanelPainter panelPainter) {
         super(null);
 
         this.panelPainter = panelPainter;
-        setSize(SirtetWindow.FRAME_SIZE_X, SirtetWindow.FRAME_SIZE_Y);
         setBackground(new Color(22, 207, 130));
+        setSize(SirtetWindow.FRAME_SIZE_X, SirtetWindow.FRAME_SIZE_Y);
         setOpaque(opaque);
     }
 
@@ -31,9 +31,9 @@ class SirtetPanel extends JPanel {
     }
 
     /**
-     * Interface for use with SirtetPanel's paint method, the background of a panel. Single method interfaces can be
-     * used with lambdas in their implementations. */
-    interface PanelPainter {
+     * This functional interface will be called at the paint method of SirtetPanel. This will be used to make a
+     * background for the paint method to use. */
+    protected interface PanelPainter {
         void paint(Graphics g);
     }
 }

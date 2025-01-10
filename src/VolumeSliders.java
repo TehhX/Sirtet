@@ -9,26 +9,22 @@ import java.util.ArrayList;
  * it editable all in the same place. */
 class VolumeSliders extends SirtetPanel implements ChangeListener {
     private static ArrayList<VolumeSliders> masterSlidersList = new ArrayList<>();
-
     private JSlider bgmSlider = sliderSetup();
     private JSlider sfxSlider = sliderSetup();
 
     public VolumeSliders() {
         super(false);
         masterSlidersList.add(this);
-
         bgmSlider.setBounds(191, 720, 100, 50);
-        bgmSlider.setValue(SaveData.bgmVolume);
         add(bgmSlider);
-
         sfxSlider.setBounds(331, 720, 100, 50);
-        sfxSlider.setValue(SaveData.sfxVolume);
         add(sfxSlider);
+        updateSliders();
 
         add(new SirtetPanel(false, g -> g.drawImage(Sirtet.menuImages[5], 162, 732, 157, 22, Sirtet.observer)));
     }
 
-    /// Sets up and returns a JSlider object
+    /// Creates, sets up and returns a JSlider object
     public JSlider sliderSetup() {
         JSlider slider = new JSlider(0, 9);
         slider.setOpaque(false);
@@ -42,18 +38,20 @@ class VolumeSliders extends SirtetPanel implements ChangeListener {
             SaveData.bgmVolume = bgmSlider.getValue();
             SirtetAudio.updateBGMVolume();
         }
-
         else if (e.getSource() == sfxSlider)
             SaveData.sfxVolume = sfxSlider.getValue();
 
-        updateAllSliders();
+        new Thread(VolumeSliders::updateAllSliders).start();
         SirtetWindow.frame.requestFocus();
     }
 
+    private void updateSliders() {
+        bgmSlider.setValue(SaveData.bgmVolume);
+        sfxSlider.setValue(SaveData.sfxVolume);
+    }
+
     private static void updateAllSliders() {
-        for (VolumeSliders sliders : masterSlidersList) {
-            sliders.bgmSlider.setValue(SaveData.bgmVolume);
-            sliders.sfxSlider.setValue(SaveData.sfxVolume);
-        }
+        for (VolumeSliders sliders : masterSlidersList)
+            sliders.updateSliders();
     }
 }
