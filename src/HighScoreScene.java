@@ -65,6 +65,6 @@ class HighScoreScene extends SirtetScene implements KeyListener {
             SirtetWindow.changeScene(SceneID.Menu);
     }
 
-    public void keyTyped(KeyEvent e) {}
-    public void keyReleased(KeyEvent e) {}
+    public void keyTyped(KeyEvent ignored) {}
+    public void keyReleased(KeyEvent ignored) {}
 }
