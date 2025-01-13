@@ -4,6 +4,7 @@
 abstract class SirtetScene extends SirtetPanel {
     public SirtetScene(boolean opaque) {
         super(opaque);
+
         setVisible(false);
     }
 
